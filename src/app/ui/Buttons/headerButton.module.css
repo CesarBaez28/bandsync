@@ -1,0 +1,14 @@
+.header-button {
+  display: flex;
+  align-items: center;
+  color: var(--foreground);
+  background-color: var(--background);
+  border: 1px solid var(--soft-gray);
+  border-radius: 8px;
+  padding: 0.4rem 0.4rem;
+  cursor: pointer;
+}
+
+.header-button:hover {
+  background-color: var(--soft-gray);
+}

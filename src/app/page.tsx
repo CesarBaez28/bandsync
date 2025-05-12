@@ -1,95 +1,59 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import styles from '@/app/page.module.css'
+import Image from 'next/image';
+import Link from 'next/link';
+import { HeaderButton } from '@/app/ui/Buttons/HeaderButton';
+import { MusicalBand } from './lib/definitions';
+import { getMusicalBandsByUser } from './lib/api/musicalBands';
 
-export default function Home() {
+export default async function Home() {
+  const musicalBands: MusicalBand[] = await getMusicalBandsByUser({ id: '0e05e942-eff3-11ef-af2b-8758219fbac8' });
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <div>
+      <header className={styles.header}>
+        <h2>BandSync</h2>
+        <div className={styles['header-buttons']}>
+          <HeaderButton
+            iconPath="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
+            label="Crear una banda"
+            ariaLabel="Crear una banda"
+          />
+          <HeaderButton
+            iconPath="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Z"
+            className={styles['profile-button']}
+            ariaLabel="Perfil del usuario"
+          />
         </div>
+      </header>
+
+      <main className={styles['main']}>
+        <section>
+          <header className={styles['title-main-content']}>
+            <h2>Elija la banda a la que desea ingresar</h2>
+          </header>
+
+          <article className={styles['options-container']}>
+
+            {musicalBands.map((musicalBand) => (
+              <Link key={musicalBand.id} href={`/musical-bands/${musicalBand.hyphenatedName}`} className={styles['option-container']}>
+                <div className={styles['option']}>
+                  <Image
+                    className={styles['image']}
+                    src={'/image_48dp.svg'}
+                    alt='musical band image'
+                    width={120}
+                    height={120}
+                  />
+                  <div>
+                    <h3>{musicalBand.name}</h3>
+                  </div>
+                </div>
+              </Link>
+            ))}
+
+          </article>
+        </section>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
