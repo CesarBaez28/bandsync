@@ -6,4 +6,5 @@ const getEnvVar = (key: string): string => {
 
 export const config = {
   api: getEnvVar('API'),
+  authSecret: getEnvVar('AUTH_SECRET')
 };

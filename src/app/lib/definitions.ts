@@ -10,3 +10,15 @@ export type MusicalBand = {
   email: string
   status: boolean
 };
+
+export type User = {
+  id: UUID;
+  username: string;
+  accessToken: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  photo: string;
+  status: boolean;
+};
