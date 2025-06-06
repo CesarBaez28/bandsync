@@ -1,22 +1,18 @@
 import { authConfig } from "@/auth.config";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { z } from "zod";
 import { signInWithApi } from "./app/lib/api/auth";
 import { User } from "./app/lib/definitions";
 import { UUID } from "crypto";
+import { formLoginSchema } from "./app/lib/schemas/formLoginSchema";
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = z
-          .object({
-            username: z.string().min(6),
-            password: z.string().min(8)
-          })
-          .safeParse(credentials);
+        
+        const parsedCredentials = formLoginSchema.safeParse(credentials);
 
         if (!parsedCredentials.success) {
           console.error("Invalid credentials format", parsedCredentials.error);
@@ -59,7 +55,7 @@ export const { auth, signIn, signOut } = NextAuth({
         phone: token.phone as string,
         photo: token.photo as string,
         status: token.status as boolean,
-        emailVerified: null,
+        emailVerified: null, 
         accessToken: token.accessToken as string,
       };
       session.accessToken = token.accessToken as string;

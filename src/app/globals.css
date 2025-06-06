@@ -1,9 +1,19 @@
 :root {
-  --background: #ffffff;
-  --foreground: #262626;
-  --gray: #595959;
-  --light-gray: #A6A6A6;
-  --soft-gray: #D9D9D9
+	  /* Base colors */
+	--color-main: #262626;
+  --color-white: #ffffff;
+	--color-white-100: #f3f4f6;
+	--color-white-200: #e5e7eb;
+  --color-gray-100: #d9d9d9;
+  --color-gray-200: #a6a6a6;
+  --color-gray-300: #595959;
+  --color-error: #ff4d4d;
+
+	--color-page-background: var(--color-white);
+  --color-text: var(--color-main);
+	--color-border: var(--color-gray-100);
+	--color-main-background: var(--color-main);
+	--color-main-hover: #262626f5;
 }
 
 html,
@@ -13,8 +23,8 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--color-text);
+  background: var(--color-page-background);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -24,6 +34,15 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+input {
+	font-size: inherit;
+	font-family: inherit;
+	color: inherit;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	padding: .625rem;
 }
 
 /******* Grid ***********/

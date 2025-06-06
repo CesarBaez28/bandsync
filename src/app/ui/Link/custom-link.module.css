@@ -1,0 +1,45 @@
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  padding: 0.5rem 1rem;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.primary {
+  color: white;
+  background-color: var(--color-main-background)
+}
+
+.primary:hover {
+  background-color:var(--color-main-hover);
+}
+
+.secondary {
+  background-color: var(--color-white-100);
+  color: var(--color-text);
+}
+
+.secondary:hover {
+  background-color: var(--color-white-200);
+}
+
+.tertiary {
+  font-size: 1rem;
+  background: none;
+  color: var(--color-text);
+  text-decoration: underline;
+  padding: 0;
+}
+
+.tertiary:hover {
+  opacity: 0.8;
+}

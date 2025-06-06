@@ -1,0 +1,29 @@
+.login-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header-description {
+  margin-top: 5px;
+  color: var(--color-gray-300);
+}
+
+.fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.register-container {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: 0.9rem;
+}
