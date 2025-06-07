@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { FormLoginSchema, formLoginSchema } from '@/app/lib/schemas/formLoginSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomInput from '../Inputs/CustomInput';
-import CustomButton from '../Buttons/CustomButton';
-import CustomLink from '../Link/CustomLink';
+import CustomButton from '../button/CustomButton';
+import CustomLink from '../link/CustomLink';
 
 export default function LoginForm() {
   const searchParams = useSearchParams();

@@ -2,10 +2,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: 0.75rem;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: .896rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
   cursor: pointer;
@@ -31,17 +31,18 @@
 }
 
 .secondary {
-  background-color: var(white);
+  background-color: var(--color-page-background);
   color: var(--color-text);
-  border: 1px solid var(--color-main);
+  border: 1px solid var(--color-gray-100);
 }
 
 .secondary:hover:not(:disabled) {
-  background-color: #e5e7eb; 
+  background-color: var(--color-white-100); 
 }
 
 .tertiary {
   background: none; 
+  padding: 0;
   color: var(--color-text);
 }
 
@@ -50,12 +51,12 @@
 }
 
 .iconLeft {
-  margin-right: 0.5rem;
+  margin-right: 0.2rem;
   display: inline-flex;
 }
 
 .iconRight {
-  margin-left: 0.5rem;
+  margin-left: 0.2rem;
   display: inline-flex;
 }
 

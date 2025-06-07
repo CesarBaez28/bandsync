@@ -1,11 +1,17 @@
-import { UUID } from "crypto";
 import { config } from "../config";
 import { MusicalBand } from "../definitions";
+import { auth } from "@/auth";
 
-export async function getMusicalBandsByUser({ id }: { id: UUID }): Promise<MusicalBand[]> {
-  const data = await fetch(`${config.api}/musical-bands/findByUserId/${id}`, {
+export async function getMusicalBandsByUser(): Promise<MusicalBand[]> {
+  const session = await auth()
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+  
+  const data = await fetch(`${config.api}/musical-bands/findByUserId/${session.user?.id}`, {
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJVc3VhcmlvUHJ1ZWJhIiwiaWF0IjoxNzQ2OTkzNzU4LCJleHAiOjE3NDcwMjk3NTh9.bCaiVxkLUXmUu4Ki_l6TKaYiJPAad2r1jVR81q2uQU03sy6OCf7EN8eCpfvdAhKj`,
+      Authorization: `Bearer ${session.accessToken}`,
     }
   });
 
