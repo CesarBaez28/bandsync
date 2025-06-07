@@ -72,7 +72,7 @@ export default function LoginForm() {
           </div>
           <input type="hidden" name="redirectTo" value={callbackUrl} />
           <div>
-            <CustomButton type='submit' isLoading={isPending} fullWidth>
+            <CustomButton style={{fontSize: '1rem'}} type='submit' isLoading={isPending} fullWidth>
               Iniciar sesión
             </CustomButton>
             <div className={styles['register-container']}>
