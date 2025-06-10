@@ -10,7 +10,7 @@ export const formLoginSchema = z.object({
     .min(8, "La contraseña debe tener al menos 8 caracteres")
     .regex(/[a-z]/, "La contraseña debe contener al menos una letra minúscula")
     .regex(/[A-Z]/, "La contraseña debe contener al menos una letra mayúscula")
-    .regex(/[0-9]/, "La contraseña debe contener al menos un número")
+    .regex(/\d/, "La contraseña debe contener al menos un número")
     .regex(/[^A-Za-z0-9]/, "La contraseña debe contener al menos un carácter especial")
 });
 

@@ -1,0 +1,62 @@
+.overlayWrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0,0,0,0.5);
+}
+.modalContent {
+  position: relative;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--color-gray-200);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  z-index: 10;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-gray-100);
+  padding: 1rem;
+}
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+.footer {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sm {
+  max-width: 28rem;
+}
+.md {
+  max-width: 32rem;
+}
+.lg {
+  max-width: 42rem;
+}
+.full {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+}

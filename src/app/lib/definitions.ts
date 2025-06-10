@@ -1,5 +1,13 @@
 import { UUID } from "crypto";
 
+export interface ApiResponse<T = unknown> {
+  errors?: T;
+  success: boolean;
+  message: string;
+  timestamp: string;
+  data?: T; 
+}
+
 export type MusicalBand = {
   id: UUID;
   name: string;

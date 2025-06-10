@@ -21,8 +21,10 @@ export const authConfig = {
   },
   callbacks: {
     async authorized({ request }) {
-
       const isOnLoginPage = request.nextUrl.pathname.startsWith('/login');
+      const isOnRegisterPage = request.nextUrl.pathname.startsWith('/register');
+
+      if (isOnRegisterPage) return true;
 
       const raw = await getToken({ req: request, secret: config.authSecret });
 

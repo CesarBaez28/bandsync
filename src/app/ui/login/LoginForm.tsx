@@ -1,5 +1,5 @@
 'use client';
-import styles from './login-form.module.css'
+import styles from "../../styles/login-register-form.module.css";
 import { startTransition, useActionState, useRef } from 'react';
 import { authenticate } from '@/app/lib/actions/auth';
 import { useSearchParams } from 'next/navigation';
@@ -42,7 +42,7 @@ export default function LoginForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <header className={styles['login-header']}>
+        <header className={styles['header']}>
           <h1>BandSync</h1>
           <p className={styles['header-description']}>
             Ingrese las credenciales para <br /> entrar con tu cuenta
@@ -75,7 +75,7 @@ export default function LoginForm() {
             <CustomButton style={{fontSize: '1rem'}} type='submit' isLoading={isPending} fullWidth>
               Iniciar sesión
             </CustomButton>
-            <div className={styles['register-container']}>
+            <div className={styles['footer-container']}>
               <p>¿No tienes cuenta?</p>
               <CustomLink style={{fontWeight: 'bold', textDecoration: 'none'}} variant='tertiary' href={'/register'}>
                 Regístrate

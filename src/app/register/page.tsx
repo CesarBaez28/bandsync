@@ -1,12 +1,12 @@
-import LoginForm from "../ui/login/LoginForm";
 import styles from '../styles/login-regiser.module.css'
- 
-export default function Login() {
+import RegisterForm from '../ui/register/RegisterForm';
+
+export default function RegisterPage() {
   return (
     <main className={styles['main']}>
       <div className={styles['main-content']}>
         <div className={styles['login-container']}>
-          <LoginForm />
+          <RegisterForm />
         </div>
       </div>
       <footer className={styles['footer']}>
