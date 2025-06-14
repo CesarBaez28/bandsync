@@ -46,12 +46,15 @@
   gap: 0.5rem;
 }
 .sm {
-  max-width: 28rem;
+  width: 22rem;
+  max-width: 22rem;
 }
 .md {
+  width: 32rem;
   max-width: 32rem;
 }
 .lg {
+  width: 42rem;
   max-width: 42rem;
 }
 .full {

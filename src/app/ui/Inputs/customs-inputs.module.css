@@ -13,3 +13,53 @@
 .field-error {
   border: 1px solid var(--color-error);
 }
+
+/* CustomFileInput styles */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #333;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.fileList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: var(--color-gray-300)
+}
+
+.errorText {
+  font-size: 0.75rem;
+  color: var(--color-error);
+}
