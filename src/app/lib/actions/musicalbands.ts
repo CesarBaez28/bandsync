@@ -1,10 +1,11 @@
 'use server';
 import { auth } from "@/auth";
 import { saveMusicalBand } from "../api/musicalBands";
-import { MusicalBand } from "../definitions";
+import { ApiResponse, MusicalBand } from "../definitions";
 import { createMusicalBandSchema } from "../schemas/createMusicalBandSchema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { handleAsync } from "../utils";
 
 export type CreateMusicalBandState = {
   errors?: {
@@ -49,21 +50,21 @@ export async function createMusicalBandAction(prevState: CreateMusicalBandState,
   )
   body.append('image', imageFile, imageFile.name)
 
-  try {
-    const response = await saveMusicalBand(body);
+  const [response, errors] = await handleAsync<ApiResponse<MusicalBand>>(saveMusicalBand(body));
 
-    if (!response.success) {
-      return {
-        message: "Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.",
-        success: response.success
-      };
-    }
-  } catch (error) {
-    console.error("Error registering user:", error);
+  if (errors) {
+    console.error("Error registering user:", errors);
     return {
       message: "Ocurrió un error al registrar la cuenta. Por favor, inténtelo de nuevo más tarde.",
       success: false
     }
+  }
+
+  if (!response?.success) {
+    return {
+      message: "Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.",
+      success: response?.success ?? false
+    };
   }
 
   revalidatePath('/');

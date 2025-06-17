@@ -7,7 +7,7 @@ import Link from "next/link";
 import clsx from "clsx";
 
 type MainContentProps = {
-  readonly musicalBands: MusicalBand[]
+  readonly musicalBands: MusicalBand[] | null
 }
 
 export default function MainContent({ musicalBands }: MainContentProps) {
