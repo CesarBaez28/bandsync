@@ -93,7 +93,10 @@ const CustomFileInput = forwardRef<HTMLInputElement, CustomFileInputProps>(
         {files.length > 0 && (
           <ul className={styles.fileList}>
             {files.map((file, idx) => (
-              <li key={idx} className={styles.fileItem}>
+              <li
+                key={`${file.name}-${file.size}-${file.lastModified}`}
+                className={styles.fileItem}
+              >
                 <span>{file.name}</span>
                 <CustomButton variant='tertiary' type='button' onClick={() => handleRemove(idx)} aria-label={`Eliminar ${file.name}`}>
                   <Image src="/close_24dp.svg" alt="delete file" width={24} height={24} />
