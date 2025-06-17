@@ -11,12 +11,11 @@ export async function authenticate(
     await signIn('credentials', formData)
   } catch (error) {
     if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Credenciales inválidas. Por favor, verifica tu nombre de usuario y contraseña.';
-        default:
-          return 'Ocurrió un error al iniciar sesión.';
+      if (error.type === 'CredentialsSignin') {
+        return 'Credenciales inválidas. Por favor, verifica tu nombre de usuario y contraseña.';
       }
+
+      return 'Ocurrió un error al iniciar sesión.';
     }
     throw error;
   }
