@@ -94,7 +94,7 @@ export default function RegisterForm() {
     <div id="modal-root">
       <Modal
         isOpen={state.success}
-        size="md"
+        size="sm"
       >
         <div className={styles['modal-content']}>
           <p>Usuario registrado correctamente. <br/> Por favor, inicie sesión:</p>

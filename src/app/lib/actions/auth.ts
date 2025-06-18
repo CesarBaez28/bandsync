@@ -15,7 +15,7 @@ export async function authenticate(
         return 'Credenciales inválidas. Por favor, verifica tu nombre de usuario y contraseña.';
       }
 
-      return 'Ocurrió un error al iniciar sesión.';
+      return 'Lo sentimos. Ocurrió un error inesperado al iniciar sesión. Inténlo de nuevo o trate de hacerlo más tarde.';
     }
     throw error;
   }

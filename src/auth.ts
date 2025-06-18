@@ -5,6 +5,7 @@ import { signInWithApi } from "./app/lib/api/auth";
 import { User } from "./app/lib/definitions";
 import { UUID } from "crypto";
 import { formLoginSchema } from "./app/lib/schemas/formLoginSchema";
+import { handleAsync } from "./app/lib/utils";
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -15,14 +16,19 @@ export const { auth, signIn, signOut } = NextAuth({
         const parsedCredentials = formLoginSchema.safeParse(credentials);
 
         if (!parsedCredentials.success) {
-          console.error("Invalid credentials format", parsedCredentials.error);
+          console.error('Invalid credentials forma', parsedCredentials.error);
           return null;
         }
 
-        const user: User = await signInWithApi(parsedCredentials.data);
+        const [user, error] = await handleAsync<User>( signInWithApi(parsedCredentials.data));
+
+        if (error) {
+          console.log('Error traying to authenticate with API: ', error);
+          throw Error('Error traying to authenticate with API');
+        }
 
         if (!user) {
-          console.error("User not found or invalid credentials");
+          console.error('User not found or invalid credentials');
           return null;
         }
 

@@ -1,7 +1,9 @@
 "use server";
 
 import registerUser from "../api/users";
+import { ApiResponse, MusicalBand } from "../definitions";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
+import { handleAsync } from "../utils";
 
 export type RegisterUserState = {
   errors?: {
@@ -13,7 +15,7 @@ export type RegisterUserState = {
   success: boolean;
 }
 
-export async function registerAction(prevState: RegisterUserState, formData: FormData) : Promise<RegisterUserState> {
+export async function registerAction(prevState: RegisterUserState, formData: FormData): Promise<RegisterUserState> {
 
   const validatedFields = formRegisterSchema.safeParse({
     username: formData.get("username"),
@@ -37,16 +39,9 @@ export async function registerAction(prevState: RegisterUserState, formData: For
     repeatedPassword: validatedFields.data.confirmPassword,
   };
 
-  try {
-    const response = await registerUser(requestBody);
+  const [response, error] = await handleAsync<ApiResponse<MusicalBand>>(registerUser(requestBody));
 
-    if (!response.success) {
-      return {
-        message: response.message,
-        success: false
-      };
-    }
-  } catch (error) {
+  if (error) {
     console.error("Error registering user:", error);
     return {
       message: "Ocurrió un error al registrar la cuenta. Por favor, inténtelo de nuevo más tarde.",
@@ -54,7 +49,14 @@ export async function registerAction(prevState: RegisterUserState, formData: For
     }
   }
 
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
   return {
-    success: true
-  };
-}
+    success: response.success
+  }
+} 
