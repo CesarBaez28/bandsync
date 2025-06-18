@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../Inputs/CustomInput';
 import CustomFileInput from '../Inputs/CustomFileInput';
+import Header from '../header/Header';
 
 export default function HomeHeader() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -47,11 +48,11 @@ export default function HomeHeader() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    setOpen(false); 
+    setOpen(false);
   };
 
   return <>
-    <header className={styles.header}>
+    <Header>
       <h2>BandSync</h2>
       <div className={styles['header-buttons']}>
         <CustomButton
@@ -81,7 +82,7 @@ export default function HomeHeader() {
           ]}
         />
       </div>
-    </header>
+    </Header>
     <div id='modal-root'>
       <Modal
         isOpen={open}
