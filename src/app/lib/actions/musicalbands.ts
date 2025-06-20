@@ -3,8 +3,6 @@ import { auth } from "@/auth";
 import { saveMusicalBand } from "../api/musicalBands";
 import { ApiResponse, MusicalBand } from "../definitions";
 import { createMusicalBandSchema } from "../schemas/createMusicalBandSchema";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { handleAsync } from "../utils";
 
 export type CreateMusicalBandState = {
@@ -67,6 +65,8 @@ export async function createMusicalBandAction(prevState: CreateMusicalBandState,
     };
   }
 
-  revalidatePath('/');
-  redirect('/');
+  return {
+    success: true,
+    data: response.data
+  }
 }

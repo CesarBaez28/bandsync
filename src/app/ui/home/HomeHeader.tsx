@@ -5,7 +5,7 @@ import CustomButton from '../button/CustomButton';
 import DropdownMenu from '../dropdown/DropdownMenu';
 import styles from './home-header.module.css'
 import Image from 'next/image';
-import { startTransition, useActionState, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import Modal from '../modal/Modal';
 import { createMusicalBandAction, CreateMusicalBandState } from '@/app/lib/actions/musicalbands';
 import { createMusicalBandSchema, CreateMusicalBandSchema } from '@/app/lib/schemas/createMusicalBandSchema';
@@ -14,8 +14,15 @@ import { useForm } from 'react-hook-form';
 import CustomInput from '../Inputs/CustomInput';
 import CustomFileInput from '../Inputs/CustomFileInput';
 import Header from '../header/Header';
+import { MusicalBand } from '@/app/lib/definitions';
+import { useToast } from '../toast/ToastContext';
 
-export default function HomeHeader() {
+type HomeHeaderProps = {
+  readonly setData: Dispatch<SetStateAction<MusicalBand[] | null>>;
+};
+
+export default function HomeHeader({ setData }: HomeHeaderProps) {
+  const { showToast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
@@ -42,14 +49,22 @@ export default function HomeHeader() {
     });
   };
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     reset();
     formRef.current?.reset();
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
     setOpen(false);
-  };
+  }, [reset, formRef, fileInputRef]);
+
+  useEffect(() => {
+    if (state?.success && state?.data) {
+      handleCancel();
+      setData(prevData => state.data ? [...(prevData ?? []), state.data] : prevData);
+      showToast('¡Banda creada exitosamente!', 'success');
+    }
+  }, [state, handleCancel, showToast, setData])
 
   return <>
     <Header>

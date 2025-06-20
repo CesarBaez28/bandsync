@@ -1,7 +1,6 @@
 import { MusicalBand } from './lib/definitions';
 import { getMusicalBandsByUser } from './lib/api/musicalBands';
 import MainContent from './ui/home/MainContent';
-import HomeHeader from './ui/home/HomeHeader';
 import { handleAsync } from './lib/utils';
 import styles from './page.module.css'
 
@@ -10,7 +9,6 @@ export default async function Home() {
 
   return (
     <div>
-      <HomeHeader />
       {errors == null
       ? <MainContent musicalBands={data} />
       : <div className={styles['error-message']}> 

@@ -4,16 +4,21 @@ import { MusicalBand } from "@/app/lib/definitions";
 import styles from './main-content.module.css'
 import Link from "next/link";
 import CustomImage from "../image/CustomImage";
+import { useState } from "react";
+import HomeHeader from "./HomeHeader";
 
 type MainContentProps = {
   readonly musicalBands: MusicalBand[] | null
 }
 
 export default function MainContent({ musicalBands }: MainContentProps) {
-  return (
+  const [data, setData] = useState<MusicalBand[] | null>(musicalBands);
+
+  return <>
+    <HomeHeader setData={setData} />
     <main className={styles['main']}>
       <section>
-        {musicalBands?.length != 0
+        {data?.length != 0
           ?
           <>
             <header className={styles['title-main-content']}>
@@ -21,7 +26,7 @@ export default function MainContent({ musicalBands }: MainContentProps) {
             </header>
 
             <article className={styles['options-container']}>
-              {musicalBands?.map((musicalBand) => (
+              {data?.map((musicalBand) => (
                 <Link key={musicalBand.id} href={`/musicalbands/${musicalBand.hyphenatedName}`} className={styles['option-container']}>
                   <div className={styles['option']}>            
                     <CustomImage 
@@ -52,5 +57,5 @@ export default function MainContent({ musicalBands }: MainContentProps) {
         }
       </section>
     </main>
-  )
+  </>;
 }
