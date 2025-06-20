@@ -60,7 +60,7 @@ export async function createMusicalBandAction(prevState: CreateMusicalBandState,
 
   if (!response?.success) {
     return {
-      message: "Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.",
+      message: response?.message,
       success: response?.success ?? false
     };
   }
