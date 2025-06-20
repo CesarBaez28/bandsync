@@ -1,5 +1,9 @@
+import { UserInfo } from "../actions/users";
 import { config } from "../config";
-import { ApiResponse, MusicalBand } from "../definitions";
+import { ApiResponse, MusicalBand, User } from "../definitions";
+import { auth } from "@/auth";
+
+const USER_PATH = 'users';
 
 interface RegisterUserParams {
   username: string;
@@ -8,19 +12,58 @@ interface RegisterUserParams {
   repeatedPassword: string;
 }
 
-export default async function registerUser({
+export async function registerUser({
   username,
   email,
   password,
   repeatedPassword,
 }: RegisterUserParams): Promise<ApiResponse<MusicalBand>> {
 
-  const response = await fetch(`${config.api}/users/register`, {
+  const response = await fetch(`${config.api}/${USER_PATH}/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ username, email, password, repeatedPassword }),
+  });
+
+  return await response.json();
+}
+
+export async function getUserById(): Promise<ApiResponse<User>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/users/findById/${session.user?.id}`, {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while geting musicalbands by user id");
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+export async function updateUser(formData: FormData): Promise<ApiResponse<UserInfo>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${USER_PATH}/updateUser/${session.user?.id}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: formData
   });
 
   return await response.json();

@@ -2,7 +2,7 @@ import { authConfig } from "@/auth.config";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signInWithApi } from "./app/lib/api/auth";
-import { User } from "./app/lib/definitions";
+import { UserSesion } from "./app/lib/definitions";
 import { UUID } from "crypto";
 import { formLoginSchema } from "./app/lib/schemas/formLoginSchema";
 import { handleAsync } from "./app/lib/utils";
@@ -20,7 +20,7 @@ export const { auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        const [user, error] = await handleAsync<User>( signInWithApi(parsedCredentials.data));
+        const [user, error] = await handleAsync<UserSesion>( signInWithApi(parsedCredentials.data));
 
         if (error) {
           console.log('Error traying to authenticate with API: ', error);
@@ -76,6 +76,7 @@ declare module 'next-auth' {
     user: {
       id: UUID;
       username: string;
+      accessToken: string;
       firstName: string;
       lastName: string;
       email: string;

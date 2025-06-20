@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type CustomImageProps = {
   src?: string,
@@ -23,9 +23,12 @@ export default function CustomImage({
   ...props
 }: CustomImageProps) {
 
-  const [imgSrc, setImgSrc] = useState(src !== "" ? src : fallBackSrc);
+  const validSrc = src && src !== "" ? src : fallBackSrc;
+  const [imgSrc, setImgSrc] = useState(validSrc);
 
-  console.log(imgSrc);
+  useEffect(() => {
+    setImgSrc(validSrc);
+  }, [validSrc]);
 
   const handleError = () => {
     if (imgSrc != fallBackSrc) {

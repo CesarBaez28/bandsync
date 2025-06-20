@@ -22,7 +22,6 @@ export type MusicalBand = {
 export type User = {
   id: UUID;
   username: string;
-  accessToken: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -30,3 +29,7 @@ export type User = {
   photo: string;
   status: boolean;
 };
+
+export type UserSesion = User & {
+  accessToken: string;
+}

@@ -1,7 +1,7 @@
 import { config } from "../config";
-import { User } from "../definitions";
+import { UserSesion } from "../definitions";
 
-export async function signInWithApi ({username, password} : {username: string, password: string}) : Promise<User> {
+export async function signInWithApi ({username, password} : {username: string, password: string}) : Promise<UserSesion> {
   const response = await fetch(`${config.api}/users/auth/login`, {
     method: 'POST',
     headers: {

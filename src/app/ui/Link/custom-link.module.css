@@ -24,12 +24,13 @@
 }
 
 .secondary {
-  background-color: var(--color-white-100);
+  background-color: var(--color-page-background);
   color: var(--color-text);
+  border: 1px solid var(--color-gray-100);
 }
 
-.secondary:hover {
-  background-color: var(--color-white-200);
+.secondary:hover:not(:disabled) {
+  background-color: var(--color-white-100); 
 }
 
 .tertiary {

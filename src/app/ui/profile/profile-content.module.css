@@ -1,0 +1,72 @@
+.main {
+  margin-top: 1rem;
+  padding: 0 1.5rem;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  padding: 1rem;
+  border: 1px solid var(--color-gray-100);
+  border-radius: 8px;
+}
+
+.profile-photo {
+  border-radius: 50%;
+  border: 1px solid var(--color-gray-200);
+}
+
+.profile-fall-back {
+  border-radius: 50%;
+  border: 1px solid var(--color-gray-200);
+  padding: .4rem;
+}
+
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.color-gray-300 {
+  color: var(--color-gray-300);
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.security-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: .9rem;
+}

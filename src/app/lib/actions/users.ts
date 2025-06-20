@@ -1,7 +1,8 @@
 "use server";
 
-import registerUser from "../api/users";
+import { registerUser, updateUser } from "../api/users";
 import { ApiResponse, MusicalBand } from "../definitions";
+import { editUserSchema } from "../schemas/editUserSchema";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
 import { handleAsync } from "../utils";
 
@@ -59,4 +60,75 @@ export async function registerAction(prevState: RegisterUserState, formData: For
   return {
     success: response.success
   }
-} 
+}
+
+export type UserInfo = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  photo: string
+}
+
+export type UpdateUserState = {
+  errors?: {
+    name?: string[];
+    lastName?: string[];
+    phone?: string[];
+  };
+  user?: UserInfo
+  message?: string | null;
+  success: boolean;
+}
+
+export async function updateUserAction(prevState: UpdateUserState, formData: FormData): Promise<UpdateUserState> {
+
+  const requestBody = {
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    phone: formData.get("phone"),
+    photo: prevState.user?.photo
+  };
+
+  const validatedFields = editUserSchema.safeParse(requestBody);
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const imageFile = formData.get('image') as File
+
+  const body = new FormData()
+  body.append(
+    'user',
+    new Blob([JSON.stringify(requestBody)], { type: 'application/json' })
+  )
+  body.append('image', imageFile, imageFile.name)
+
+  const [response, errors] = await handleAsync<ApiResponse<UserInfo>>(updateUser(body));
+
+  if (errors) {
+    console.error("Error updating user:", errors);
+    return {
+      message: "Ocurrió un error al editar los datos. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: "Ocurrió un error al guardar la información. Por favor, inténtelo de nuevo.",
+      success: response?.success ?? false
+    };
+  }
+
+  console.log(response.data);
+
+  return {
+    success: true,
+    user: response.data
+  }
+}

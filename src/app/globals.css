@@ -8,6 +8,9 @@
   --color-gray-200: #a6a6a6;
   --color-gray-300: #595959;
   --color-error: #ff4d4d;
+	--color-success: #16a34a;
+	--color-warning: #facc15;
+	--color-info: #3b82f6;
 
 	--color-page-background: var(--color-white);
   --color-text: var(--color-main);
