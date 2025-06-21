@@ -59,7 +59,6 @@
 
 .activeLink {
   font-weight: bold;
-  color: var(--color-main-hover);
 }
 
 .overlay {

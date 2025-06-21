@@ -2,13 +2,13 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import clsx from 'clsx';
-import styles from './sidenav.module.css';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSideNav } from './SideNavContext';
 import Image from 'next/image';
 import CustomButton from '../button/CustomButton';
 import CustomLink from '../link/CustomLink';
+import styles from './sidenav.module.css';
 
 type NavItem = {
   label: string;
@@ -141,7 +141,9 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
                           const isSubActive = subItem.href === pathname;
                           return (
                             <li key={subItem.label} className={styles.subNavItem}>
-                              <CustomLink style={{ textDecoration: 'none', fontSize: '0.9rem' }} variant='tertiary'
+                              <CustomLink
+                                style={{ textDecoration: 'none', fontSize: '0.9rem' }}
+                                variant='tertiary'
                                 href={subItem.href}
                                 className={clsx({ [styles.activeLink]: isSubActive })}
                               >
@@ -157,7 +159,9 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
                     )}
                   </>
                 ) : (
-                  <CustomLink style={{ textDecoration: 'none', fontSize: '0.9rem' }} variant='tertiary'
+                  <CustomLink
+                    style={{ textDecoration: 'none', fontSize: '0.9rem' }}
+                    variant='tertiary'
                     href={item.href!}
                     className={clsx({ [styles.activeLink]: isActive })}
                   >
