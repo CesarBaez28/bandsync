@@ -1,0 +1,99 @@
+.sideNav {
+  background-color: var(--color-page-background);
+  border-right: 1px solid var(--color-gray-100);
+  color: var(--color-main);
+  position: sticky;
+  padding: 0;
+  top: 0;
+  height: 100vh;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.open {
+  padding: 1rem;
+}
+
+.collapsed {
+  width: 0
+}
+
+.collapseButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.navItem {
+  margin-bottom: 1rem;
+}
+
+.navButtonContainer {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.active {
+  color: var(--color-main-hover);
+}
+
+.subNavList {
+  list-style: none;
+  padding-left: 1.6rem;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.subNavItem {
+  margin-bottom: 0.5rem;
+}
+
+.activeLink {
+  font-weight: bold;
+  color: var(--color-main-hover);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1500;
+}
+
+.chevronIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .sideNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 220px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 2000;
+  }
+
+  .open {
+    transform: translateX(0);
+    padding: 1rem
+  }
+}

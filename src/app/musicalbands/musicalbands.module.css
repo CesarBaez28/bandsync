@@ -1,0 +1,8 @@
+.layout-content {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem 1.5rem 1rem 2rem;
+}
