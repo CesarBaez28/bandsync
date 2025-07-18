@@ -17,6 +17,8 @@ type NavItem = {
   subItems?: { label: string; href: string; icon?: ReactNode }[];
 };
 
+const MOBILE_BREAKPOINT = 768;
+
 export default function SideNav({ hypName }: { readonly hypName: string }) {
   const { isCollapsed, setCollapsed, mounted } = useSideNav();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
@@ -29,7 +31,7 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
 
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth <= 768;
+      const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
       setIsMobile(mobile);
       if (mobile) setCollapsed(true);
     };
@@ -103,7 +105,7 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
           {navItems.map((item) => {
             const isActive = item.href === pathname;

@@ -34,9 +34,9 @@ export const SideNavProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <SideNavContext.Provider value={value}>
+    <SideNavContext value={value}>
       {children}
-    </SideNavContext.Provider>
+    </SideNavContext>
   );
 };
 
