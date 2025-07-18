@@ -18,7 +18,9 @@ export default async function Layout({ children, params }: LayoutProps) {
       <MainHeader hypName={hypName} />
       <div className={styles['layout-content']}>
         <SideNav hypName={hypName} />
-        {children}
+        <div style={{width: '100%', marginTop: '1rem', padding: '0 1.5rem'}}>
+          {children}
+        </div>
       </div>
     </SideNavProvider>
   );

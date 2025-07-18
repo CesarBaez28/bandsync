@@ -1,8 +1,4 @@
-.error-message {
-  padding-top: 4rem;
-  display: flex;
-  gap: .4rem;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;  
+.main {
+  margin-top: 1rem;
+  padding: 0 1.5rem;
 }

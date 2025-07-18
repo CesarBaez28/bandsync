@@ -65,62 +65,60 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
   }, [state, showToast, handleCancel]);
 
   return <>
-    <main className={styles.main}>
-      <div className={`${styles.profile} col-12 col-sm-8 col-md-6 col-lg-6`}>
+    <div className={`${styles.profile} col-12 col-sm-8 col-md-6 col-lg-6`}>
 
-        <div className={`${styles.card}`}>
-          <header className={styles['header-profile']}>
-            <CustomImage
-              src={state.user?.photo}
-              alt={'Foto de perfil'}
-              width={80}
-              height={80}
-              fallBackSrc='/person_24dp.svg'
-              className={state.user?.photo ? styles['profile-photo'] : styles['profile-fall-back']}
-            />
-            <div>
-              <h3>{user?.username}</h3>
-              <p className={styles['color-gray-300']}>{user?.email}</p>
-            </div>
-          </header>
-        </div>
-
-        <div className={`${styles.card}`}>
-          <div className={styles['user-info-container']}>
-            <h3>Datos de su usuario</h3>
-            <div className={styles['user-info']}>
-              <p>Nombre:</p>
-              <p className={styles['color-gray-300']}>{state.user?.firstName !== '' ? state.user?.firstName : 'No disponible'}</p>
-              <p>Apellido:</p>
-              <p className={styles['color-gray-300']}>{state.user?.lastName !== '' ? state.user?.lastName : 'No disponible'}</p>
-              <p>Teléfono:</p>
-              <p className={styles['color-gray-300']}>{state.user?.phone !== '' ? state.user?.phone : 'No disponible'}</p>
-            </div>
-            <div>
-              <CustomButton type='button' onClick={() => setOpen(true)}>
-                Editar información
-              </CustomButton>
-            </div>
+      <div className={`${styles.card}`}>
+        <header className={styles['header-profile']}>
+          <CustomImage
+            src={state.user?.photo}
+            alt={'Foto de perfil'}
+            width={80}
+            height={80}
+            fallBackSrc='/person_24dp.svg'
+            className={state.user?.photo ? styles['profile-photo'] : styles['profile-fall-back']}
+          />
+          <div>
+            <h3>{user?.username}</h3>
+            <p className={styles['color-gray-300']}>{user?.email}</p>
           </div>
-        </div>
+        </header>
+      </div>
 
-        <div className={`${styles.card}`}>
-          <div className={styles['security-container']}>
-            <h3>Seguridad</h3>
-            <div>
-              <CustomLink variant="secondary" href={'/change-password'}>
-                Cambiar contraseña
-              </CustomLink>
-            </div>
-            <div>
-              <CustomLink variant="secondary" href={'/two-factor'}>
-                Autenticación en dos pasos
-              </CustomLink>
-            </div>
+      <div className={`${styles.card}`}>
+        <div className={styles['user-info-container']}>
+          <h3>Datos de su usuario</h3>
+          <div className={styles['user-info']}>
+            <p>Nombre:</p>
+            <p className={styles['color-gray-300']}>{state.user?.firstName !== '' ? state.user?.firstName : 'No disponible'}</p>
+            <p>Apellido:</p>
+            <p className={styles['color-gray-300']}>{state.user?.lastName !== '' ? state.user?.lastName : 'No disponible'}</p>
+            <p>Teléfono:</p>
+            <p className={styles['color-gray-300']}>{state.user?.phone !== '' ? state.user?.phone : 'No disponible'}</p>
+          </div>
+          <div>
+            <CustomButton type='button' onClick={() => setOpen(true)}>
+              Editar información
+            </CustomButton>
           </div>
         </div>
       </div>
-    </main>
+
+      <div className={`${styles.card}`}>
+        <div className={styles['security-container']}>
+          <h3>Seguridad</h3>
+          <div>
+            <CustomLink variant="secondary" href={'/change-password'}>
+              Cambiar contraseña
+            </CustomLink>
+          </div>
+          <div>
+            <CustomLink variant="secondary" href={'/two-factor'}>
+              Autenticación en dos pasos
+            </CustomLink>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id='modal-root'>
       <Modal
         isOpen={open}

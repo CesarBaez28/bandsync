@@ -47,6 +47,15 @@ input {
 	padding: .625rem;
 }
 
+.error-message {
+  padding-top: 4rem;
+  display: flex;
+  gap: .4rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  
+}
+
 /******* Grid ***********/
 
 .col-12 { width: 100%; }

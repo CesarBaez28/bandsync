@@ -31,8 +31,8 @@ export default async function Profile() {
         </div>
       </Header>
       {error == null
-        ? <ProfileContent user={response?.data} />
-        : <div className={styles['error-message']}>
+        ? <main className={styles.main}> <ProfileContent user={response?.data} /> </main> 
+        : <div className="error-message">
           <h2>¡Lo sentimos!</h2>
           <p>Hubo un error al traer los datos. Intente refrescar la página o vuelva a visitar la página más tarde.</p>
         </div>
