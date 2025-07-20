@@ -4,6 +4,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import CustomLink from "../link/CustomLink";
 import Image from "next/image";
 import { generatePagination } from "@/app/lib/utils";
+import styles from './pagination.module.css';
 
 export default function Pagination({ totalPages }: { readonly totalPages: number }) {
   const pathname = usePathname();
@@ -18,8 +19,8 @@ export default function Pagination({ totalPages }: { readonly totalPages: number
   };
 
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '.2rem' }}>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
 
         {currentPage > 1 && totalPages >= 5 ?
           <PaginationArrow
@@ -29,7 +30,7 @@ export default function Pagination({ totalPages }: { readonly totalPages: number
           : null
         }
 
-        <div style={{ display: 'flex', gap: '.2rem' }}>
+        <div className={styles.paginationNumber}>
           {allPages.map((page, index) => {
             return (
               <PaginationNumber
@@ -66,7 +67,7 @@ function PaginationNumber({
 }) {
 
   if (page === '...') {
-    return <p style={{ display: 'flex', alignItems: 'flex-end', fontSize: '1.4rem' }}>...</p>;
+    return <p className={styles.ellipsis}>...</p>;
   }
 
   return isActive ? (
