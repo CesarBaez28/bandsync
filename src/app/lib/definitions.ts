@@ -8,6 +8,16 @@ export interface ApiResponse<T = unknown> {
   data?: T; 
 }
 
+export interface PagedData<T> {
+  content: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
 export type MusicalBand = {
   id: UUID;
   name: string;
@@ -17,6 +27,12 @@ export type MusicalBand = {
   phone: string
   email: string
   status: boolean
+};
+
+export type Artist = {
+  id: number;
+  name: string;
+  status: boolean;
 };
 
 export type User = {
@@ -32,4 +48,5 @@ export type User = {
 
 export type UserSesion = User & {
   accessToken: string;
+  musicalBands: MusicalBand[];
 }

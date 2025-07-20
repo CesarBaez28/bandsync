@@ -8,3 +8,23 @@ export async function handleAsync<T, E = unknown>(
     return [null, err as E];
   }
 }
+
+export const generatePagination = (currentPage: number, totalPages: number) => {
+  // If there are 6 or fewer pages, show all page numbers
+  if (totalPages <= 6) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  // If the current page is near the start, show the first 5 pages, an ellipsis, and the last page
+  if (currentPage <= 3) {
+    return [1, 2, 3, 4, 5, '...', totalPages];
+  }
+
+  // If the current page is near the end, show the first page, an ellipsis, and the last 5 pages
+  if (currentPage + 3 === totalPages || currentPage + 2 >= totalPages) {
+    return [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  // Otherwise, show the first page, an ellipsis, two pages before and after the current page, another ellipsis, and the last page
+  return [1, '...', currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2, '...', totalPages];
+};
