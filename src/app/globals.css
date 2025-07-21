@@ -103,7 +103,7 @@ tbody tr:last-child td:last-child {
 	border-bottom-right-radius: 8px;
 }
 
-.error-message {
+.message {
 	padding-top: 4rem;
 	display: flex;
 	gap: .4rem;

@@ -34,7 +34,7 @@ export default async function ArtistTable({ data }: ArtistTableProps) {
           ))}
         </tbody>
       </table>) : (
-      <div className="error-message">
+      <div className="message">
         <h2>¡No se encontraron resultados!</h2>
         <p>Registre un artista usando el botón Agregar o cambie los valores de su búsqueda</p>
       </div>)

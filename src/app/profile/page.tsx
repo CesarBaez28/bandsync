@@ -32,7 +32,7 @@ export default async function Profile() {
       </Header>
       {error == null
         ? <main className={styles.main}> <ProfileContent user={response?.data} /> </main> 
-        : <div className="error-message">
+        : <div className="message">
           <h2>¡Lo sentimos!</h2>
           <p>Hubo un error al traer los datos. Intente refrescar la página o vuelva a visitar la página más tarde.</p>
         </div>

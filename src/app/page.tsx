@@ -11,7 +11,7 @@ export default async function Home() {
     <div>
       {errors == null
       ? <MainContent musicalBands={data} />
-      : <div className={styles['error-message']}> 
+      : <div className={styles['message']}> 
            <h2>¡Lo sentimos!</h2>
            <p>Hubo un error al traer los datos. Intente refrescar la página o vuelva a visitar la página más tarde.</p>
         </div>
