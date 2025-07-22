@@ -1,12 +1,11 @@
-import CustomButton from "@/app/ui/button/CustomButton";
 import styles from './artists.module.css';
-import Search from "@/app/ui/search/Search";
 import { auth } from "@/auth";
 import ArtistTable from "@/app/ui/musicalbands/artists/ArtistsTable";
 import { ApiResponse, Artist, MusicalBand, PagedData } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import { getArtistsByMusicalBandIdAndName } from "@/app/lib/api/artists";
 import Pagination from "@/app/ui/pagination/Pagination";
+import InputContainer from "@/app/ui/musicalbands/artists/InputContainer";
 
 type ArtistPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -35,12 +34,9 @@ export default async function ArtistsPage(props: ArtistPageProps) {
   return (
     <div>
       <h2>Artistas</h2>
-      <div className={styles.inputContainer}>
-        <Search placeholder="Escriba nombre del artista" />
-        <CustomButton variant="primary" type="button">
-          Agregar
-        </CustomButton>
-      </div>
+
+      <InputContainer musicalBandId={musicalBand?.id} hypName={hypName} />
+
       <main className={styles.mainContainer}>
         {error
           ? <div className="message">
@@ -55,6 +51,7 @@ export default async function ArtistsPage(props: ArtistPageProps) {
           )
         }
       </main>
+
     </div>
   );
 }

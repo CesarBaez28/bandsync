@@ -3,6 +3,8 @@ import { ApiResponse, Artist, PagedData } from "../definitions";
 import { config } from "../config";
 import { UUID } from "crypto";
 
+const ARTISTS_PATH = 'artists';
+
 type GetArtistsByMusicalBandIdAndNameParams = {
   musicalBandId: UUID | undefined;
   query?: string;
@@ -20,7 +22,7 @@ export async function getArtistsByMusicalBandIdAndName({
     throw Error("Unauthorized: No session or access token found.")
   }
 
-  const response = await fetch(`${config.api}/artists/findByMusicalBandIdAndName/${musicalBandId}?query=${query}&page=${page}`, {
+  const response = await fetch(`${config.api}/${ARTISTS_PATH}/findByMusicalBandIdAndName/${musicalBandId}?query=${query}&page=${page}`, {
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
     }
@@ -29,6 +31,30 @@ export async function getArtistsByMusicalBandIdAndName({
   if (!response.ok) {
     throw new Error("Error while getting artists by musical band id");
   }
+
+  return await response.json();
+}
+
+export type CreateArtistParams = {
+  name: string;
+  musicalBandId: UUID | undefined;
+};
+
+export async function createArtist({ name, musicalBandId }: CreateArtistParams) : Promise<ApiResponse<Artist>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${ARTISTS_PATH}/save`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({ name, musicalBandId }),
+  });
 
   return await response.json();
 }

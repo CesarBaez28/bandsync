@@ -1,0 +1,16 @@
+.fieldsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.errorMessage {
+  font-size: .9rem;
+  color: var(--color-error);
+}
+
+.buttonsContainer {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
