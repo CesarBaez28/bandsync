@@ -15,7 +15,12 @@ import { UUID } from "crypto";
 import { useToast } from "../../toast/ToastContext";
 import { useRouter } from "next/navigation";
 
-export default function InputContainer({ musicalBandId, hypName }: { readonly musicalBandId: UUID | undefined, readonly hypName: string }) {
+type InputContainerProps = {
+  readonly musicalBandId: UUID | undefined;
+  readonly hypName: string
+}
+
+export default function InputContainer({ musicalBandId, hypName }: InputContainerProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
