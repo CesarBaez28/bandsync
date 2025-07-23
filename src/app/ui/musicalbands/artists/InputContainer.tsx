@@ -6,10 +6,10 @@ import Modal from "../../modal/Modal";
 import Search from "../../search/Search";
 import styles from './input-container.module.css';
 import stylesForm from '../../../styles/form.module.css'
-import { createArtistAction, CreateArtistState } from "@/app/lib/actions/artists";
+import { createArtistAction, ArtistActionState } from "@/app/lib/actions/artists";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateArtistSchema, createArtistSchema } from "@/app/lib/schemas/CreateArtistSchema";
+import { ArtistSchema, artistSchema } from "@/app/lib/schemas/artistSchema";
 import CustomInput from "../../Inputs/CustomInput";
 import { UUID } from "crypto";
 import { useToast } from "../../toast/ToastContext";
@@ -20,16 +20,16 @@ export default function InputContainer({ musicalBandId, hypName }: { readonly mu
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const initialState: CreateArtistState = { errors: {}, message: null, success: false };
-  const [state, formAction, isPending] = useActionState<CreateArtistState, FormData>(createArtistAction, initialState);
+  const initialState: ArtistActionState = { errors: {}, message: null, success: false };
+  const [state, formAction, isPending] = useActionState<ArtistActionState, FormData>(createArtistAction, initialState);
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm<CreateArtistSchema>({
-    resolver: zodResolver(createArtistSchema),
+  } = useForm<ArtistSchema>({
+    resolver: zodResolver(artistSchema),
     mode: "onChange",
   });
 
@@ -87,7 +87,6 @@ export default function InputContainer({ musicalBandId, hypName }: { readonly mu
             />
 
             <input type="hidden" name="musicalBandId" value={musicalBandId} />
-            <input type="hidden" name="redirectTo" value={`/musicalbands/${hypName}/artists`} />
 
             {state?.message && (
               <p className={stylesForm.errorMessage}>

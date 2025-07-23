@@ -1,12 +1,12 @@
 "use server";
 
 import { UUID } from "crypto";
-import { createArtist } from "../api/artists";
+import { createArtist, updateArtistById } from "../api/artists";
 import { ApiResponse, Artist } from "../definitions";
-import { createArtistSchema } from "../schemas/CreateArtistSchema";
+import { artistSchema } from "../schemas/artistSchema";
 import { handleAsync } from "../utils";
 
-export type CreateArtistState = {
+export type ArtistActionState = {
   errors?: {
     name?: string[];
   };
@@ -14,9 +14,9 @@ export type CreateArtistState = {
   success: boolean;
 }
 
-export async function createArtistAction(prevState: CreateArtistState, formData: FormData) {
+export async function createArtistAction(prevState: ArtistActionState, formData: FormData) {
 
-  const validatedFields = createArtistSchema.safeParse({
+  const validatedFields = artistSchema.safeParse({
     name: formData.get("name"),
   });
 
@@ -39,6 +39,49 @@ export async function createArtistAction(prevState: CreateArtistState, formData:
     console.error("Error creating artist:", error);
     return {
       message: "Ocurrió un error al crear el artista. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
+  return {
+    success: response.success
+  }
+}
+
+export async function updateArtistAction(prevState: ArtistActionState, formData: FormData) {
+  const validatedFields = artistSchema.safeParse({
+    name: formData.get("name"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const idValue = formData.get("id");
+  const id = Number(idValue);
+
+  const requestBody = {
+    name: validatedFields.data.name,
+    id,
+  };
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(updateArtistById(requestBody));
+
+  if (error) {
+    console.error("Error updating artist:", error);
+    return {
+      message: "Ocurrió un error al actualizar el artista. Por favor, inténtelo de nuevo.",
       success: false
     };
   }

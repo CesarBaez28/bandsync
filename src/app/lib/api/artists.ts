@@ -40,7 +40,7 @@ export type CreateArtistParams = {
   musicalBandId: UUID | undefined;
 };
 
-export async function createArtist({ name, musicalBandId }: CreateArtistParams) : Promise<ApiResponse<Artist>> {
+export async function createArtist({ name, musicalBandId }: CreateArtistParams): Promise<ApiResponse<Artist>> {
   const session = await auth();
 
   if (!session?.accessToken) {
@@ -59,3 +59,21 @@ export async function createArtist({ name, musicalBandId }: CreateArtistParams) 
   return await response.json();
 }
 
+export async function updateArtistById({ name, id }: { name: string; id: number }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${ARTISTS_PATH}/updateArtistName/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({ name })
+  })
+
+  return await response.json();
+}
