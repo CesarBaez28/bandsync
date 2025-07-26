@@ -1,0 +1,79 @@
+import { UUID } from "crypto";
+import { ApiResponse, MusicalGenre, PagedData } from "../definitions";
+import { auth } from "@/auth";
+import { config } from "../config";
+
+const MUSICAL_GENRES_PATH = 'musical-genres';
+
+type GetMusicalGenresByMusicalBandIdAndNameProps = {
+  musicalBandId: UUID | undefined;
+  query?: string;
+  page?: number;
+}
+
+export async function getMusicalGenresByMusicalBandIdAndName({
+  musicalBandId,
+  query,
+  page }: GetMusicalGenresByMusicalBandIdAndNameProps): Promise<ApiResponse<PagedData<MusicalGenre>>> {
+
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/findByMusicalBandIdAndName/${musicalBandId}?query=${query}&page=${page}`, {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while getting musical genres by musical band id and name");
+  }
+
+  return await response.json();
+}
+
+type CreateMusicalGenreParams = {
+  name: string;
+  musicalBandId: UUID | undefined
+}
+
+export async function createMusicalGenre({ name, musicalBandId }: CreateMusicalGenreParams): Promise<ApiResponse<MusicalGenre>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/save`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({ name, musicalBandId }),
+  });
+
+  return await response.json();
+}
+
+export async function updateMusicalGenreById({ name, id }: { name: string; id: number }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/updateMusicalGenreName/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({ name })
+  })
+
+  return await response.json();
+}
