@@ -1,7 +1,7 @@
 'use server';
 
 import { UUID } from "crypto";
-import { createMusicalGenre, updateMusicalGenreById } from "../api/musicalGenres";
+import { createMusicalGenre, deleteMusicalGenreById, updateMusicalGenreById } from "../api/musicalGenres";
 import { ApiResponse, MusicalGenre } from "../definitions";
 import { musicalGenreSchema } from "../schemas/musicalGenteSchema";
 import { handleAsync } from "../utils";
@@ -81,6 +81,37 @@ export async function updateMusicalGenreAction(prevState: MusicalGenreActionStat
     console.error("Error updating musical genre:", error);
     return {
       message: "Ocurrió un error al actualizar el género musical. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
+  return {
+    success: response.success
+  }
+}
+
+export type DeleteMusicalGenreActionState = {
+  success: boolean;
+  message?: string | null;
+}
+
+export async function deleteMusicalGenreAction (prevState: DeleteMusicalGenreActionState, formData: FormData) {
+  const idValue = formData.get("id");
+  const id = Number(idValue);
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(deleteMusicalGenreById({ id }));
+
+  if (error) {
+    console.error("Error deleting musical genre:", error);
+    return {
+      message: "Ocurrió un error al eliminar el género musical. Por favor, inténtelo de nuevo.",
       success: false
     };
   }

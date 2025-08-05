@@ -77,3 +77,21 @@ export async function updateArtistById({ name, id }: { name: string; id: number 
 
   return await response.json();
 }
+
+export default async function deleteArtistById({ id }: { id: number }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.");
+  }
+
+  const response = await fetch(`${config.api}/${ARTISTS_PATH}/delete/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    }
+  })
+
+  return await response.json();
+}

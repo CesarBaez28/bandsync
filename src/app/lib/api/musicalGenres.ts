@@ -77,3 +77,21 @@ export async function updateMusicalGenreById({ name, id }: { name: string; id: n
 
   return await response.json();
 }
+
+export async function deleteMusicalGenreById({ id }: { id: number }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/delete/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    }
+  });
+
+  return await response.json();
+}

@@ -6,13 +6,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
-import { ArtistActionState, updateArtistAction } from "@/app/lib/actions/artists";
+import { ArtistActionState, deleteArtistAction, DeleteArtistActionState, updateArtistAction } from "@/app/lib/actions/artists";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArtistSchema, artistSchema } from "@/app/lib/schemas/artistSchema";
 import { useForm } from "react-hook-form";
 import Modal from "../../modal/Modal";
 import CustomInput from "../../Inputs/CustomInput";
 import stylesForm from "../../../styles/form.module.css"
+import stylesModal from "../../../styles/modal.module.css";
 
 type ArtistTableProps = {
   readonly data: PagedData<Artist> | undefined;
@@ -23,18 +24,22 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
-  const [open, setOpen] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const initialState: ArtistActionState = { errors: {}, message: null, success: false };
   const [state, formAction, isPending] = useActionState<ArtistActionState, FormData>(updateArtistAction, initialState);
+  const initialDeleteState: DeleteArtistActionState = { message: null, success: false };
+  const [deleteState, formDeleteAction, isDeletingPending] = useActionState<DeleteArtistActionState, FormData>(deleteArtistAction, initialDeleteState);
 
   const handleEdit = ({ id, name, status }: Artist) => {
     setSelectedArtist({ id, name, status });
-    setOpen(true)
+    setOpenUpdateModal(true)
   }
 
   const handleDelete = ({ id, name, status }: Artist) => {
     setSelectedArtist({ id, name, status });
+    setOpenDeleteModal(true);
   }
 
   const {
@@ -62,7 +67,8 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
     formRef.current?.reset();
     state.errors = {};
     state.message = null;
-    setOpen(false);
+    setOpenUpdateModal(false);
+    setOpenDeleteModal(false);
   }, [reset, formRef, state]);
 
   useEffect(() => {
@@ -79,7 +85,12 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
       showToast('Artista actualizado con éxito!', 'success');
       router.push(`/musicalbands/${hypName}/artists`);
     }
-  }, [state, showToast, handleCancel, hypName, router]);
+    if (deleteState?.success) {
+      handleCancel();
+      showToast('Artista eliminado correctamente', 'success');
+      router.push(`/musicalbands/${hypName}/artists`);
+    }
+  }, [state, deleteState, showToast, handleCancel, hypName, router]);
 
   return <div className="modal-root">
     {(data?.content?.length ?? 0) > 0 ? (
@@ -116,7 +127,7 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
 
     <Modal
       size="sm"
-      isOpen={open}
+      isOpen={openUpdateModal}
       title="Crear Artista"
     >
       <form
@@ -153,5 +164,37 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
         </div>
       </form>
     </Modal>
+
+    <Modal
+      size="sm"
+      isOpen={openDeleteModal}
+      title="Eliminar Artista"
+    >
+
+      <form action={formDeleteAction} className={stylesModal.modalContent}>
+
+        <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
+
+        <p>Toda la información relacionada con este artista será eliminada </p>
+
+        {deleteState?.message && (
+          <p className={stylesForm.errorMessage}>
+            {deleteState?.message}
+          </p>
+        )}
+
+        <input type="hidden" name="id" value={selectedArtist?.id} />
+
+        <div className={stylesModal.buttonsContainer}>
+          <CustomButton type='button' variant='secondary' onClick={handleCancel}>
+            Cancelar
+          </CustomButton>
+          <CustomButton isLoading={isDeletingPending} type='submit'>
+            Eliminar
+          </CustomButton>
+        </div>
+      </form>
+    </Modal>
+
   </div>
 }

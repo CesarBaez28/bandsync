@@ -5,7 +5,7 @@ import { MusicalGenre, PagedData } from "@/app/lib/definitions";
 import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../toast/ToastContext";
-import { MusicalGenreActionState, updateMusicalGenreAction } from "@/app/lib/actions/musicalGenres";
+import { deleteMusicalGenreAction, DeleteMusicalGenreActionState, MusicalGenreActionState, updateMusicalGenreAction } from "@/app/lib/actions/musicalGenres";
 import { useForm } from "react-hook-form";
 import { musicalGenreSchema, MusicalGenreSchema } from "@/app/lib/schemas/musicalGenteSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,7 @@ import Modal from "../../modal/Modal";
 import CustomButton from "../../button/CustomButton";
 import Image from "next/image";
 import CustomInput from "../../Inputs/CustomInput";
+import stylesModal from "../../../styles/modal.module.css";
 
 type MusicalGentesTableProps = {
   readonly data: PagedData<MusicalGenre> | undefined;
@@ -23,18 +24,22 @@ export default function MusicalGenresTable({ data, hypName }: MusicalGentesTable
   const [selectedMusicalGenre, setSelectedMusicalGenre] = useState<MusicalGenre | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
-  const [open, setOpen] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const initialState: MusicalGenreActionState = { errors: {}, message: null, success: false };
   const [state, formAction, isPending] = useActionState<MusicalGenreActionState, FormData>(updateMusicalGenreAction, initialState);
+  const initialDeleteState: DeleteMusicalGenreActionState = { message: null, success: false };
+  const [deleteState, formDeleteAction, isDeletingPending] = useActionState<DeleteMusicalGenreActionState, FormData>(deleteMusicalGenreAction, initialDeleteState);
 
   const handleEdit = ({ id, name, status }: MusicalGenre) => {
     setSelectedMusicalGenre({ id, name, status });
-    setOpen(true)
+    setOpenUpdateModal(true)
   }
 
   const handleDelete = ({ id, name, status }: MusicalGenre) => {
     setSelectedMusicalGenre({ id, name, status });
+    setOpenDeleteModal(true);
   }
 
   const {
@@ -62,7 +67,8 @@ export default function MusicalGenresTable({ data, hypName }: MusicalGentesTable
     formRef.current?.reset();
     state.errors = {};
     state.message = null;
-    setOpen(false);
+    setOpenUpdateModal(false);
+    setOpenDeleteModal(false);
   }, [reset, formRef, state]);
 
   useEffect(() => {
@@ -79,7 +85,12 @@ export default function MusicalGenresTable({ data, hypName }: MusicalGentesTable
       showToast('Género musical actualizado con éxito!', 'success');
       router.push(`/musicalbands/${hypName}/genres`);
     }
-  }, [state, showToast, handleCancel, hypName, router]);
+    if (deleteState?.success) {
+      handleCancel();
+      showToast("Género musical eliminado con éxito!", 'success');
+      router.push(`/musicalbands/${hypName}/genres`);
+    }
+  }, [state, deleteState, showToast, handleCancel, hypName, router]);
 
   return <div className="modal-root">
     {(data?.content?.length ?? 0) > 0 ? (
@@ -116,7 +127,7 @@ export default function MusicalGenresTable({ data, hypName }: MusicalGentesTable
 
     <Modal
       size="sm"
-      isOpen={open}
+      isOpen={openUpdateModal}
       title="Crear Artista"
     >
       <form
@@ -150,6 +161,37 @@ export default function MusicalGenresTable({ data, hypName }: MusicalGentesTable
             </CustomButton>
           </div>
 
+        </div>
+      </form>
+    </Modal>
+
+    <Modal
+      size="sm"
+      isOpen={openDeleteModal}
+      title="Eliminar Género Musical"
+    >
+
+      <form action={formDeleteAction} className={stylesModal.modalContent}>
+
+        <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
+
+        <p>Toda la información relacionada con este Género musical será eliminada </p>
+
+        {deleteState?.message && (
+          <p className={stylesForm.errorMessage}>
+            {deleteState?.message}
+          </p>
+        )}
+
+        <input type="hidden" name="id" value={selectedMusicalGenre?.id} />
+
+        <div className={stylesModal.buttonsContainer}>
+          <CustomButton type='button' variant='secondary' onClick={handleCancel}>
+            Cancelar
+          </CustomButton>
+          <CustomButton isLoading={isDeletingPending} type='submit'>
+            Eliminar
+          </CustomButton>
         </div>
       </form>
     </Modal>

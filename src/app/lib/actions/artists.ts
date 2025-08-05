@@ -1,7 +1,7 @@
 "use server";
 
 import { UUID } from "crypto";
-import { createArtist, updateArtistById } from "../api/artists";
+import deleteArtistById, { createArtist, updateArtistById } from "../api/artists";
 import { ApiResponse, Artist } from "../definitions";
 import { artistSchema } from "../schemas/artistSchema";
 import { handleAsync } from "../utils";
@@ -82,6 +82,37 @@ export async function updateArtistAction(prevState: ArtistActionState, formData:
     console.error("Error updating artist:", error);
     return {
       message: "Ocurrió un error al actualizar el artista. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
+  return {
+    success: response.success
+  }
+}
+
+export type DeleteArtistActionState = {
+  success: boolean;
+  message?: string | null;
+};
+
+export async function deleteArtistAction(prevState: DeleteArtistActionState, formData: FormData) {
+  const idValue = formData.get("id");
+  const id = Number(idValue);
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(deleteArtistById({ id }));
+
+  if (error) {
+    console.error("Error deleting artist:", error);
+    return {
+      message: "Ocurrió un error al eliminar el artista. Por favor, inténtelo de nuevo.",
       success: false
     };
   }
