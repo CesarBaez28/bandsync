@@ -15,12 +15,12 @@ import Image from "next/image";
 import CustomInput from "../../Inputs/CustomInput";
 import stylesModal from "../../../styles/modal.module.css";
 
-type MusicalGentesTableProps = {
+type MusicalGenresTableProps = {
   readonly data: PagedData<MusicalGenre> | undefined;
   readonly hypName: string
 };
 
-export default function MusicalGenresTable({ data, hypName }: MusicalGentesTableProps) {
+export default function MusicalGenresTable({ data, hypName }: MusicalGenresTableProps) {
   const [selectedMusicalGenre, setSelectedMusicalGenre] = useState<MusicalGenre | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
