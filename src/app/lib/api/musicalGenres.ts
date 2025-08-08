@@ -2,6 +2,7 @@ import { UUID } from "crypto";
 import { ApiResponse, MusicalGenre, PagedData } from "../definitions";
 import { auth } from "@/auth";
 import { config } from "../config";
+import { MUSICAL_BAND_ID_HEADER } from "../constants";
 
 const MUSICAL_GENRES_PATH = 'musical-genres';
 
@@ -22,10 +23,43 @@ export async function getMusicalGenresByMusicalBandIdAndName({
     throw Error("Unauthorized: No session or access token found.")
   }
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/findByMusicalBandIdAndName/${musicalBandId}?query=${query}&page=${page}`, {
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-    }
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while getting musical genres by musical band id and name");
+  }
+
+  return await response.json();
+}
+
+export async function getAllMusicalGenresByMusicalBandId({
+  musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<MusicalGenre[]>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/findByMusicalBandId/${musicalBandId}`, {
+    headers
   });
 
   if (!response.ok) {
@@ -47,12 +81,18 @@ export async function createMusicalGenre({ name, musicalBandId }: CreateMusicalG
     throw Error("Unauthorized: No session or access token found.")
   }
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (musicalBandId) {
+    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/save`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.accessToken}`,
-    },
+    headers,
     body: JSON.stringify({ name, musicalBandId }),
   });
 

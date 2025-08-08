@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { ApiResponse, Artist, PagedData } from "../definitions";
 import { config } from "../config";
 import { UUID } from "crypto";
+import { MUSICAL_BAND_ID_HEADER } from "../constants";
 
 const ARTISTS_PATH = 'artists';
 
@@ -22,10 +23,42 @@ export async function getArtistsByMusicalBandIdAndName({
     throw Error("Unauthorized: No session or access token found.")
   }
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${ARTISTS_PATH}/findByMusicalBandIdAndName/${musicalBandId}?query=${query}&page=${page}`, {
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-    }
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while getting artists by musical band id");
+  }
+
+  return await response.json();
+}
+
+export async function getAllArtistsByMusicalBandId({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<Artist[]>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${ARTISTS_PATH}/findByMusicalBandId/${musicalBandId}`, {
+    headers
   });
 
   if (!response.ok) {
@@ -47,12 +80,18 @@ export async function createArtist({ name, musicalBandId }: CreateArtistParams):
     throw Error("Unauthorized: No session or access token found.")
   }
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (musicalBandId) {
+    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${ARTISTS_PATH}/save`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.accessToken}`,
-    },
+    headers,
     body: JSON.stringify({ name, musicalBandId }),
   });
 

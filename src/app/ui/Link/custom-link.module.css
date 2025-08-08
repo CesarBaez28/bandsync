@@ -9,6 +9,11 @@
   padding: 0.5rem 1rem;
 }
 
+.buttonStyle {
+  padding: 0.75rem;
+  font-size: .9rem;
+}
+
 .fullWidth {
   width: 100%;
 }

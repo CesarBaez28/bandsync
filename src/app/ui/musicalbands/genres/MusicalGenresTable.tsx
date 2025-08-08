@@ -175,7 +175,7 @@ export default function MusicalGenresTable({ data, hypName }: MusicalGenresTable
 
         <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
 
-        <p>Toda la información relacionada con este Género musical será eliminada </p>
+        <p>Toda la información relacionada con este género musical será eliminada </p>
 
         {deleteState?.message && (
           <p className={stylesForm.errorMessage}>

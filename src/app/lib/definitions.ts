@@ -41,6 +41,16 @@ export type MusicalGenre = {
   status: boolean;
 };
 
+export type Song = {
+  id: number;
+  name: string;
+  artist: Artist;
+  genre: MusicalGenre;
+  tonality: string;
+  link: string;
+  sheetMusic: string;
+};
+
 export type User = {
   id: UUID;
   username: string;

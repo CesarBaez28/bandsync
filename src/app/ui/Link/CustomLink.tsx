@@ -13,6 +13,7 @@ type CustomLinkProps = LinkProps & {
   style?: CSSProperties;
   variant?: 'primary' | 'secondary' | 'tertiary';
   fullWidth?: boolean;
+  buttonStyle?: boolean;
 };
 
 export default function CustomLink({
@@ -24,6 +25,7 @@ export default function CustomLink({
   style,
   variant = 'primary',
   fullWidth = false,
+  buttonStyle = false,
   ...props
 }: CustomLinkProps) {
   const linkClassName = clsx(
@@ -31,6 +33,7 @@ export default function CustomLink({
     styles[variant],
     {
       [styles.fullWidth]: fullWidth,
+      [styles.buttonStyle]: buttonStyle,
     },
     className
   );
