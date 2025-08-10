@@ -35,7 +35,7 @@ export default function SongsTable({ data, hypName }: SongsTableProps) {
               <tr key={song.id}>
                 <td>
                   <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <CustomLink href={`/musicalbands/${hypName}/songs/edit`} variant="tertiary">
+                    <CustomLink href={`/musicalbands/${hypName}/songs/${song.id}/edit`} variant="tertiary">
                       <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
                     </CustomLink>
                     <CustomButton onClick={() => handleDelete(song)} variant="tertiary" type="button">

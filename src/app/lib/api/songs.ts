@@ -38,6 +38,32 @@ export async function getSongsByMusicalBandIdAndSearchTerm({ musicalBandId, quer
   return await response.json();
 }
 
+export async function getById({ id, musicalBandId }: { id: number, musicalBandId: UUID | undefined }): Promise<ApiResponse<Song>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${SONGS_PATH}/findById/${id}`, {
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while getting song by id");
+  }
+
+  return await response.json();
+}
+
 export async function createSong(formData: FormData): Promise<ApiResponse<Song>> {
   const session = await auth()
 
@@ -49,15 +75,34 @@ export async function createSong(formData: FormData): Promise<ApiResponse<Song>>
     Authorization: `Bearer ${session.accessToken}`,
   };
 
-  const idValue = formData.get("musicalBandId");
-  const musicalBandId = (typeof idValue === "string") ? idValue : undefined;
+  const musicalBandId = formData.get("musicalBandId") as string;
 
-  if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId
-  }
+  headers[MUSICAL_BAND_ID_HEADER] = musicalBandId
 
   const response = await fetch(`${config.api}/${SONGS_PATH}/save`, {
     method: 'POST',
+    headers,
+    body: formData
+  });
+
+  return await response.json();
+}
+
+export async function updateSongById(formData: FormData, id: number, musicalBandId: string): Promise<ApiResponse<Song>> {
+  const session = await auth()
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  headers[MUSICAL_BAND_ID_HEADER] = musicalBandId
+
+  const response = await fetch(`${config.api}/${SONGS_PATH}/update/${id}`, {
+    method: 'PUT',
     headers,
     body: formData
   });

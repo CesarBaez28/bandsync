@@ -1,35 +1,36 @@
 'use client';
 
-import { startTransition, useActionState, useEffect, useRef } from 'react';
-import stylesForm from '../../../styles/form.module.css';
-import CustomButton from "../../button/CustomButton";
+import stylesForm from '../../../styles/form.module.css'
+import { Artist, MusicalGenre, Song } from "@/app/lib/definitions";
+import { UUID } from "crypto";
+import { useToast } from "../../toast/ToastContext";
+import { startTransition, useActionState, useEffect, useRef } from "react";
+import CustomSelect, { OptionInputSelect } from "../../Inputs/CustomSelect";
 import CustomInput from "../../Inputs/CustomInput";
-import { UUID } from 'crypto';
-import { useForm } from 'react-hook-form';
+import CustomLink from "../../link/CustomLink";
+import CustomButton from "../../button/CustomButton";
+import CustomFileInput from "../../Inputs/CustomFileInput";
+import { songSchema, SongSchema } from '@/app/lib/schemas/songSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import CustomLink from '../../link/CustomLink';
-import { createSongSchema, CreateSongSchema } from '@/app/lib/schemas/createSongSchema';
-import { createSongAction, CreateSongState } from '@/app/lib/actions/songs';
-import CustomSelect, { OptionInputSelect } from '../../Inputs/CustomSelect';
-import CustomFileInput from '../../Inputs/CustomFileInput';
-import { Artist, MusicalGenre } from '@/app/lib/definitions';
-import { useToast } from '../../toast/ToastContext';
+import { useForm } from 'react-hook-form';
+import { UpdateSongState, updateSongAction } from '@/app/lib/actions/songs';
 import { useRouter } from 'next/navigation';
 
 type FormProps = {
+  readonly song: Song | undefined
   readonly musicalBandId: UUID | undefined;
   readonly artists: Artist[] | undefined;
   readonly genres: MusicalGenre[] | undefined;
   readonly hypName: string;
 }
 
-export default function Form({ musicalBandId, artists, genres, hypName }: FormProps) {
+export default function Form({ song, musicalBandId, artists, genres, hypName }: FormProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const initialState: CreateSongState = { errors: {}, message: null, success: false };
-  const [state, formAction, isPending] = useActionState<CreateSongState, FormData>(createSongAction, initialState);
+  const initialState: UpdateSongState = { errors: {}, message: null, success: false, song };
+  const [state, formAction, isPending] = useActionState<UpdateSongState, FormData>(updateSongAction, initialState);
 
   const artistsOptions: OptionInputSelect[] | undefined = artists
     ?.sort((a, b) => a.name.localeCompare(b.name))
@@ -46,9 +47,16 @@ export default function Form({ musicalBandId, artists, genres, hypName }: FormPr
   const {
     register,
     handleSubmit,
-    formState: { errors }
-  } = useForm<CreateSongSchema>({
-    resolver: zodResolver(createSongSchema),
+    formState: { errors },
+  } = useForm<SongSchema>({
+    resolver: zodResolver(songSchema),
+    defaultValues: {
+      name: song?.name,
+      artist: song?.artist.id.toString(),
+      genre: song?.genre.id.toString(),
+      tonality: song?.tonality,
+      link: song?.link
+    },
     mode: "onChange",
   });
 
@@ -64,7 +72,7 @@ export default function Form({ musicalBandId, artists, genres, hypName }: FormPr
 
   useEffect(() => {
     if (state?.success) {
-      showToast('Canción registrada con éxito!', 'success');
+      showToast('Canción actualizada con éxito!', 'success');
       router.push(`/musicalbands/${hypName}/songs`);
     }
   }, [state, hypName, router, showToast])
@@ -121,6 +129,7 @@ export default function Form({ musicalBandId, artists, genres, hypName }: FormPr
         />
 
         <input type="hidden" name="musicalBandId" value={musicalBandId} />
+        <input type="hidden" name="id" value={song?.id} />
 
         {state?.message && (
           <p className={stylesForm.errorMessage}>

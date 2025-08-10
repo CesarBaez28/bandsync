@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createSongSchema = z.object({
+export const songSchema = z.object({
   name: z
     .string()
     .min(3, "El nombre debe tener al menos 3 caracteres")
@@ -19,4 +19,4 @@ export const createSongSchema = z.object({
     .url('El link no es válido'),
 });
 
-export type CreateSongSchema = z.infer<typeof createSongSchema>;
+export type SongSchema = z.infer<typeof songSchema>;

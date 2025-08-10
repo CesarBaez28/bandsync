@@ -1,4 +1,4 @@
-import Form from '@/app/ui/musicalbands/songs/Form';
+import Form from '@/app/ui/musicalbands/songs/CreateForm';
 import { auth } from '@/auth';
 import { ApiResponse, Artist, MusicalBand, MusicalGenre } from '@/app/lib/definitions';
 import { handleAsync } from '@/app/lib/utils';
