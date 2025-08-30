@@ -2,7 +2,6 @@ import { UUID } from "crypto";
 import { ApiResponse, MusicalGenre, PagedData } from "../definitions";
 import { auth } from "@/auth";
 import { config } from "../config";
-import { MUSICAL_BAND_ID_HEADER } from "../constants";
 
 const MUSICAL_GENRES_PATH = 'musical-genres';
 
@@ -28,7 +27,7 @@ export async function getMusicalGenresByMusicalBandIdAndName({
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/findByMusicalBandIdAndName/${musicalBandId}?query=${query}&page=${page}`, {
@@ -55,7 +54,7 @@ export async function getAllMusicalGenresByMusicalBandId({
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/findByMusicalBandId/${musicalBandId}`, {
@@ -87,7 +86,7 @@ export async function createMusicalGenre({ name, musicalBandId }: CreateMusicalG
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/save`, {

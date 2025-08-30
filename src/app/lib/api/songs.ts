@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { ApiResponse, PagedData, Song } from "../definitions";
 import { config } from "../config";
 import { UUID } from "crypto";
-import { MUSICAL_BAND_ID_HEADER } from "../constants";
 
 const SONGS_PATH = 'songs';
 
@@ -24,7 +23,7 @@ export async function getSongsByMusicalBandIdAndSearchTerm({ musicalBandId, quer
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${SONGS_PATH}/findByMusicalBandIdAndTerm/${musicalBandId}?query=${query}&page=${page}`, {
@@ -50,7 +49,7 @@ export async function getById({ id, musicalBandId }: { id: number, musicalBandId
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${SONGS_PATH}/findById/${id}`, {
@@ -75,7 +74,7 @@ export async function createSong(formData: FormData, musicalBandId: string): Pro
     Authorization: `Bearer ${session.accessToken}`,
   };
 
-  headers[MUSICAL_BAND_ID_HEADER] = musicalBandId
+  headers[config.musicalBandHeader] = musicalBandId
 
   const response = await fetch(`${config.api}/${SONGS_PATH}/save`, {
     method: 'POST',
@@ -97,7 +96,7 @@ export async function updateSongById(formData: FormData, id: number, musicalBand
     Authorization: `Bearer ${session.accessToken}`,
   };
 
-  headers[MUSICAL_BAND_ID_HEADER] = musicalBandId
+  headers[config.musicalBandHeader] = musicalBandId
 
   const response = await fetch(`${config.api}/${SONGS_PATH}/update/${id}`, {
     method: 'PUT',
@@ -119,7 +118,7 @@ export async function deleteSongById({ id, musicalBandId }: { id: number, musica
     Authorization: `Bearer ${session.accessToken}`,
   };
 
-  headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+  headers[config.musicalBandHeader] = musicalBandId;
 
   const response = await fetch(`${config.api}/${SONGS_PATH}/delete/${id}`, {
     method: 'DELETE',

@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { ApiResponse, Artist, PagedData } from "../definitions";
 import { config } from "../config";
 import { UUID } from "crypto";
-import { MUSICAL_BAND_ID_HEADER } from "../constants";
 
 const ARTISTS_PATH = 'artists';
 
@@ -28,7 +27,7 @@ export async function getArtistsByMusicalBandIdAndName({
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${ARTISTS_PATH}/findByMusicalBandIdAndName/${musicalBandId}?query=${query}&page=${page}`, {
@@ -54,7 +53,7 @@ export async function getAllArtistsByMusicalBandId({ musicalBandId }: { musicalB
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${ARTISTS_PATH}/findByMusicalBandId/${musicalBandId}`, {
@@ -86,7 +85,7 @@ export async function createArtist({ name, musicalBandId }: CreateArtistParams):
   };
 
   if (musicalBandId) {
-    headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+    headers[config.musicalBandHeader] = musicalBandId;
   }
 
   const response = await fetch(`${config.api}/${ARTISTS_PATH}/save`, {

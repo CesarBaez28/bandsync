@@ -1,1 +1,0 @@
-export const MUSICAL_BAND_ID_HEADER = 'X-MUSICAL-BAND-ID';
