@@ -1,6 +1,6 @@
 'use server';
 
-import { createSong, updateSongById } from "../api/songs";
+import { createSong, deleteSongById, updateSongById } from "../api/songs";
 import { ApiResponse, Song } from "../definitions";
 import { songSchema } from "../schemas/songSchema";
 import { handleAsync } from "../utils";
@@ -53,7 +53,9 @@ export async function createSongAction(prevState: SongState, formData: FormData)
   )
   body.append('file', imageFile, imageFile.name)
 
-  const [response, errors] = await handleAsync<ApiResponse<Song>>(createSong(body));
+  const musicalBandId = formData.get("musicalBandId") as string;
+
+  const [response, errors] = await handleAsync<ApiResponse<Song>>(createSong(body, musicalBandId));
 
   if (errors) {
     console.error("Error creating song:", errors);
@@ -134,7 +136,40 @@ export async function updateSongAction(prevState: UpdateSongState, formData: For
   if (errors) {
     console.error("Error updating song:", errors);
     return {
-      message: "Ocurrió un error al registrar la canción. Por favor, inténtelo de nuevo más tarde.",
+      message: "Ocurrió un error al editar la canción. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true,
+  }
+}
+
+export type DeleteSongActionState = {
+  success: boolean;
+  message?: string | null;
+}
+
+export async function deleteSongAction(prevState: DeleteSongActionState, formData: FormData) {
+  const idValue = formData.get("id");
+  const id = Number(idValue);
+
+  const musicalBandId = formData.get("musicalBandId") as string;
+
+  const [response, errors] = await handleAsync<ApiResponse<void>>(deleteSongById({ id, musicalBandId }));
+
+  if (errors) {
+    console.error("Error deleting song:", errors);
+    return {
+      message: "Ocurrió un error al eliminar la canción. Por favor, inténtelo de nuevo más tarde.",
       success: false
     }
   }

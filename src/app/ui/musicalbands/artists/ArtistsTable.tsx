@@ -184,6 +184,7 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
         )}
 
         <input type="hidden" name="id" value={selectedArtist?.id} />
+        <input type="hidden" name="musicalBandId" value={selectedArtist?.id} />
 
         <div className={stylesModal.buttonsContainer}>
           <CustomButton type='button' variant='secondary' onClick={handleCancel}>

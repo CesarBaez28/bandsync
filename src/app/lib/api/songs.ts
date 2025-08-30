@@ -64,7 +64,7 @@ export async function getById({ id, musicalBandId }: { id: number, musicalBandId
   return await response.json();
 }
 
-export async function createSong(formData: FormData): Promise<ApiResponse<Song>> {
+export async function createSong(formData: FormData, musicalBandId: string): Promise<ApiResponse<Song>> {
   const session = await auth()
 
   if (!session?.accessToken) {
@@ -74,8 +74,6 @@ export async function createSong(formData: FormData): Promise<ApiResponse<Song>>
   const headers: Record<string, string> = {
     Authorization: `Bearer ${session.accessToken}`,
   };
-
-  const musicalBandId = formData.get("musicalBandId") as string;
 
   headers[MUSICAL_BAND_ID_HEADER] = musicalBandId
 
@@ -106,6 +104,31 @@ export async function updateSongById(formData: FormData, id: number, musicalBand
     headers,
     body: formData
   });
+
+  return await response.json();
+}
+
+export async function deleteSongById({ id, musicalBandId }: { id: number, musicalBandId: string }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  headers[MUSICAL_BAND_ID_HEADER] = musicalBandId;
+
+  const response = await fetch(`${config.api}/${SONGS_PATH}/delete/${id}`, {
+    method: 'DELETE',
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while deleting song by id: " + id);
+  }
 
   return await response.json();
 }

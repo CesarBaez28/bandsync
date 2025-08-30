@@ -1,21 +1,48 @@
 'use client';
 
+import stylesForm from "../../../styles/form.module.css"
+import stylesModal from "../../../styles/modal.module.css";
 import { PagedData, Song } from "@/app/lib/definitions";
 import CustomButton from "../../button/CustomButton";
 import Image from "next/image";
 import CustomLink from "../../link/CustomLink";
+import { useActionState, useCallback, useEffect, useState } from "react";
+import Modal from "../../modal/Modal";
+import { deleteSongAction, DeleteSongActionState } from "@/app/lib/actions/songs";
+import { UUID } from "crypto";
+import { useRouter } from "next/navigation";
+import { useToast } from "../../toast/ToastContext";
 
 type SongsTableProps = {
   readonly data: PagedData<Song> | undefined;
-  readonly hypName: string
+  readonly musicalBandId: UUID | undefined;
+  readonly hypName: string;
 };
 
-export default function SongsTable({ data, hypName }: SongsTableProps) {
+export default function SongsTable({ data, musicalBandId, hypName }: SongsTableProps) {
+  const router = useRouter();
+  const { showToast } = useToast();
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const initialDeleteState: DeleteSongActionState = { message: null, success: false };
+  const [deleteState, formDeleteAction, isDeletingPending] = useActionState<DeleteSongActionState, FormData>(deleteSongAction, initialDeleteState);
 
-  const handleDelete = ({ id, name, artist, genre, tonality, link, sheetMusic }: Song) => {
-    //TODO: Finish to implement this function
-    console.log(id);
+  const handleDelete = (song: Song) => {
+    setSelectedSong(song);
+    setOpenModal(true);
   }
+
+  const handleCancel = useCallback(() => {
+    setOpenModal(false);
+  }, []);
+
+  useEffect(() => {
+    if (deleteState?.success) {
+      handleCancel();
+      showToast('Canción eliminada correctamente!', 'success');
+      router.push(`/musicalbands/${hypName}/songs`);
+    }
+  }, [deleteState, showToast, handleCancel, hypName, router]);
 
   return (
     <div id="modal-root">
@@ -62,6 +89,37 @@ export default function SongsTable({ data, hypName }: SongsTableProps) {
           <p>Registre una canción usando el botón Agregar o cambie los valores de su búsqueda</p>
         </div>)
       }
+
+      <Modal
+        size="sm"
+        isOpen={openModal}
+        title="Eliminar Canción"
+      >
+        <form action={formDeleteAction} className={stylesModal.modalContent}>
+
+          <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
+
+          <p>Toda la información relacionada con esta canción será eliminada </p>
+
+          {deleteState?.message && (
+            <p className={stylesForm.errorMessage}>
+              {deleteState?.message}
+            </p>
+          )}
+
+          <input type="hidden" name="id" value={selectedSong?.id} />
+          <input type="hidden" name="musicalBandId" value={musicalBandId} />
+
+          <div className={stylesModal.buttonsContainer}>
+            <CustomButton type='button' variant='secondary' onClick={handleCancel}>
+              Cancelar
+            </CustomButton>
+            <CustomButton isLoading={isDeletingPending} type='submit'>
+              Eliminar
+            </CustomButton>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
