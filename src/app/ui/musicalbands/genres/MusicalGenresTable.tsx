@@ -128,7 +128,7 @@ export default function MusicalGenresTable({ data, hypName }: MusicalGenresTable
     <Modal
       size="sm"
       isOpen={openUpdateModal}
-      title="Crear Artista"
+      title="Actualizar Género Musical"
     >
       <form
         ref={formRef}

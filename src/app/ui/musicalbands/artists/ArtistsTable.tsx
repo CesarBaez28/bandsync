@@ -128,7 +128,7 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
     <Modal
       size="sm"
       isOpen={openUpdateModal}
-      title="Crear Artista"
+      title="Actualizar Artista"
     >
       <form
         ref={formRef}
