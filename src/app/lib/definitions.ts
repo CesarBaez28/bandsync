@@ -41,6 +41,12 @@ export type MusicalGenre = {
   status: boolean;
 };
 
+export type MusicalRole = {
+  id: number;
+  name: string;
+  status: boolean;
+};
+
 export type Song = {
   id: number;
   name: string;
