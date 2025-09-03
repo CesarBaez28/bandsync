@@ -69,10 +69,12 @@ export async function updateMusicalGenreAction(prevState: MusicalGenreActionStat
 
   const idValue = formData.get("id");
   const id = Number(idValue);
+  const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
 
   const requestBody = {
     name: validatedFields.data.name,
     id,
+    musicalBandId
   };
 
   const [response, error] = await handleAsync<ApiResponse<void>>(updateMusicalGenreById(requestBody));
@@ -102,11 +104,12 @@ export type DeleteMusicalGenreActionState = {
   message?: string | null;
 }
 
-export async function deleteMusicalGenreAction (prevState: DeleteMusicalGenreActionState, formData: FormData) {
+export async function deleteMusicalGenreAction(prevState: DeleteMusicalGenreActionState, formData: FormData) {
   const idValue = formData.get("id");
   const id = Number(idValue);
+  const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
 
-  const [response, error] = await handleAsync<ApiResponse<void>>(deleteMusicalGenreById({ id }));
+  const [response, error] = await handleAsync<ApiResponse<void>>(deleteMusicalGenreById({ id, musicalBandId }));
 
   if (error) {
     console.error("Error deleting musical genre:", error);

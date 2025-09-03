@@ -98,38 +98,50 @@ export async function createMusicalGenre({ name, musicalBandId }: CreateMusicalG
   return await response.json();
 }
 
-export async function updateMusicalGenreById({ name, id }: { name: string; id: number }): Promise<ApiResponse<void>> {
+export async function updateMusicalGenreById({ name, id, musicalBandId }: { name: string; id: number; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
   const session = await auth();
 
   if (!session?.accessToken) {
     throw Error("Unauthorized: No session or access token found.")
   }
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/updateMusicalGenreName/${id}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.accessToken}`,
-    },
+    headers,
     body: JSON.stringify({ name })
   })
 
   return await response.json();
 }
 
-export async function deleteMusicalGenreById({ id }: { id: number }): Promise<ApiResponse<void>> {
+export async function deleteMusicalGenreById({ id, musicalBandId }: { id: number; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
   const session = await auth();
 
   if (!session?.accessToken) {
     throw Error("Unauthorized: No session or access token found.")
   }
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${MUSICAL_GENRES_PATH}/delete/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.accessToken}`,
-    }
+    headers,
   });
 
   return await response.json();

@@ -47,7 +47,7 @@ export default async function GenresPage(props: GenresPageProps) {
             : (
               <div>
                 <Pagination totalPages={response?.data?.totalPages ?? 0} />
-                <MusicalGenresTable data={response?.data} hypName={hypName} />
+                <MusicalGenresTable data={response?.data} hypName={hypName} musicalBandId={musicalBand?.id} />
               </div>
             )
           }
