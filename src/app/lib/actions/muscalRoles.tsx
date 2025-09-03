@@ -70,10 +70,12 @@ export async function updateMusicalRoleAction(prevState: MusicalRoleActionState,
 
   const idValue = formData.get("id");
   const id = Number(idValue);
+  const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
 
   const requestBody = {
     name: validatedFields.data.name,
     id,
+    musicalBandId
   };
 
   const [response, error] = await handleAsync<ApiResponse<void>>(updateMusicalRole(requestBody));
@@ -106,8 +108,9 @@ export type DeleteMusicalRoleActionState = {
 export async function deleteMusicalRoleAction(prevState: DeleteMusicalRoleActionState, formData: FormData) {
   const idValue = formData.get("id");
   const id = Number(idValue);
+  const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
 
-  const [response, error] = await handleAsync<ApiResponse<void>>(deleteMusicalRoleById({ id }));
+  const [response, error] = await handleAsync<ApiResponse<void>>(deleteMusicalRoleById({ id, musicalBandId }));
 
   if (error) {
     console.error("Error deleting musical role:", error);

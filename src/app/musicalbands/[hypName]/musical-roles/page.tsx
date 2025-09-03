@@ -46,7 +46,7 @@ export default async function MusicalRolesPage(props: MusicalRolesPageProps) {
           : (
             <div>
               <Pagination totalPages={response?.data?.totalPages ?? 0} />
-              <MusicalRoleTable data={response?.data} hypName={hypName} />
+              <MusicalRoleTable data={response?.data} hypName={hypName} musicalBandId={musicalBand?.id} />
             </div>
           )
         }

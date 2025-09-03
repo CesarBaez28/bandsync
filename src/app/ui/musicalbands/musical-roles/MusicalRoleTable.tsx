@@ -14,13 +14,15 @@ import CustomInput from "../../Inputs/CustomInput";
 import { musicalRoleSchema, MusicalRoleSchema } from "@/app/lib/schemas/musicalRolesSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { UUID } from "crypto";
 
 type MusicalRoleTableProps = {
   readonly data: PagedData<MusicalRole> | undefined;
-  readonly hypName: string
+  readonly hypName: string;
+  readonly musicalBandId?: UUID;
 }
 
-export default function MusicalRoleTable({ data, hypName }: MusicalRoleTableProps) {
+export default function MusicalRoleTable({ data, hypName, musicalBandId }: MusicalRoleTableProps) {
   const [selectedMusicalRole, setSelectedMusicalRole] = useState<MusicalRole | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
@@ -67,9 +69,11 @@ export default function MusicalRoleTable({ data, hypName }: MusicalRoleTableProp
     formRef.current?.reset();
     state.errors = {};
     state.message = null;
+    deleteState.message = null;
+    deleteState.success = false;
     setOpenUpdateModal(false);
     setOpenDeleteModal(false);
-  }, [reset, formRef, state]);
+  }, [reset, formRef, state, deleteState]);
 
   useEffect(() => {
     if (selectedMusicalRole) {
@@ -146,6 +150,7 @@ export default function MusicalRoleTable({ data, hypName }: MusicalRoleTableProp
             />
 
             <input type="hidden" name="id" value={selectedMusicalRole?.id} />
+            <input type="hidden" name="musicalBandId" value={musicalBandId} />
 
             {state?.message && (
               <p className={stylesForm.errorMessage}>
@@ -185,7 +190,7 @@ export default function MusicalRoleTable({ data, hypName }: MusicalRoleTableProp
           )}
 
           <input type="hidden" name="id" value={selectedMusicalRole?.id} />
-          <input type="hidden" name="musicalBandId" value={selectedMusicalRole?.id} />
+          <input type="hidden" name="musicalBandId" value={musicalBandId} />
 
           <div className={stylesModal.buttonsContainer}>
             <CustomButton type='button' variant='secondary' onClick={handleCancel}>

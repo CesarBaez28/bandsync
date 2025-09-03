@@ -75,7 +75,7 @@ export async function createMusicalRole({ name, musicalBandId }: CreateMusicalRo
   return await response.json();
 }
 
-export async function updateMusicalRole({ id, name }: { id: number, name: string }): Promise<ApiResponse<void>> {
+export async function updateMusicalRole({ id, name, musicalBandId }: { id: number, name: string; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
   const session = await auth();
 
   if (!session?.accessToken) {
@@ -86,6 +86,10 @@ export async function updateMusicalRole({ id, name }: { id: number, name: string
     'Content-Type': 'application/json',
     Authorization: `Bearer ${session.accessToken}`,
   };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
 
   const response = await fetch(`${config.api}/${MUSICAL_ROLES_PATH}/updateMusicalRoleName/${id}`, {
     method: 'PUT',
@@ -100,19 +104,25 @@ export async function updateMusicalRole({ id, name }: { id: number, name: string
   return await response.json();
 }
 
-export async function deleteMusicalRoleById({ id }: { id: number }): Promise<ApiResponse<void>> {
+export async function deleteMusicalRoleById({ id, musicalBandId }: { id: number; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
   const session = await auth();
 
   if (!session?.accessToken) {
     throw Error("Unauthorized: No session or access token found.")
   }
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${MUSICAL_ROLES_PATH}/delete/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.accessToken}`,
-    },
+    headers,
   });
 
   if (!response.ok) {
