@@ -1,6 +1,6 @@
 'use client';
 
-import styles from './input-container.module.css';
+import styles from '../../../styles/input-container.module.css';
 import stylesForm from '../../../styles/form.module.css';
 import { UUID } from "crypto"
 import Search from "../../search/Search";

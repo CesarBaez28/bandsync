@@ -4,7 +4,7 @@ import { startTransition, useActionState, useCallback, useEffect, useRef, useSta
 import CustomButton from "../../button/CustomButton";
 import Modal from "../../modal/Modal";
 import Search from "../../search/Search";
-import styles from './input-container.module.css';
+import styles from '../../../styles/input-container.module.css';
 import stylesForm from '../../../styles/form.module.css'
 import { createArtistAction, ArtistActionState } from "@/app/lib/actions/artists";
 import { useForm } from "react-hook-form";

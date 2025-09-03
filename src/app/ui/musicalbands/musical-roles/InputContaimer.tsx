@@ -1,7 +1,7 @@
 'use client';
 
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
-import styles from './input-container.module.css';
+import styles from '../../../styles/input-container.module.css';
 import stylesForm from '../../../styles/form.module.css';
 import Search from '../../search/Search';
 import CustomButton from '../../button/CustomButton';

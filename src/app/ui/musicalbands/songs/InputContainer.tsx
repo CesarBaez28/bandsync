@@ -2,7 +2,7 @@
 
 import CustomLink from '../../link/CustomLink';
 import Search from '../../search/Search';
-import styles from './input-container.module.css';
+import styles from '../../../styles/input-container.module.css';
 
 type InputContainerProps = {
   readonly hypName: string
