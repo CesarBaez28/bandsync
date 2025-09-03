@@ -14,13 +14,15 @@ import Modal from "../../modal/Modal";
 import CustomInput from "../../Inputs/CustomInput";
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
+import { UUID } from "crypto";
 
 type ArtistTableProps = {
   readonly data: PagedData<Artist> | undefined;
-  readonly hypName: string
+  readonly hypName: string;
+  readonly musicalBandId?: UUID;
 };
 
-export default function ArtistTable({ data, hypName }: ArtistTableProps) {
+export default function ArtistTable({ data, hypName, musicalBandId }: ArtistTableProps) {
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
@@ -67,9 +69,12 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
     formRef.current?.reset();
     state.errors = {};
     state.message = null;
+    deleteState.message = null;
+    deleteState.success = false;
+    setSelectedArtist(null);
     setOpenUpdateModal(false);
     setOpenDeleteModal(false);
-  }, [reset, formRef, state]);
+  }, [reset, formRef, state, deleteState]);
 
   useEffect(() => {
     if (selectedArtist) {
@@ -145,6 +150,7 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
           />
 
           <input type="hidden" name="id" value={selectedArtist?.id} />
+          <input type="hidden" name="musicalBandId" value={musicalBandId} />
 
           {state?.message && (
             <p className={stylesForm.errorMessage}>
@@ -184,7 +190,7 @@ export default function ArtistTable({ data, hypName }: ArtistTableProps) {
         )}
 
         <input type="hidden" name="id" value={selectedArtist?.id} />
-        <input type="hidden" name="musicalBandId" value={selectedArtist?.id} />
+        <input type="hidden" name="musicalBandId" value={musicalBandId} />
 
         <div className={stylesModal.buttonsContainer}>
           <CustomButton type='button' variant='secondary' onClick={handleCancel}>

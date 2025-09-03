@@ -46,7 +46,7 @@ export default async function ArtistsPage(props: ArtistPageProps) {
           : (
             <div>
               <Pagination totalPages={response?.data?.totalPages ?? 0} />
-              <ArtistTable data={response?.data} hypName={hypName} />
+              <ArtistTable data={response?.data} hypName={hypName} musicalBandId={musicalBand?.id} />
             </div>
           )
         }
