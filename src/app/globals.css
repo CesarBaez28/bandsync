@@ -49,6 +49,17 @@ input {
 	padding: .625rem;
 }
 
+textarea {
+	font-size: inherit;
+	font-family: inherit;
+	color: inherit;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	padding: .625rem;
+	resize: vertical;
+	min-height: 100px;
+}
+
 table {
 	table-layout: auto;
 	border-collapse: separate;
@@ -110,6 +121,7 @@ tbody tr:last-child td:last-child {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	text-align: center;
 }
 
 /******* Grid ***********/

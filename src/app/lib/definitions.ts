@@ -57,6 +57,14 @@ export type Song = {
   sheetMusic: string;
 };
 
+export type Repertoire = {
+  id: UUID;
+  name: string;
+  description: string;
+  link: string;
+  status: boolean;
+}
+
 export type User = {
   id: UUID;
   username: string;

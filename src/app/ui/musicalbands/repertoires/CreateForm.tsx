@@ -1,0 +1,160 @@
+'use client';
+
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
+import stylesForm from "../../../styles/form.module.css"
+import { createRepertoireAction, RepertoireState } from "@/app/lib/actions/repertoires";
+import { useToast } from "../../toast/ToastContext";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { repertoireSchema, RepertoireSchema } from "@/app/lib/schemas/repertoireSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import CustomInput from "../../Inputs/CustomInput";
+import CustomLink from "../../link/CustomLink";
+import CustomButton from "../../button/CustomButton";
+import { Song } from "@/app/lib/definitions";
+import RepertoireSongsTable from "./AddAndEditRepertoireSongsTable";
+import Modal from "../../modal/Modal";
+import CustomSelect, { OptionInputSelect } from "../../Inputs/CustomSelect";
+import { UUID } from "crypto";
+import CustomTextArea from "../../Inputs/CustomTextArea";
+
+type FormProps = {
+  readonly musicalBandId: UUID | undefined;
+  readonly songs: Song[] | undefined;
+  readonly hypName: string;
+}
+
+export default function Form({ musicalBandId, songs, hypName }: FormProps) {
+  const [selected, setSelected] = useState<string>('');
+  const [selectedSongs, setSelectedSongs] = useState<Song[]>([]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const { showToast } = useToast();
+  const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+  const initialState: RepertoireState = { errors: {}, message: null, success: false };
+  const [state, formAction, isPending] = useActionState<RepertoireState, FormData>(createRepertoireAction, initialState);
+
+  const songsOptions: OptionInputSelect[] | undefined = songs
+    ?.sort((a, b) => a.name.localeCompare(b.name))
+    .map((song) => (
+      { label: song.name, value: song.id.toString() }
+    ));
+
+  const handleAddSong = () => {
+    const songToAdd = songs?.find(song => song.id.toString() === selected);
+    if (songToAdd && !selectedSongs.find(song => song.id === songToAdd.id)) {
+      setSelectedSongs([...selectedSongs, songToAdd]);
+      setSelected('');
+    }
+  }
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<RepertoireSchema>({
+    resolver: zodResolver(repertoireSchema),
+    mode: "onChange",
+  });
+
+  const onSubmit = () => {
+    if (!formRef.current) return;
+
+    const fd = new FormData(formRef.current);
+
+    startTransition(() => {
+      formAction(fd);
+    });
+  };
+
+  useEffect(() => {
+    if (state?.success) {
+      showToast('Repertorio registrado con éxito!', 'success');
+      router.push(`/musicalbands/${hypName}/repertoires`);
+    }
+  }, [state, hypName, router, showToast])
+
+  return (
+    <div id="modal-root">
+      <form
+        ref={formRef}
+        action={formAction}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className={stylesForm.fieldsContainer + ' col-12 col-sm-8 col-md-6 col-lg-5'}>
+
+          <CustomInput
+            label='Nombre:'
+            type='text'
+            {...register("name")}
+            error={errors.name}
+          />
+
+          <CustomTextArea 
+            label='Descripción:'
+            {...register("description")}
+            error={errors.description}
+          />
+
+          <CustomInput
+            label='Link:'
+            type='text'
+            {...register("link")}
+            error={errors.link}
+          />
+
+          <input type="hidden" name="musicalBandId" value={musicalBandId} />
+          <input type="hidden" name="songs" value={selectedSongs.map(song => song.id).toString()} />
+
+          {state?.message && (
+            <p className={stylesForm.errorMessage}>
+              {state?.message}
+            </p>
+          )}
+        </div>
+        <div className={stylesForm.fieldsContainer} style={{ marginTop: '25px' }}>
+
+          <div className={stylesForm.buttonsContainer}>
+            <CustomLink buttonStyle={true} href={`/musicalbands/${hypName}/repertoires`} variant='secondary'>
+              Cancelar
+            </CustomLink>
+            <CustomButton type="button" variant='secondary' onClick={() => setOpenModal(true)}>
+              Agregar canción
+            </CustomButton>
+            <CustomButton isLoading={isPending} type='submit'>
+              Guardar
+            </CustomButton>
+          </div>
+
+          <RepertoireSongsTable songs={selectedSongs} setSongs={setSelectedSongs} />
+        </div>
+      </form>
+
+      <Modal
+        size="sm"
+        isOpen={openModal}
+        title="Agregar Canción"
+      >
+        <div className={stylesForm.fieldsContainer}>
+          <CustomSelect
+            name="songs"
+            label="Canción:"
+            options={songsOptions}
+            onChange={(e) => setSelected(e.target.value)}
+          />
+
+          <div className={stylesForm.buttonsContainer}>
+            <CustomButton type='button' variant='secondary' onClick={() => setOpenModal(false)}>
+              Cancelar
+            </CustomButton>
+            <CustomButton type="button" onClick={handleAddSong}>
+              Guardar
+            </CustomButton>
+          </div>
+
+        </div>
+      </Modal>
+
+    </div>
+  )
+}
