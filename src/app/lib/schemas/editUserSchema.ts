@@ -8,8 +8,11 @@ export const editUserSchema = z.object({
     .string()
     .min(3, 'El apellido debe tener al menos 3 letras'),
   phone: z
-    .string()  
-    .min(10, "El número debe tener mínimo 10 dígitos")
+    .string()
+    .min(10, "El número debe tener mínimo 10 dígitos"),
+  email: z
+    .string()
+    .email("El correo no es válido")
 })
 
 export type EditUseSchema = z.infer<typeof editUserSchema>;

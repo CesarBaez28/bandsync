@@ -34,6 +34,7 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
     defaultValues: {
       firstName: user?.firstName ?? '',
       lastName: user?.lastName ?? '',
+      email: user?.email ?? '',
       phone: user?.phone ?? ''
     }
   });
@@ -53,6 +54,7 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
       reset({
         firstName: state.user?.firstName ?? '',
         lastName: state.user?.lastName ?? '',
+        email: state.user?.email ?? '',
         phone: state.user?.phone ?? ''
       });
     }
@@ -86,7 +88,7 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
           />
           <div>
             <h3>{user?.username}</h3>
-            <p className={styles['color-gray-300']}>{user?.email}</p>
+            <p className={styles['color-gray-300']}>{state.user?.email}</p>
           </div>
         </header>
       </div>
@@ -150,6 +152,13 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
               label='Apellido:'
               {...register("lastName")}
               error={errors.lastName}
+            />
+
+            <CustomInput
+              type='text'
+              label='Email::'
+              {...register("email")}
+              error={errors.email}
             />
 
             <CustomInput

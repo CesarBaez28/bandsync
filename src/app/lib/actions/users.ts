@@ -66,6 +66,7 @@ export type UserInfo = {
   firstName: string;
   lastName: string;
   phone: string;
+  email: string
   photo: string
 }
 
@@ -86,6 +87,7 @@ export async function updateUserAction(prevState: UpdateUserState, formData: For
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     phone: formData.get("phone"),
+    email: formData.get("email"),
     photo: prevState.user?.photo
   };
 
