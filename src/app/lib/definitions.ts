@@ -5,7 +5,7 @@ export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   timestamp: string;
-  data?: T; 
+  data?: T;
 }
 
 export interface PagedData<T> {
@@ -28,6 +28,14 @@ export type MusicalBand = {
   email: string
   status: boolean
 };
+
+export type MusicalBandInfo = {
+  name: string;
+  logo: string;
+  address: string;
+  phone: string
+  email: string
+}
 
 export type Artist = {
   id: number;

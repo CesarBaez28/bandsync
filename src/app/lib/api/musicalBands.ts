@@ -1,5 +1,6 @@
+import { UUID } from "crypto";
 import { config } from "../config";
-import { ApiResponse, MusicalBand } from "../definitions";
+import { ApiResponse, MusicalBand, MusicalBandInfo } from "../definitions";
 import { auth } from "@/auth";
 
 export async function getMusicalBandsByUser(): Promise<MusicalBand[]> {
@@ -23,6 +24,26 @@ export async function getMusicalBandsByUser(): Promise<MusicalBand[]> {
   return response.data;
 }
 
+export async function getMusicalBandById({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<MusicalBand>> {
+  const session = await auth()
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const data = await fetch(`${config.api}/musical-bands/findById/${musicalBandId}`, {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    }
+  });
+
+  if (!data.ok) {
+    throw new Error("Error while geting musicalbands by id");
+  }
+
+  return await data.json();
+}
+
 export async function saveMusicalBand(formData: FormData): Promise<ApiResponse<MusicalBand>> {
   const session = await auth()
 
@@ -35,6 +56,28 @@ export async function saveMusicalBand(formData: FormData): Promise<ApiResponse<M
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
     },
+    body: formData
+  });
+
+  return await response.json();
+}
+
+export async function updateMusicalBand(musicalBandId: UUID, formData: FormData): Promise<ApiResponse<MusicalBandInfo>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  }
+
+  headers[config.musicalBandHeader] = musicalBandId;
+
+  const response = await fetch(`${config.api}/musical-bands/update/${musicalBandId}`, {
+    method: 'PUT',
+    headers,
     body: formData
   });
 
