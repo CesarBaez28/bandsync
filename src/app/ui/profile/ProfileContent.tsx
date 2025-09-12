@@ -49,13 +49,20 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
   };
 
   const handleCancel = useCallback(() => {
-    reset();
+    if (state.success) {
+      reset({
+        firstName: state.user?.firstName ?? '',
+        lastName: state.user?.lastName ?? '',
+        phone: state.user?.phone ?? ''
+      });
+    }
+
     formRef.current?.reset();
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
     setOpen(false);
-  }, [reset, formRef, fileInputRef]);
+  }, [reset, formRef, fileInputRef, state]);
 
   useEffect(() => {
     if (state?.success) {
