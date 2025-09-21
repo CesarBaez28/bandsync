@@ -28,3 +28,21 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   // Otherwise, show the first page, an ellipsis, two pages before and after the current page, another ellipsis, and the last page
   return [1, '...', currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2, '...', totalPages];
 };
+
+export const urlToBase64 = async (url?: string): Promise<string | null> => {
+  if (!url) return null;
+
+  try {
+    const response = await fetch(url); 
+    if (!response.ok) return null;
+
+    const contentType = response.headers.get("content-type") || "image/png";
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    return `data:${contentType};base64,${buffer.toString("base64")}`;
+  } catch (err) {
+    console.error("Error converting to base64:", err);
+    return null;
+  }
+};

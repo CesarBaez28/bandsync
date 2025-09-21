@@ -35,6 +35,32 @@ export async function getRepertoiresByMusicalBandId({ musicalBandId, query, page
   return await response.json();
 }
 
+export async function getAllRepertoiresByMusicalBandId({ musicalBandId}: {musicalBandId: UUID | undefined}): Promise<ApiResponse<Repertoire[]>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  }
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/repertoires/findByMusicalBandId/${musicalBandId}`, {
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while getting repertoires by musical band id");
+  }
+
+  return await response.json();
+}
+
 export async function getRepertoireById({ repertoireId, musicalBandId }: { repertoireId: UUID | undefined; musicalBandId: UUID | undefined }): Promise<ApiResponse<Repertoire>> {
   const session = await auth();
 

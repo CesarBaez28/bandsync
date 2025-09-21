@@ -1,10 +1,11 @@
 'use server';
 
 import { UUID } from "crypto";
-import { createRepertoire, deleteRepertoireById, updateRepertoire } from "../api/repertoires";
-import { ApiResponse } from "../definitions";
+import { createRepertoire, deleteRepertoireById, getRepertoireSongs, updateRepertoire } from "../api/repertoires";
+import { ApiResponse, Song } from "../definitions";
 import { handleAsync } from "../utils";
 import { repertoireSchema } from "../schemas/repertoireSchema";
+import { exportSchema } from "../schemas/exportRepertoireSchema";
 
 export type RepertoireState = {
   errors?: {
@@ -151,6 +152,68 @@ export async function deleteRepertoireAction(prevState: DeleteRepertoireActionSt
   }
 
   return {
+    success: response.success
+  }
+}
+
+export type ExportRepertoireState = {
+  errors?: {
+    repertoire?: string[];
+    option?: string[];
+  };
+  message?: string | null;
+  data?: {
+    songs?: Song[],
+    repertoire?: string,
+    option?: string
+  },
+  success: boolean;
+}
+
+export async function exportRepertoireAction(prevState: ExportRepertoireState, formData: FormData) {
+  const validatedFields = exportSchema.safeParse({
+    repertoire: formData.get("repertoire"),
+    option: formData.get("option"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
+
+  const requestBody = {
+    repertoireId: validatedFields.data.repertoire as UUID,
+    musicalBandId
+  };
+
+  const [response, error] = await handleAsync<ApiResponse<Song[]>>(getRepertoireSongs(requestBody));
+
+  if (error) {
+    console.error("Error gettings songs of repetoire:", error);
+    return {
+      message: "Ocurrió un error al obtener las canciones del repertorio. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
+  return {
+    data: {
+      songs: response.data,
+      repertoire: validatedFields.data.repertoire,
+      option: validatedFields.data.option
+    },
     success: response.success
   }
 }
