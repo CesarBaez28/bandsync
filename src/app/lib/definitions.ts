@@ -55,6 +55,11 @@ export type MusicalRole = {
   status: boolean;
 };
 
+export type MusicalRolesUsers  = {
+  userId: UUID;
+  musicalRoles: MusicalRole[];
+}
+
 export type Song = {
   id: number;
   name: string;

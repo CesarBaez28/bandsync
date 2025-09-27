@@ -1,0 +1,26 @@
+.image {
+  border-radius: 50%;
+  border: 1px solid var(--color-gray-200);
+}
+
+.fall-back {
+  border-radius: 50%;
+  border: 1px solid var(--color-gray-200);
+  padding: .4rem;
+}
+
+.usernameContainer {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.roleBadge {
+  display: inline-block;
+  background-color: var(--color-main);
+  color: var(--color-white);
+  padding: .2rem .5rem;
+  border-radius: .5rem;
+  margin-right: .2rem;
+  margin-top: .2rem;
+}

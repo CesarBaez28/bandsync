@@ -1,6 +1,7 @@
+import { UUID } from "crypto";
 import { UserInfo } from "../actions/users";
 import { config } from "../config";
-import { ApiResponse, MusicalBand, User } from "../definitions";
+import { ApiResponse, MusicalBand, PagedData, User } from "../definitions";
 import { auth } from "@/auth";
 
 const USER_PATH = 'users';
@@ -64,6 +65,35 @@ export async function updateUser(formData: FormData): Promise<ApiResponse<UserIn
       Authorization: `Bearer ${session.accessToken}`,
     },
     body: formData
+  });
+
+  return await response.json();
+}
+
+type GetUsersByMusicalBandIdProps = {
+  musicalBandId: UUID | undefined;
+  query?: string;
+  page?: number;
+}
+
+export async function getUsersByMusicalBandId({ musicalBandId, query, page }: GetUsersByMusicalBandIdProps): Promise<ApiResponse<PagedData<User>>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw Error("Unauthorized: No session or access token found.");
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  }
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${USER_PATH}/find/${musicalBandId}?query=${query}&page=${page}`, {
+    method: 'GET',
+    headers
   });
 
   return await response.json();
