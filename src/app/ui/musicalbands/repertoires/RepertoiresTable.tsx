@@ -95,7 +95,7 @@ export default function RepertoiresTable({ data, musicalBandId, hypName }: Reper
 
           <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
 
-          <p>Toda la información relacionada con esta canción será eliminada </p>
+          <p>Toda la información relacionada con este repertorio será eliminada </p>
 
           {deleteState?.message && (
             <p className={stylesForm.errorMessage}>
