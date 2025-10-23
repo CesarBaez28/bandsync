@@ -1,12 +1,12 @@
-import { auth } from '@/auth';
 import styles from './users.module.css';
 import { handleAsync } from '@/app/lib/utils';
-import { ApiResponse, MusicalBand, MusicalRolesUsers, PagedData, User } from '@/app/lib/definitions';
+import { ApiResponse, MusicalRolesUsers, PagedData, User } from '@/app/lib/definitions';
 import { getUsersByMusicalBandId } from '@/app/lib/api/users';
 import Pagination from '@/app/ui/pagination/Pagination';
 import InputContainer from '@/app/ui/musicalbands/users/InputContainer';
 import UsersTable from '@/app/ui/musicalbands/users/UsersTable';
 import { getAllByMusicalBandId } from '@/app/lib/api/musicalRolesUsers';
+import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 
 type UsersPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -17,13 +17,12 @@ type UsersPageProps = {
 }
 
 export default async function UsersPage(props: UsersPageProps) {
-  const [session, { hypName }, { query = '', page = '1' } = {}] = await Promise.all([
-    auth(),
+  const [{ hypName }, { query = '', page = '1' } = {}] = await Promise.all([
     props.params,
     props.searchParams,
   ]);
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [[usersResponse, usersError], [musicalRolesResponse, musicalRolesError]] = await Promise.all([
     handleAsync<ApiResponse<PagedData<User>>>(getUsersByMusicalBandId({

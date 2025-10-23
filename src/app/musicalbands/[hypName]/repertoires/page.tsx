@@ -1,11 +1,11 @@
+import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import styles from './repertoires.module.css'
 import { getRepertoiresByMusicalBandId } from "@/app/lib/api/repertoires";
-import { ApiResponse, MusicalBand, PagedData, Repertoire } from "@/app/lib/definitions";
+import { ApiResponse, PagedData, Repertoire } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import InputContainer from "@/app/ui/musicalbands/repertoires/InputContainer";
 import RepertoiresTable from "@/app/ui/musicalbands/repertoires/RepertoiresTable";
 import Pagination from "@/app/ui/pagination/Pagination";
-import { auth } from "@/auth";
 
 type RepertoiresPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -16,13 +16,12 @@ type RepertoiresPageProps = {
 }
 
 export default async function RepertoiresPage(props: RepertoiresPageProps) {
-  const [session, { hypName }, { query = '', page = '1' } = {}] = await Promise.all([
-    auth(),
+  const [{ hypName }, { query = '', page = '1' } = {}] = await Promise.all([
     props.params,
     props.searchParams
   ]);
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [response, error] = await handleAsync<ApiResponse<PagedData<Repertoire>>>(getRepertoiresByMusicalBandId({
     musicalBandId: musicalBand?.id,

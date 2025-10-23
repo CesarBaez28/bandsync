@@ -1,4 +1,4 @@
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { UserInfo } from "../actions/users";
 import { config } from "../config";
 import { ApiResponse, MusicalBand, PagedData, User } from "../definitions";
@@ -80,7 +80,7 @@ export async function getUsersByMusicalBandId({ musicalBandId, query, page }: Ge
   const session = await auth();
 
   if (!session?.accessToken) {
-    throw Error("Unauthorized: No session or access token found.");
+    throw new Error("Unauthorized: No session or access token found.");
   }
 
   const headers: Record<string, string> = {
@@ -95,6 +95,6 @@ export async function getUsersByMusicalBandId({ musicalBandId, query, page }: Ge
     method: 'GET',
     headers
   });
-
+  
   return await response.json();
 }

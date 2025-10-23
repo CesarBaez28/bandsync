@@ -1,18 +1,18 @@
 import Form from '@/app/ui/musicalbands/songs/CreateForm';
-import { auth } from '@/auth';
-import { ApiResponse, Artist, MusicalBand, MusicalGenre } from '@/app/lib/definitions';
+import { ApiResponse, Artist, MusicalGenre } from '@/app/lib/definitions';
 import { handleAsync } from '@/app/lib/utils';
 import { getAllArtistsByMusicalBandId } from '@/app/lib/api/artists';
 import { getAllMusicalGenresByMusicalBandId } from '@/app/lib/api/musicalGenres';
+import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 
 type CreateSongPageProps = {
   params: Promise<{ hypName: string; }>;
 }
 
 export default async function CreateSongPage(props: CreateSongPageProps) {
-  const [session, { hypName }] = await Promise.all([auth(), props.params]);
+  const { hypName } = await props.params;
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [[artist, error], [genres, error2]] = await Promise.all([
     handleAsync<ApiResponse<Artist[]>>(getAllArtistsByMusicalBandId({ musicalBandId: musicalBand?.id })),

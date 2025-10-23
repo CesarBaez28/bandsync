@@ -1,4 +1,4 @@
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { ApiResponse, MusicalRolesUsers } from "../definitions";
 import { auth } from "@/auth";
 import { config } from "../config";
@@ -9,7 +9,7 @@ export async function getAllByMusicalBandId({ musicalBandId }: { musicalBandId: 
   const session = await auth();
 
   if (!session?.accessToken) {
-    throw Error("Unauthorized: No session or access token found.")
+    throw new Error("Unauthorized: No session or access token found.")
   }
 
   const headers: Record<string, string> = {

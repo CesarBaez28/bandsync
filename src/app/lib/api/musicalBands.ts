@@ -44,6 +44,26 @@ export async function getMusicalBandById({ musicalBandId }: { musicalBandId: UUI
   return await data.json();
 }
 
+export async function getMusicalBandByHyphenatedName({ name }: { name: string }): Promise<ApiResponse<MusicalBand>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const data = await fetch(`${config.api}/musical-bands/findByHyphenatedName/${name}`, {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    }
+  });
+
+  if (!data.ok) {
+    throw new Error("Error while geting musicalbands by id");
+  }
+
+  return await data.json()
+}
+
 export async function saveMusicalBand(formData: FormData): Promise<ApiResponse<MusicalBand>> {
   const session = await auth()
 

@@ -1,21 +1,18 @@
-import { auth } from "@/auth";
 import styles from '../repertoires.module.css'
 import { handleAsync, urlToBase64 } from "@/app/lib/utils";
-import { ApiResponse, MusicalBand, Repertoire } from "@/app/lib/definitions";
+import { ApiResponse, Repertoire } from "@/app/lib/definitions";
 import { getAllRepertoiresByMusicalBandId } from "@/app/lib/api/repertoires";
 import ExportRerpertoiresContent from "@/app/ui/musicalbands/repertoires/ExportRepertoiresContent";
+import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
 
 type Props = {
   params: Promise<{ hypName: string; }>;
 }
 
 export default async function ExportPage(props: Props) {
-  const [session, { hypName }] = await Promise.all([
-    auth(),
-    props.params,
-  ]);
+  const { hypName } = await props.params;
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [response, error] = await handleAsync<ApiResponse<Repertoire[]>>(getAllRepertoiresByMusicalBandId({ musicalBandId: musicalBand?.id }));
   const imageBase64 = await urlToBase64(musicalBand?.logo);

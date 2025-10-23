@@ -1,23 +1,20 @@
 import styles from './calendar.module.css';
-import { auth } from "@/auth";
 import { handleAsync } from '@/app/lib/utils';
-import { ApiResponse, Event, MusicalBand, Repertoire } from '@/app/lib/definitions';
+import { ApiResponse, Event, Repertoire } from '@/app/lib/definitions';
 import { getAllEventsByMusicalBandId } from '@/app/lib/api/events';
 import { EventInput } from "@fullcalendar/core/index.js";
 import Calendar from '@/app/ui/musicalbands/calendar/Calendar';
 import { getAllRepertoiresByMusicalBandId } from '@/app/lib/api/repertoires';
+import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 
 type CalendarPageProps = {
   params: Promise<{ hypName: string; }>;
 }
 
 export default async function CalendarPage(props: CalendarPageProps) {
-  const [session, { hypName }] = await Promise.all([
-    auth(),
-    props.params
-  ]);
+  const { hypName } = await props.params;
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [[events, eventsError], [repertoires, repertoiresError]] = await Promise.all([
     handleAsync<ApiResponse<Event[]>>(getAllEventsByMusicalBandId({ musicalBandId: musicalBand?.id })),

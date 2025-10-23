@@ -1,20 +1,19 @@
 import { getAllArtistsByMusicalBandId } from "@/app/lib/api/artists";
+import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
 import { getAllMusicalGenresByMusicalBandId } from "@/app/lib/api/musicalGenres";
 import { getById } from "@/app/lib/api/songs";
-import { ApiResponse, Artist, MusicalBand, MusicalGenre, Song } from "@/app/lib/definitions";
+import { ApiResponse, Artist, MusicalGenre, Song } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import Form from "@/app/ui/musicalbands/songs/EditForm";
-import { auth } from "@/auth";
-
 
 type EdtitSongPageProps = {
   params: Promise<{ hypName: string; id: string }>;
 }
 
 export default async function editSongPage(props: EdtitSongPageProps) {
-  const [session, { hypName, id }] = await Promise.all([auth(), props.params]);
+  const { hypName, id } = await props.params;
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [[artist, error], [genres, error2], [song, error3]] = await Promise.all([
     handleAsync<ApiResponse<Artist[]>>(getAllArtistsByMusicalBandId({ musicalBandId: musicalBand?.id })),

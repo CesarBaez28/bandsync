@@ -1,17 +1,16 @@
-import { getMusicalBandById } from "@/app/lib/api/musicalBands";
+import { getMusicalBandByHyphenatedName, getMusicalBandById } from "@/app/lib/api/musicalBands";
 import { ApiResponse, MusicalBand } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import SettingsContent from "@/app/ui/musicalbands/settings/SettingsContent";
-import { auth } from "@/auth";
 
 type Props = {
   params: Promise<{ hypName: string; }>;
 }
 
 export default async function SettingsPage(props: Props) {
-  const [session, { hypName }] = await Promise.all([auth(), props.params]);
+  const { hypName } = await props.params;
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [response, error] = await handleAsync<ApiResponse<MusicalBand>>(getMusicalBandById({ musicalBandId: musicalBand?.id }));
 

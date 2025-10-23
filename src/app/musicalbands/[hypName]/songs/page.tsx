@@ -1,11 +1,11 @@
-import { auth } from '@/auth';
 import styles from './songs.module.css'
-import { ApiResponse, MusicalBand, PagedData, Song } from '@/app/lib/definitions';
+import { ApiResponse, PagedData, Song } from '@/app/lib/definitions';
 import { handleAsync } from '@/app/lib/utils';
 import Pagination from '@/app/ui/pagination/Pagination';
 import InputContainer from '@/app/ui/musicalbands/songs/InputContainer';
 import SongsTable from '@/app/ui/musicalbands/songs/SongsTable';
 import { getSongsByMusicalBandIdAndSearchTerm } from '@/app/lib/api/songs';
+import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 
 type SongsPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -16,13 +16,12 @@ type SongsPageProps = {
 }
 
 export default async function SongsPage(props: SongsPageProps) {
-  const [session, { hypName }, { query = '', page = '1' } = {}] = await Promise.all([
-    auth(),
+  const [{ hypName }, { query = '', page = '1' } = {}] = await Promise.all([
     props.params,
     props.searchParams
   ]);
 
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [response, error] = await handleAsync<ApiResponse<PagedData<Song>>>(getSongsByMusicalBandIdAndSearchTerm({
     musicalBandId: musicalBand?.id,

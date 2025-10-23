@@ -24,7 +24,7 @@ export const { auth, signIn, signOut } = NextAuth({
 
         if (error) {
           console.log('Error traying to authenticate with API: ', error);
-          throw Error('Error traying to authenticate with API');
+          throw new Error('Error traying to authenticate with API');
         }
 
         if (!user) {

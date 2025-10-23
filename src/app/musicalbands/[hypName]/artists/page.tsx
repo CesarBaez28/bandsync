@@ -1,11 +1,11 @@
 import styles from './artists.module.css';
-import { auth } from "@/auth";
 import ArtistTable from "@/app/ui/musicalbands/artists/ArtistsTable";
-import { ApiResponse, Artist, MusicalBand, PagedData } from "@/app/lib/definitions";
+import { ApiResponse, Artist, PagedData } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import { getArtistsByMusicalBandIdAndName } from "@/app/lib/api/artists";
 import Pagination from "@/app/ui/pagination/Pagination";
 import InputContainer from "@/app/ui/musicalbands/artists/InputContainer";
+import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 
 type ArtistPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -16,14 +16,13 @@ type ArtistPageProps = {
 }
 
 export default async function ArtistsPage(props: ArtistPageProps) {
-  const session = await auth();
   const searchParams = await props.searchParams;
   const params = await props.params;
 
   const query = searchParams?.query || '';
   const page = Number(searchParams?.page) || 1;
   const hypName = params.hypName;
-  const musicalBand: MusicalBand | undefined = session?.user?.musicalBands.find(mb => mb.hyphenatedName === hypName);
+  const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
   const [response, error] = await handleAsync<ApiResponse<PagedData<Artist>>>(getArtistsByMusicalBandIdAndName({
     musicalBandId: musicalBand?.id,
