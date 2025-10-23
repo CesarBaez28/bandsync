@@ -2,7 +2,7 @@ import { authConfig } from "@/auth.config";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signInWithApi } from "./app/lib/api/auth";
-import { MusicalBand, UserSesion } from "./app/lib/definitions";
+import { UserSesion } from "./app/lib/definitions";
 import { UUID } from "crypto";
 import { formLoginSchema } from "./app/lib/schemas/formLoginSchema";
 import { handleAsync } from "./app/lib/utils";
@@ -48,7 +48,6 @@ export const { auth, signIn, signOut } = NextAuth({
         token.photo = user.photo;
         token.status = user.status;
         token.accessToken = user.accessToken;
-        token.musicalBands = user.musicalBands;
       }
       return token;
     },
@@ -64,7 +63,6 @@ export const { auth, signIn, signOut } = NextAuth({
         status: token.status as boolean,
         emailVerified: null, 
         accessToken: token.accessToken as string,
-        musicalBands: token.musicalBands as MusicalBand[],
       };
       session.accessToken = token.accessToken as string;
       return session;
@@ -78,7 +76,6 @@ declare module 'next-auth' {
     user: {
       id: UUID;
       username: string;
-      musicalBands: MusicalBand[];
       accessToken: string;
       firstName: string;
       lastName: string;
@@ -93,7 +90,6 @@ declare module 'next-auth' {
   interface User {
     id: UUID;
     username: string;
-    musicalBands: MusicalBand[];
     accessToken: string;
     email: string;
     firstName: string;

@@ -102,5 +102,4 @@ export type User = {
 
 export type UserSesion = User & {
   accessToken: string;
-  musicalBands: MusicalBand[];
 }
