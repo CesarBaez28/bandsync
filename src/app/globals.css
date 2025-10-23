@@ -124,6 +124,31 @@ tbody tr:last-child td:last-child {
 	text-align: center;
 }
 
+/******* Calendar ***********/
+
+.fc .fc-toolbar-title {
+  font-size: 1.6rem;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.fc .fc-toolbar-title::first-letter {
+  text-transform: uppercase;
+}
+
+.fc .fc-button {
+  background-color: var(--color-main);
+  border: none;
+  color: var(--color-white);
+  font-size: 0.875rem;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.fc .fc-button:hover {
+  background-color: var(--color-main-hover);
+}
+
 /******* Grid ***********/
 
 .col-12 {

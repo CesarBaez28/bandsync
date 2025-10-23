@@ -78,6 +78,17 @@ export type Repertoire = {
   status: boolean;
 }
 
+export type Event  = {
+  id: UUID;
+  repertoire: Repertoire;
+  date: Date;
+  name: string;
+  description: string;
+  place: string;
+  location: string;
+  status: boolean;
+}
+
 export type User = {
   id: UUID;
   username: string;

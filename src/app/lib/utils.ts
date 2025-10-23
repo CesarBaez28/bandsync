@@ -1,4 +1,4 @@
-export async function handleAsync<T, E = unknown>(
+export async function handleAsync<T, E = Error>(
   promise: Promise<T>
 ): Promise<[T, null] | [null, E]> {
   try {
@@ -33,7 +33,7 @@ export const urlToBase64 = async (url?: string): Promise<string | null> => {
   if (!url) return null;
 
   try {
-    const response = await fetch(url); 
+    const response = await fetch(url);
     if (!response.ok) return null;
 
     const contentType = response.headers.get("content-type") || "image/png";
@@ -46,3 +46,13 @@ export const urlToBase64 = async (url?: string): Promise<string | null> => {
     return null;
   }
 };
+
+export const formatDate = (date: Date): string => {
+  if (!date) return '';
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
