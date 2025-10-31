@@ -26,7 +26,8 @@
     "react-dom": "19.1.0",
     "react-hook-form": "7.57.0",
     "use-debounce": "10.0.5",
-    "zod": "3.25.40"
+    "zod": "3.25.40",
+    "zustand": "5.0.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3",

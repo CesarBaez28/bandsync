@@ -7,12 +7,12 @@ import { UUID } from "crypto";
 import { formLoginSchema } from "./app/lib/schemas/formLoginSchema";
 import { handleAsync } from "./app/lib/utils";
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
-        
+
         const parsedCredentials = formLoginSchema.safeParse(credentials);
 
         if (!parsedCredentials.success) {
@@ -20,7 +20,7 @@ export const { auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        const [user, error] = await handleAsync<UserSesion>( signInWithApi(parsedCredentials.data));
+        const [user, error] = await handleAsync<UserSesion>(signInWithApi(parsedCredentials.data));
 
         if (error) {
           console.log('Error traying to authenticate with API: ', error);
@@ -37,7 +37,7 @@ export const { auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
@@ -49,6 +49,24 @@ export const { auth, signIn, signOut } = NextAuth({
         token.status = user.status;
         token.accessToken = user.accessToken;
       }
+
+      if (trigger === "update" && session?.user) {
+        const updatedUser = session.user;
+
+        token.id = updatedUser.id ?? token.id;
+        token.username = updatedUser.username ?? token.username;
+        token.firstName = updatedUser.firstName ?? token.firstName;
+        token.lastName = updatedUser.lastName ?? token.lastName;
+        token.email = updatedUser.email ?? token.email;
+        token.phone = updatedUser.phone ?? token.phone;
+        token.photo = updatedUser.photo ?? token.photo;
+        token.status =
+          typeof updatedUser.status === "boolean"
+            ? updatedUser.status
+            : token.status;
+        token.accessToken = updatedUser.accessToken ?? token.accessToken;
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -61,7 +79,7 @@ export const { auth, signIn, signOut } = NextAuth({
         phone: token.phone as string,
         photo: token.photo as string,
         status: token.status as boolean,
-        emailVerified: null, 
+        emailVerified: null,
         accessToken: token.accessToken as string,
       };
       session.accessToken = token.accessToken as string;

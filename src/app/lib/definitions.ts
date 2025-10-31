@@ -100,6 +100,37 @@ export type User = {
   status: boolean;
 };
 
+export type Role = {
+  id: number;
+  name: string;
+  status: boolean;
+}
+
+export type Permission = {
+  id: number;
+  typeOfPermission: TypeOfPermission;
+  name: string;
+  status: boolean;
+}
+
+export type TypeOfPermission = {
+  id: number;
+  name: string;
+  status: boolean;
+}
+
+export type RoleAndPermissions = {
+  role: Role;
+  permissions: Permission[];
+}
+
+export type UserRolesAndPermissions = {
+  role: Role;
+  musicalBand: MusicalBand;
+  permissions: Permission[];
+}
+
 export type UserSesion = User & {
+  rolesAndPermissions: UserRolesAndPermissions [],
   accessToken: string;
 }

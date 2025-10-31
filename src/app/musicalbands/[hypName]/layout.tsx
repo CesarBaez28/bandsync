@@ -3,6 +3,8 @@ import SideNav from "@/app/ui/sidenav/SideNav";
 import styles from '../musicalbands.module.css';
 import { SideNavProvider } from "@/app/ui/sidenav/SideNavContext";
 import MainHeader from "@/app/ui/musicalbands/MainHeader";
+import PermissionsProvider from "@/app/providers/UserRolesPermissionsProvider";
+import { auth } from "@/auth";
 
 type LayoutProps = {
   children: ReactNode;
@@ -10,18 +12,22 @@ type LayoutProps = {
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
-  const param = await params;
-  const hypName = param.hypName;
+  const [session, { hypName }] = await Promise.all([
+    auth(),
+    params
+  ])
 
   return (
-    <SideNavProvider>
-      <MainHeader hypName={hypName} />
-      <div className={styles['layout-content']}>
-        <SideNav hypName={hypName} />
-        <div className={styles.mainContainer}>
-          {children}
+    <PermissionsProvider session={session}>
+      <SideNavProvider>
+        <MainHeader hypName={hypName} />
+        <div className={styles['layout-content']}>
+          <SideNav hypName={hypName} />
+          <div className={styles.mainContainer}>
+            {children}
+          </div>
         </div>
-      </div>
-    </SideNavProvider>
+      </SideNavProvider>
+    </PermissionsProvider>
   );
 }
