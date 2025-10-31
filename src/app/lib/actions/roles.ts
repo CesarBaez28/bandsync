@@ -4,7 +4,8 @@ import { UUID } from "node:crypto";
 import { roleSchema } from "../schemas/roleSchema";
 import { ApiResponse, RoleAndPermissions, User } from "../definitions";
 import { handleAsync } from "../utils";
-import { createRole, CreateRoleAndPermissionsParams, deleteRoleById, updateRoleAndPermissions, UpdateRoleAndPermissionsParams } from "../api/roles";
+import { createRole, CreateRoleAndPermissionsParams, deleteRoleById, updateRoleAndPermissions, UpdateRoleAndPermissionsParams, updateUserRole, UpdateUserRoleProps } from "../api/roles";
+import { userRoleSchema } from "../schemas/userRoleSchema";
 
 export type RoleState = {
   errors?: {
@@ -46,6 +47,60 @@ export async function createRoleAction(prevState: RoleState, formData: FormData)
     console.error("Error creating role:", error);
     return {
       message: "Ocurrió un error al crear el rol. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
+  return {
+    success: true
+  };
+}
+
+export type UserRoleState = {
+  errors?: {
+    role?: string[];
+  };
+  message?: string | null;
+  success: boolean;
+}
+
+export async function updateUserRoleAction(prevState: UserRoleState, formData: FormData) {
+  const validatedFields = userRoleSchema.safeParse({
+    role: formData.get("role"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const roleValue = formData.get("role");
+  const roleId = Number(roleValue);
+  const musicalBandId = formData.get("musicalBandId") as UUID;
+  const userId = formData.get("userId") as UUID;
+
+  const requestBody: UpdateUserRoleProps = {
+    musicalBandId,
+    userId,
+    role: { id: roleId }
+  }
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(updateUserRole(requestBody));
+
+  if (error) {
+    console.error("Error updating user role:", error);
+    return {
+      message: "Ocurrió un error al actualizar el rol del usuario. Por favor, inténtelo de nuevo.",
       success: false
     };
   }

@@ -1,7 +1,7 @@
 'use server';
 
 import { UUID } from "node:crypto";
-import { ApiResponse, RoleAndPermissions, User, UserRolesAndPermissions } from "../definitions";
+import { ApiResponse, RoleAndPermissions, User, UserRole, UserRolesAndPermissions } from "../definitions";
 import { auth } from "@/auth";
 import { config } from "../config";
 
@@ -50,6 +50,28 @@ export async function getUserRolesAndPermissions({ userId }: { userId: UUID }): 
 
   if (!response.ok) {
     throw new Error("Erro while getting roles and permissions of the user");
+  }
+
+  return await response.json();
+}
+
+export async function getUsersRoles({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<UserRole[]>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  const response = await fetch(`${config.api}/${ROLES_PATH}/users/musicalBand/${musicalBandId}`, {
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro while getting users roles");
   }
 
   return await response.json();
@@ -130,6 +152,41 @@ export async function updateRoleAndPermissions({ musicalBandId, roleId, newName,
 
   if (!response.ok) {
     throw new Error("Error while updating role and permissions");
+  }
+
+  return await response.json();
+}
+
+export type UpdateUserRoleProps = {
+  musicalBandId: UUID;
+  userId: UUID;
+  role: { id: number }
+}
+
+export async function updateUserRole({ musicalBandId, userId, role }: UpdateUserRoleProps) {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    "Content-Type": "application/json"
+  }
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${ROLES_PATH}/user/${userId}/musicalBand/${musicalBandId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(role)
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while updating user role");
   }
 
   return await response.json();

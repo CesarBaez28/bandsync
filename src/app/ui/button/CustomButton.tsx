@@ -1,7 +1,7 @@
 'use client';
 
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import styles from './CustomButton.module.css';
+import styles from  './customButton.module.css'
 import clsx from 'clsx';
 
 type ButtonProps = {

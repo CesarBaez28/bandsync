@@ -130,6 +130,12 @@ export type UserRolesAndPermissions = {
   permissions: Permission[];
 }
 
+export type UserRole = {
+  user: User,
+  role: Role,
+  musicalBand: MusicalBand
+}
+
 export type UserSesion = User & {
   rolesAndPermissions: UserRolesAndPermissions [],
   accessToken: string;

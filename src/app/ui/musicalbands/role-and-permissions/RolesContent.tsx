@@ -38,7 +38,7 @@ export default function RolesContent({ hypName, musicalBandId, rolesAndPermissio
   const initialDeleteState: RoleStateDelete = { errors: {}, message: null, success: false, data: undefined };
   const [stateDelete, formActionDelete, isDeletingPending] = useActionState<RoleStateDelete, FormData>(deleteRoleAction, initialDeleteState);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [actualUserRole, setActualUserRole] = useState<UserRolesAndPermissions | null>(null);
+  const [currentUserRole, setCurrentUserRole] = useState<UserRolesAndPermissions | null>(null);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
@@ -46,9 +46,9 @@ export default function RolesContent({ hypName, musicalBandId, rolesAndPermissio
   const formRefCreate = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    const actualRole = userRolesAndPermissions.find((ur) => ur.musicalBand.id === musicalBandId);
-    if (actualRole) {
-      setActualUserRole(actualRole);
+    const currentRole = userRolesAndPermissions.find((ur) => ur.musicalBand.id === musicalBandId);
+    if (currentRole) {
+      setCurrentUserRole(currentRole);
     }
   }, [userRolesAndPermissions, musicalBandId])
 
@@ -237,10 +237,10 @@ export default function RolesContent({ hypName, musicalBandId, rolesAndPermissio
               <tr key={roleAndPermission.role.id}>
                 <td>
                   <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <CustomButton disabled={actualUserRole?.role.id === roleAndPermission.role.id} onClick={() => handleEditRole(roleAndPermission)} variant="tertiary">
+                    <CustomButton disabled={currentUserRole?.role.id === roleAndPermission.role.id} onClick={() => handleEditRole(roleAndPermission)} variant="tertiary">
                       <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
                     </CustomButton>
-                    <CustomButton disabled={actualUserRole?.role.id === roleAndPermission.role.id} onClick={() => handleDelete(roleAndPermission)} variant="tertiary" type="button">
+                    <CustomButton disabled={currentUserRole?.role.id === roleAndPermission.role.id} onClick={() => handleDelete(roleAndPermission)} variant="tertiary" type="button">
                       <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
                     </CustomButton>
                   </div>

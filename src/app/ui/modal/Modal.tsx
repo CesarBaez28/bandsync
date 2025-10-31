@@ -3,7 +3,7 @@
 import { FC, ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import styles from "./Modal.module.css";
+import styles from "./modal.module.css";
 
 export type ModalSize = "sm" | "md" | "lg" | "full";
 
