@@ -1,5 +1,6 @@
 "use server";
 
+import { auth, unstable_update } from "@/auth";
 import { registerUser, updateUser } from "../api/users";
 import { ApiResponse, MusicalBand } from "../definitions";
 import { editUserSchema } from "../schemas/editUserSchema";
@@ -127,8 +128,14 @@ export async function updateUserAction(prevState: UpdateUserState, formData: For
     };
   }
 
-  console.log(response.data);
-
+  const session = await auth();
+  await unstable_update({
+    user: {
+      ...session?.user,
+      ...response.data
+    }
+  })
+  
   return {
     success: true,
     user: response.data
