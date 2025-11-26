@@ -82,6 +82,37 @@ export async function saveMusicalBand(formData: FormData): Promise<ApiResponse<M
   return await response.json();
 }
 
+export type InvitationProps = {
+  email: string;
+  user: { id: UUID };
+  musicalBandId: UUID;
+}
+
+export async function sendInvitationEmail({ email, user, musicalBandId }: InvitationProps): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json'
+  }
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/musical-bands/${musicalBandId}/invite`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ email, invitedBy: user })
+  });
+
+  return await response.json();
+}
+
 export async function updateMusicalBand(musicalBandId: UUID, formData: FormData): Promise<ApiResponse<MusicalBandInfo>> {
   const session = await auth();
 

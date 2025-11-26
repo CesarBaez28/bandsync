@@ -11,7 +11,11 @@ import { registerAction, RegisterUserState } from "@/app/lib/actions/users";
 import CustomLink from "../link/CustomLink";
 import Modal from "../modal/Modal";
 
-export default function RegisterForm() {
+type Props = {
+  token: string | undefined;
+}
+
+export default function RegisterForm({ token }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const initialState: RegisterUserState = { errors: {}, message: null, success: false };
   const [state, formAction, isPending] = useActionState<RegisterUserState, FormData>(registerAction, initialState);
@@ -72,6 +76,9 @@ export default function RegisterForm() {
             {...register("confirmPassword")}
             error={errors.confirmPassword}
           />
+
+          <input type="hidden" name="token" value={token || ''} />
+
           {state?.message && (
             <p className={styles['error-message']}>
               {state?.message}
@@ -97,7 +104,7 @@ export default function RegisterForm() {
         size="sm"
       >
         <div className={styles['modal-content']}>
-          <p>Usuario registrado correctamente. <br/> Por favor, inicie sesión:</p>
+          <p>Usuario registrado correctamente. <br /> Por favor, inicie sesión:</p>
           <CustomLink href={'/login'}>Iniciar sesión</CustomLink>
         </div>
       </Modal>

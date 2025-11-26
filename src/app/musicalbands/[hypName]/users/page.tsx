@@ -7,6 +7,7 @@ import InputContainer from '@/app/ui/musicalbands/users/InputContainer';
 import UsersTable from '@/app/ui/musicalbands/users/UsersTable';
 import { getAllByMusicalBandId } from '@/app/lib/api/musicalRolesUsers';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
+import { auth } from '@/auth';
 
 type UsersPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -17,12 +18,14 @@ type UsersPageProps = {
 }
 
 export default async function UsersPage(props: UsersPageProps) {
-  const [{ hypName }, { query = '', page = '1' } = {}] = await Promise.all([
+  const [{ hypName }, { query = '', page = '1' } = {}, session] = await Promise.all([
     props.params,
     props.searchParams,
+    auth()
   ]);
 
   const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
+  const userId = session?.user.id
 
   const [[usersResponse, usersError], [musicalRolesResponse, musicalRolesError]] = await Promise.all([
     handleAsync<ApiResponse<PagedData<User>>>(getUsersByMusicalBandId({
@@ -39,7 +42,7 @@ export default async function UsersPage(props: UsersPageProps) {
     <div>
       <h2>Integrantes</h2>
 
-      <InputContainer />
+      <InputContainer hypName={hypName} musicalBandId={musicalBand?.id} userId={userId} />
 
       <main className={styles.mainContainer}>
         {usersError || musicalRolesError
@@ -50,7 +53,7 @@ export default async function UsersPage(props: UsersPageProps) {
           : (
             <div>
               <Pagination totalPages={usersResponse?.data?.totalPages ?? 0} />
-              <UsersTable users={usersResponse?.data} musicalRolesUsers={musicalRolesResponse?.data} hypName={hypName} />
+              <UsersTable users={usersResponse?.data} musicalRolesUsers={musicalRolesResponse?.data} hypName={hypName} currentUserId={userId} />
             </div>
           )
         }

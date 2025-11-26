@@ -1,7 +1,7 @@
 "use server";
 
 import { auth, unstable_update } from "@/auth";
-import { registerUser, updateUser } from "../api/users";
+import { registerUser, registerUserFromInvitation, updateUser } from "../api/users";
 import { ApiResponse, MusicalBand } from "../definitions";
 import { editUserSchema } from "../schemas/editUserSchema";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
@@ -41,7 +41,16 @@ export async function registerAction(prevState: RegisterUserState, formData: For
     repeatedPassword: validatedFields.data.confirmPassword,
   };
 
-  const [response, error] = await handleAsync<ApiResponse<MusicalBand>>(registerUser(requestBody));
+  const token = formData.get("token") as string;
+
+  let response: ApiResponse<MusicalBand> | null;
+  let error: Error | null;
+
+  if (token === '') {
+    [response, error] = await handleAsync<ApiResponse<MusicalBand>>(registerUser(requestBody));
+  } else {
+    [response, error] = await handleAsync<ApiResponse<MusicalBand>>(registerUserFromInvitation({ ...requestBody, token }));
+  }
 
   if (error) {
     console.error("Error registering user:", error);
@@ -135,7 +144,7 @@ export async function updateUserAction(prevState: UpdateUserState, formData: For
       ...response.data
     }
   })
-  
+
   return {
     success: true,
     user: response.data

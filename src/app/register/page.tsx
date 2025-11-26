@@ -1,12 +1,20 @@
 import styles from '../styles/login-regiser.module.css'
 import RegisterForm from '../ui/register/RegisterForm';
 
-export default function RegisterPage() {
+type Props = {
+  readonly searchParams?: Promise<{
+    token?: string;
+  }>;
+};
+
+export default async function RegisterPage(props: Props) {
+  const { token } = (await props.searchParams) ?? {};
+
   return (
     <main className={styles['main']}>
       <div className={styles['main-content']}>
         <div className={styles['login-container']}>
-          <RegisterForm />
+          <RegisterForm token={token} />
         </div>
       </div>
       <footer className={styles['footer']}>

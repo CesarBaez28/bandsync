@@ -8,12 +8,13 @@ import CustomButton from "../../button/CustomButton";
 import CustomImage from "../../image/CustomImage";
 
 type Props = {
+  readonly currentUserId: string | undefined;
   readonly users: PagedData<User> | undefined;
   readonly musicalRolesUsers?: MusicalRolesUsers[];
   readonly hypName: string;
 }
 
-export default function UsersTable({ users, musicalRolesUsers, hypName }: Props) {
+export default function UsersTable({ users, musicalRolesUsers, hypName, currentUserId }: Props) {
   const handleDelete = (user: User) => {
     console.log(user);
   }
@@ -40,7 +41,7 @@ export default function UsersTable({ users, musicalRolesUsers, hypName }: Props)
                     <CustomLink href={`/musicalbands/${hypName}/users/${user.id}/edit`} variant="tertiary">
                       <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
                     </CustomLink>
-                    <CustomButton onClick={() => handleDelete(user)} variant="tertiary" type="button">
+                    <CustomButton disabled={user.id === currentUserId} onClick={() => handleDelete(user)} variant="tertiary" type="button">
                       <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
                     </CustomButton>
                   </div>

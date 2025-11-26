@@ -140,3 +140,9 @@ export type UserSesion = User & {
   rolesAndPermissions: UserRolesAndPermissions [],
   accessToken: string;
 }
+
+export type AcceptInvitation = {
+  userExist: boolean,
+  bandName: string,
+  email: string
+}

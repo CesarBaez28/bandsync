@@ -1,10 +1,11 @@
 'use server';
 import { auth } from "@/auth";
-import { saveMusicalBand, updateMusicalBand } from "../api/musicalBands";
+import { InvitationProps, saveMusicalBand, sendInvitationEmail, updateMusicalBand } from "../api/musicalBands";
 import { ApiResponse, MusicalBand, MusicalBandInfo } from "../definitions";
 import { createMusicalBandSchema } from "../schemas/createMusicalBandSchema";
 import { handleAsync } from "../utils";
 import { UUID } from "crypto";
+import { sendInvitationSchema } from "../schemas/sendInvitationSchema";
 
 export type CreateMusicalBandState = {
   errors?: {
@@ -88,7 +89,7 @@ export type UpdateMusicalBandState = {
 export async function updateMusicalBandAction(prevState: UpdateMusicalBandState, formData: FormData) {
   const musicalBandId = formData.get("musicalBandId") as UUID;
   const logo = formData.get("logo") as string;
-  
+
   const requestBody = {
     name: formData.get("name"),
     email: formData.get("email"),
@@ -137,5 +138,62 @@ export async function updateMusicalBandAction(prevState: UpdateMusicalBandState,
   return {
     success: true,
     band: response.data
+  }
+}
+
+
+export type InvitationState = {
+  errors?: {
+    email?: string[];
+  };
+  message?: string | null;
+  success: boolean;
+}
+
+export async function sendInvitationEmailAction(prevState: InvitationState, formData: FormData) {
+  const musicalBandId = formData.get("musicalBandId") as UUID;
+  const userId = formData.get("userId") as UUID;
+  const email = formData.get("email") as string;
+
+  console.log("musicalBandId:", musicalBandId);
+  console.log("userId:", userId);
+  console.log("email:", email);
+
+  const validatedFields = sendInvitationSchema.safeParse({ email });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const request: InvitationProps = {
+    email,
+    user: { id: userId },
+    musicalBandId
+  };
+
+  const [response, errors] = await handleAsync<ApiResponse<void>>(sendInvitationEmail(request));
+
+  if (errors) {
+    console.error("Error sending invitation email:", errors);
+    return {
+      message: "Ocurrió un error al enviar la invitación. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true,
+    message: "Invitación enviada correctamente."
   }
 }

@@ -31,11 +31,38 @@ export async function registerUser({
   return await response.json();
 }
 
+type RegisterUserFromInvitationParams = {
+  username: string;
+  email: string;
+  password: string;
+  repeatedPassword: string;
+  token: string;
+}
+
+export async function registerUserFromInvitation({
+  username,
+  email,
+  password,
+  repeatedPassword,
+  token
+}: RegisterUserFromInvitationParams): Promise<ApiResponse<MusicalBand>> {
+
+  const response = await fetch(`${config.api}/${USER_PATH}/register/${token}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, email, password, repeatedPassword }),
+  });
+
+  return await response.json();
+}
+
 export async function getUserById(): Promise<ApiResponse<User>> {
   const session = await auth();
 
   if (!session?.accessToken) {
-    throw Error("Unauthorized: No session or access token found.")
+    throw new Error("Unauthorized: No session or access token found.")
   }
 
   const response = await fetch(`${config.api}/users/findById/${session.user?.id}`, {
@@ -95,6 +122,6 @@ export async function getUsersByMusicalBandId({ musicalBandId, query, page }: Ge
     method: 'GET',
     headers
   });
-  
+
   return await response.json();
 }
