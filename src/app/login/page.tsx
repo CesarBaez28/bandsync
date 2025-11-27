@@ -1,5 +1,6 @@
 import LoginForm from "../ui/login/LoginForm";
 import styles from '../styles/login-regiser.module.css'
+import { Footer } from "../ui/footer/Footer";
  
 export default function Login() {
   return (
@@ -9,11 +10,7 @@ export default function Login() {
           <LoginForm />
         </div>
       </div>
-      <footer className={styles['footer']}>
-        <div className={styles['footer-container']}>
-          <p>© 2025 BandSync. Todos los derechos reservados.</p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

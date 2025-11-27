@@ -1,4 +1,5 @@
 import styles from '../styles/login-regiser.module.css'
+import { Footer } from '../ui/footer/Footer';
 import RegisterForm from '../ui/register/RegisterForm';
 
 type Props = {
@@ -17,11 +18,7 @@ export default async function RegisterPage(props: Props) {
           <RegisterForm token={token} />
         </div>
       </div>
-      <footer className={styles['footer']}>
-        <div className={styles['footer-container']}>
-          <p>© 2025 BandSync. Todos los derechos reservados.</p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

@@ -194,6 +194,5 @@ export async function sendInvitationEmailAction(prevState: InvitationState, form
 
   return {
     success: true,
-    message: "Invitación enviada correctamente."
   }
 }
