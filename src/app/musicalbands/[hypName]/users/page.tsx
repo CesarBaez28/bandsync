@@ -53,7 +53,13 @@ export default async function UsersPage(props: UsersPageProps) {
           : (
             <div>
               <Pagination totalPages={usersResponse?.data?.totalPages ?? 0} />
-              <UsersTable users={usersResponse?.data} musicalRolesUsers={musicalRolesResponse?.data} hypName={hypName} currentUserId={userId} />
+              <UsersTable
+                musicalBandId={musicalBand?.id}
+                users={usersResponse?.data}
+                musicalRolesUsers={musicalRolesResponse?.data}
+                hypName={hypName}
+                currentUserId={userId}
+              />
             </div>
           )
         }

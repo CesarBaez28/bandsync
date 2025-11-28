@@ -1,11 +1,12 @@
 "use server";
 
 import { auth, unstable_update } from "@/auth";
-import { registerUser, registerUserFromInvitation, updateUser } from "../api/users";
+import { leaveMusicalBand, registerUser, registerUserFromInvitation, updateUser } from "../api/users";
 import { ApiResponse, MusicalBand } from "../definitions";
 import { editUserSchema } from "../schemas/editUserSchema";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
 import { handleAsync } from "../utils";
+import { UUID } from "crypto";
 
 export type RegisterUserState = {
   errors?: {
@@ -148,5 +149,36 @@ export async function updateUserAction(prevState: UpdateUserState, formData: For
   return {
     success: true,
     user: response.data
+  }
+}
+
+export type LeaveMusicalBandState = {
+  message?: string | null;
+  success: boolean;
+}
+
+export async function leaveMusicalBandAction(prevState: LeaveMusicalBandState, FormData: FormData): Promise<LeaveMusicalBandState> {
+  const musicalBandId = FormData.get("musicalBandId") as UUID;
+  const userId = FormData.get("userId") as UUID;
+
+  const [response, errors] = await handleAsync<ApiResponse<void>>(leaveMusicalBand(userId, musicalBandId));
+
+  if (errors) {
+    console.error("Error leaving musical band:", errors);
+    return {
+      message: "Ocurrió un error al salir de la banda musical. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true
   }
 }

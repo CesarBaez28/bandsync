@@ -156,7 +156,7 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
 
             <CustomInput
               type='text'
-              label='Email::'
+              label='Email:'
               {...register("email")}
               error={errors.email}
             />

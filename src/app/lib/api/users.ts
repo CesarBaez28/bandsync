@@ -125,3 +125,21 @@ export async function getUsersByMusicalBandId({ musicalBandId, query, page }: Ge
 
   return await response.json();
 }
+
+export async function leaveMusicalBand(userId: UUID, musicalBandId: UUID): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const response = await fetch(`${config.api}/${USER_PATH}/leaveMusicalBand/${musicalBandId}/${userId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+      [config.musicalBandHeader]: musicalBandId
+    }
+  });
+
+  return await response.json();
+}
