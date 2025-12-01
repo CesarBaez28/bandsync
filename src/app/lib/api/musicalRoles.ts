@@ -41,6 +41,32 @@ export async function getMusicalRolesByMusicalBandIdAndName({
   return await response.json();
 }
 
+export async function getAllMusicalRolesByMusicalBandId({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<MusicalRole[]>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${MUSICAL_ROLES_PATH}/findByMusicalBandId/${musicalBandId}`, {
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while getting all musical roles by musical band id");
+  }
+
+  return await response.json();
+}
+
 export type CreateMusicalRoleParams = {
   name: string;
   musicalBandId: UUID | undefined;
@@ -108,7 +134,7 @@ export async function deleteMusicalRoleById({ id, musicalBandId }: { id: number;
   const session = await auth();
 
   if (!session?.accessToken) {
-    throw Error("Unauthorized: No session or access token found.")
+    throw new Error("Unauthorized: No session or access token found.")
   }
 
   const headers: Record<string, string> = {
@@ -127,7 +153,7 @@ export async function deleteMusicalRoleById({ id, musicalBandId }: { id: number;
 
   if (!response.ok) {
     throw new Error("Error while deleting musical role by id");
-  }    
-  
+  }
+
   return await response.json();
 }

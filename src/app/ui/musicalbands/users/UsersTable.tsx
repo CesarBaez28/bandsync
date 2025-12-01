@@ -3,7 +3,7 @@
 import styles from './users-table.module.css';
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
-import { MusicalRolesUsers, PagedData, User } from "@/app/lib/definitions";
+import { MusicalRole, MusicalRolesUsers, PagedData, User } from "@/app/lib/definitions";
 import Image from "next/image";
 import CustomButton from "../../button/CustomButton";
 import CustomImage from "../../image/CustomImage";
@@ -13,33 +13,79 @@ import { leaveMusicalBandAction, LeaveMusicalBandState } from '@/app/lib/actions
 import { UUID } from 'crypto';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
+import CustomSelect, { OptionInputSelect } from '../../Inputs/CustomSelect';
+import { assignMusicalRolesToUserAction, AssignMusicalRolesToUserActionState } from '@/app/lib/actions/muscalRoles';
 
 type Props = {
   readonly musicalBandId: UUID | undefined;
   readonly currentUserId: string | undefined;
   readonly users: PagedData<User> | undefined;
+  readonly musicalRoles: MusicalRole[] | undefined;
   readonly musicalRolesUsers?: MusicalRolesUsers[];
   readonly hypName: string;
 }
 
-export default function UsersTable({ users, musicalRolesUsers, hypName, currentUserId, musicalBandId }: Props) {
+export default function UsersTable({
+  users,
+  musicalRolesUsers,
+  musicalRoles,
+  hypName,
+  currentUserId,
+  musicalBandId }: Props) {
   const { showToast } = useToast();
   const router = useRouter();
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedMusicalRolesUsers, setSelectedMusicalRolesUsers] = useState<MusicalRole[]>([]);
+  const [selectedRole, setSelectedRole] = useState<string>('');
+  const initialState: AssignMusicalRolesToUserActionState = { message: null, success: false };
+  const [state, formAction, isPending] = useActionState<AssignMusicalRolesToUserActionState, FormData>(assignMusicalRolesToUserAction, initialState);
   const initialDeleteState: LeaveMusicalBandState = { message: null, success: false };
   const [deleteState, formDeleteAction, isDeletingPending] = useActionState<LeaveMusicalBandState, FormData>(leaveMusicalBandAction, initialDeleteState);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+
+  const options: OptionInputSelect[] | undefined = musicalRoles
+    ?.sort((a, b) => a.name.localeCompare(b.name))
+    .map((musicalRole) => (
+      { label: musicalRole.name, value: musicalRole.id.toString() }
+    ));
 
   const handleCancel = useCallback(() => {
     setOpenDeleteModal(false);
+    setOpenEditModal(false);
     setSelectedUser(null);
+    setSelectedMusicalRolesUsers([]);
     deleteState.message = null;
     deleteState.success = false;
-  }, [deleteState]);
+    state.message = null;
+    state.success = false;
+  }, [deleteState, state]);
 
   const handleDelete = (user: User) => {
     setSelectedUser(user);
     setOpenDeleteModal(true);
+  }
+
+  const handleEdit = (user: User) => {
+    setSelectedUser(user);
+    setOpenEditModal(true);
+    setSelectedMusicalRolesUsers(
+      musicalRolesUsers?.find(mru => mru.userId === user.id)?.musicalRoles || []
+    );
+  }
+
+  const handleAddRole = () => {
+    const roleToAdd = musicalRoles?.find(role => role.id.toString() === selectedRole);
+    if (roleToAdd && !selectedMusicalRolesUsers.some(r => r.id === roleToAdd.id)) {
+      setSelectedMusicalRolesUsers([...selectedMusicalRolesUsers, roleToAdd]);
+      setSelectedRole('');
+    }
+  }
+
+  const handleDeleteRole = (role: MusicalRole) => {
+    if (selectedMusicalRolesUsers) {
+      setSelectedMusicalRolesUsers(selectedMusicalRolesUsers.filter(r => r.id !== role.id));
+    }
   }
 
   useEffect(() => {
@@ -49,6 +95,14 @@ export default function UsersTable({ users, musicalRolesUsers, hypName, currentU
       router.push(`/musicalbands/${hypName}/users`);
     }
   }, [deleteState.success, handleCancel, hypName, router, showToast]);
+
+  useEffect(() => {
+    if (state?.success) {
+      handleCancel();
+      showToast('Roles musicales asignados con éxito!', 'success');
+      router.push(`/musicalbands/${hypName}/users`);
+    }
+  }, [state.success, handleCancel, showToast, router, hypName]);
 
   return (
     <div id="modal-root">
@@ -70,7 +124,7 @@ export default function UsersTable({ users, musicalRolesUsers, hypName, currentU
                 <td>
                   <div style={{ display: 'flex', gap: '.6rem' }}>
                     <CustomButton variant="tertiary">
-                      <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                      <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} onClick={() => handleEdit(user)} />
                     </CustomButton>
                     <CustomButton disabled={user.id === currentUserId} onClick={() => handleDelete(user)} variant="tertiary" type="button">
                       <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
@@ -98,7 +152,7 @@ export default function UsersTable({ users, musicalRolesUsers, hypName, currentU
                   {
                     musicalRolesUsers?.find(mru => mru.userId === user.id)?.musicalRoles.map((mr) => (
                       <span key={mr.id} className={styles.roleBadge}>{mr.name}</span>
-                    )) ?? 'Sin roles'
+                    )) ?? ''
                   }
                 </td>
                 <td>{user.phone}</td>
@@ -111,6 +165,63 @@ export default function UsersTable({ users, musicalRolesUsers, hypName, currentU
           <p>Invite a un integrante o cambie los valores de su búsqueda</p>
         </div>)
       }
+
+      <Modal
+        size="sm"
+        isOpen={openEditModal}
+        title="Asignar Roles musicales"
+      >
+
+        <form action={formAction} className={stylesForm.fieldsContainer}>
+
+          <div className={styles.selectAddContainer}>
+            <CustomSelect
+              placeholder='Escoja un rol y agréguelo'
+              fullWidth={true}
+              name="musicalRoles"
+              options={options || []}
+              onChange={(e) => setSelectedRole(e.target.value)}
+            />
+            <CustomButton onClick={handleAddRole} style={{ color: 'white' }} type='button'>
+              <Image src="/add_2_24dp_FFF.svg" alt="Agregar" width={16} height={16} />
+            </CustomButton>
+          </div>
+
+          {selectedMusicalRolesUsers.length !== 0 && (
+            <div className={styles.rolesContainer}>
+              {selectedMusicalRolesUsers?.map((mr) => (
+                <div className={styles.role} key={mr.id}>
+                  <div className={styles.roleContent}>
+                    <span>{mr.name}</span>
+                    <CustomButton onClick={() => handleDeleteRole(mr)} type='button' variant='tertiary'>
+                      <Image src="/delete_24dp.svg" alt="Eliminar" width={20} height={20} />
+                    </CustomButton>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {state?.message && (
+            <p className={stylesForm.errorMessage}>
+              {state?.message}
+            </p>
+          )}
+
+          <input type="hidden" name="userId" value={selectedUser?.id} />
+          <input type="hidden" name="musicalBandId" value={musicalBandId} />
+          <input type="hidden" name="roles" value={selectedMusicalRolesUsers.map(role => role.id).toString()} />
+
+          <div className={stylesModal.buttonsContainer}>
+            <CustomButton type='button' variant='secondary' onClick={handleCancel}>
+              Cancelar
+            </CustomButton>
+            <CustomButton isLoading={isPending} type='submit'>
+              Guardar
+            </CustomButton>
+          </div>
+        </form>
+      </Modal>
 
       <Modal
         size="sm"

@@ -155,10 +155,6 @@ export async function sendInvitationEmailAction(prevState: InvitationState, form
   const userId = formData.get("userId") as UUID;
   const email = formData.get("email") as string;
 
-  console.log("musicalBandId:", musicalBandId);
-  console.log("userId:", userId);
-  console.log("email:", email);
-
   const validatedFields = sendInvitationSchema.safeParse({ email });
 
   if (!validatedFields.success) {

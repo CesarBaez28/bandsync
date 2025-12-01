@@ -4,6 +4,10 @@
   gap: 5px;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 /* CustomSelect styles */
 
 .select {

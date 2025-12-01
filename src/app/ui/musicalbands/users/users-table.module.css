@@ -24,3 +24,34 @@
   margin-right: .2rem;
   margin-top: .2rem;
 }
+
+.selectAddContainer{
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.rolesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.role {
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  background-color: var(--color-white-100);
+  border-radius: 8px;
+  padding: .625rem;
+}
+
+.role:hover {
+  background-color: var(--color-white-200);
+}
+
+.roleContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

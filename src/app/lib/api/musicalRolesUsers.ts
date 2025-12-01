@@ -30,3 +30,29 @@ export async function getAllByMusicalBandId({ musicalBandId }: { musicalBandId: 
 
   return await response.json();
 }
+
+type AssignRolesToUserProps = {
+  userId: UUID;
+  musicalBandId: UUID;
+  roleIds: { id: string }[];
+}
+
+export async function assignRolesToUser({ userId, musicalBandId, roleIds }: AssignRolesToUserProps): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const response = await fetch(`${config.api}/${MUSICAL_ROLES_USERS_PATH}/assignMusicalRoles/${musicalBandId}/${userId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json',
+      [config.musicalBandHeader]: musicalBandId
+    },
+    body: JSON.stringify(roleIds)
+  });
+
+  return await response.json();
+}

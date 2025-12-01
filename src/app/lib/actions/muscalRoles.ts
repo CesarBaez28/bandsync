@@ -5,6 +5,7 @@ import { musicalRoleSchema } from "../schemas/musicalRolesSchema";
 import { ApiResponse, MusicalRole } from "../definitions";
 import { createMusicalRole, deleteMusicalRoleById, updateMusicalRole } from "../api/musicalRoles";
 import { handleAsync } from "../utils";
+import { assignRolesToUser } from "../api/musicalRolesUsers";
 
 export type MusicalRoleActionState = {
   errors?: {
@@ -130,4 +131,40 @@ export async function deleteMusicalRoleAction(prevState: DeleteMusicalRoleAction
   return {
     success: response.success
   }
+}
+
+export type AssignMusicalRolesToUserActionState = {
+  message?: string | null;
+  success: boolean;
+}
+
+export async function assignMusicalRolesToUserAction(prevState: AssignMusicalRolesToUserActionState, formData: FormData) {
+  const userId = formData.get("userId") as UUID;
+  const musicalBandId = formData.get("musicalBandId") as UUID;
+
+  const roleIds = (formData.get("roles") as string)
+    ?.split(',')
+    .filter(Boolean) // Filtrar IDs vacíos
+    .map(id => ({ id }));
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(assignRolesToUser({ userId, musicalBandId, roleIds }));
+
+  if (error) {
+    console.error("Error assigning musical roles to user:", error);
+    return {
+      message: "Ocurrió un error al asignar los roles musicales al usuario. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: "Seleccione al menos un rol musical para asignar al usuario.",
+      success: false
+    };
+  }
+
+  return {
+    success: response.success
+  };
 }

@@ -11,19 +11,27 @@ export type OptionInputSelect = {
 };
 
 type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
-  label: string;
+  placeholder?: string;
+  label?: string;
+  fullWidth?: boolean;
   name: string;
   options: OptionInputSelect[] | undefined;
   error?: FieldError;
 };
 
 const CustomSelect = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, name, options, error, className, ...rest }, ref) => {
+  ({ label, name, options, error, className, fullWidth = false, placeholder, ...rest }, ref) => {
     return (
-      <div className={styles["field"]}>
-        <label htmlFor={name} className={styles["label"]}>
-          {label}
-        </label>
+      <div className={clsx(
+        styles["field"],
+        { [styles.fullWidth]: fullWidth }
+      )}
+      >
+        {label && (
+          <label htmlFor={name} className={styles["label"]}>
+            {label}
+          </label>
+        )}
         <select
           id={name}
           name={name}
@@ -36,7 +44,7 @@ const CustomSelect = forwardRef<HTMLSelectElement, SelectProps>(
           )}
           {...rest}
         >
-          <option value="">Seleccione una opción</option>
+          <option value="">{placeholder ?? "Seleccione una opción"}</option>
           {options?.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
