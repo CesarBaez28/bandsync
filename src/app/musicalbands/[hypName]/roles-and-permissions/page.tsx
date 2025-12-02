@@ -2,13 +2,14 @@ import getAllPermissions from '@/app/lib/api/permissions';
 import styles from './roles-and-permissions.module.css'
 import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
 import { getRolesAndPermissionsByMusicalBandId, getUsersRoles } from "@/app/lib/api/roles";
-import { ApiResponse, RoleAndPermissions, Permission, TypeOfPermission, UserRole, Role} from "@/app/lib/definitions";
+import { ApiResponse, RoleAndPermissions, Permission, TypeOfPermission, UserRole, Role, User } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import RolesContent from '@/app/ui/musicalbands/role-and-permissions/RolesContent';
 import getAllTypesOfPermissions from '@/app/lib/api/typeOfPermissions';
 import UsersRolesContent from '@/app/ui/musicalbands/role-and-permissions/UsersRoles';
 import Tabs from '@/app/ui/tabs/Tabs';
 import { auth } from '@/auth';
+import { getAllUsersByMusicalBandId } from '@/app/lib/api/users';
 
 type PageProps = {
   params: Promise<{ hypName: string; }>;
@@ -26,12 +27,14 @@ export default async function RolesAndPermissionsPage(props: PageProps) {
     [rolesAndPermissions, rolesAndPermissionsError],
     [permissions, permissionsError],
     [typeOfPermissions, typeOfPermissionsError],
-    [usersRoles, usersRolesError]
+    [usersRoles, usersRolesError],
+    [users, usersError]
   ] = await Promise.all([
     handleAsync<ApiResponse<RoleAndPermissions[]>>(getRolesAndPermissionsByMusicalBandId({ musicalBandId: musicalBand?.id })),
     handleAsync<ApiResponse<Permission[]>>(getAllPermissions({ musicalBandId: musicalBand?.id })),
     handleAsync<ApiResponse<TypeOfPermission[]>>(getAllTypesOfPermissions({ musicalBandId: musicalBand?.id })),
-    handleAsync<ApiResponse<UserRole[]>>(getUsersRoles({ musicalBandId: musicalBand?.id }))
+    handleAsync<ApiResponse<UserRole[]>>(getUsersRoles({ musicalBandId: musicalBand?.id })),
+    handleAsync<ApiResponse<User[]>>(getAllUsersByMusicalBandId({ musicalBandId: musicalBand?.id }))
   ]);
 
   const roles: Role[] | undefined = rolesAndPermissions?.data?.map(rp => rp.role);
@@ -55,6 +58,7 @@ export default async function RolesAndPermissionsPage(props: PageProps) {
       content: <UsersRolesContent
         currentUserId={currentUserId}
         usersRoles={usersRoles?.data}
+        users={users?.data}
         roles={roles}
         musicalBandId={musicalBand?.id}
         hypName={hypName}
@@ -68,7 +72,7 @@ export default async function RolesAndPermissionsPage(props: PageProps) {
       <h2>Roles y Permisos</h2>
 
       <main className={styles.mainContainer}>
-        {rolesAndPermissionsError || permissionsError || typeOfPermissionsError || usersRolesError
+        {rolesAndPermissionsError || permissionsError || typeOfPermissionsError || usersRolesError || usersError
           ? <div className="message">
             <h2>¡Lo sentimos!</h2>
             <p>Hubo un error al traer los datos. Intente refrescar la página o vuelva a visitar la página más tarde.</p>

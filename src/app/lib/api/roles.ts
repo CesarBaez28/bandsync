@@ -7,6 +7,39 @@ import { config } from "../config";
 
 const ROLES_PATH = "roles";
 
+export type AssignRoleToUserParams = {
+  musicalBandId: UUID;
+  userId: UUID;
+  roleId: number;
+}
+
+export async function assingRoleToUserInBand({ musicalBandId, userId, roleId }: AssignRoleToUserParams): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  }
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${ROLES_PATH}/assign/role/${roleId}/user/${userId}/musicalBand/${musicalBandId}`, {
+    method: 'POST',
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while assigning role to user in band");
+  }
+
+  return await response.json();
+}
+
 export async function getRolesAndPermissionsByMusicalBandId({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<RoleAndPermissions[]>> {
   const session = await auth();
 

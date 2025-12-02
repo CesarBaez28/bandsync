@@ -126,6 +126,29 @@ export async function getUsersByMusicalBandId({ musicalBandId, query, page }: Ge
   return await response.json();
 }
 
+export async function getAllUsersByMusicalBandId({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<User[]>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  }
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${USER_PATH}/findAllByMusicalBandId/${musicalBandId}`, {
+    method: 'GET',
+    headers
+  });
+
+  return await response.json();
+}
+
 export async function leaveMusicalBand(userId: UUID, musicalBandId: UUID): Promise<ApiResponse<void>> {
   const session = await auth();
 

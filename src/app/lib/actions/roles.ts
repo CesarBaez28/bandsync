@@ -4,8 +4,9 @@ import { UUID } from "node:crypto";
 import { roleSchema } from "../schemas/roleSchema";
 import { ApiResponse, RoleAndPermissions, User } from "../definitions";
 import { handleAsync } from "../utils";
-import { createRole, CreateRoleAndPermissionsParams, deleteRoleById, updateRoleAndPermissions, UpdateRoleAndPermissionsParams, updateUserRole, UpdateUserRoleProps } from "../api/roles";
+import { AssignRoleToUserParams, assingRoleToUserInBand, createRole, CreateRoleAndPermissionsParams, deleteRoleById, updateRoleAndPermissions, UpdateRoleAndPermissionsParams, updateUserRole, UpdateUserRoleProps } from "../api/roles";
 import { userRoleSchema } from "../schemas/userRoleSchema";
+import { assingRoleToUserSchema } from "../schemas/assingRoleToUserSchema";
 
 export type RoleState = {
   errors?: {
@@ -203,6 +204,61 @@ export async function deleteRoleAction(prevState: RoleStateDelete, formData: For
 
   return {
     data: [],
+    success: true
+  };
+}
+
+export type RoleStateAssign = {
+  errors?: {
+    user?: string[];
+    role?: string[];
+  };
+  message?: string | null;
+  success: boolean;
+}
+
+export async function assignRoleToUserAction(prevState: RoleStateAssign, formData: FormData) {
+  const validatedFields = assingRoleToUserSchema.safeParse({
+    user: formData.get("user"),
+    role: formData.get("role"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const roleId = Number(validatedFields.data.role);
+  const userId = validatedFields.data.user as UUID;
+  const musicalBandId = formData.get("musicalBandId") as UUID;
+
+  const requestBody: AssignRoleToUserParams = {
+    musicalBandId,
+    userId,
+    roleId
+  }
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(assingRoleToUserInBand(requestBody));
+
+  if (error) {
+    console.error("Error assigning role to user:", error);
+    return {
+      message: "Ocurrió un error al asignar el rol al usuario. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
+  return {
     success: true
   };
 }
