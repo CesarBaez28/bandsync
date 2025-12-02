@@ -1,6 +1,7 @@
 'use client';
 
 import stylesForm from '../../../styles/form.module.css'
+import stylesModal from '../../../styles/modal.module.css';
 import { Role, User, UserRole, UserRolesAndPermissions } from "@/app/lib/definitions";
 import { usePermissionsStore } from "@/app/store/usePermissionsStore";
 import CustomButton from "../../button/CustomButton";
@@ -9,7 +10,7 @@ import { startTransition, useActionState, useCallback, useEffect, useRef, useSta
 import { UUID } from "node:crypto";
 import Modal from "../../modal/Modal";
 import CustomSelect, { OptionInputSelect } from '../../Inputs/CustomSelect';
-import { assignRoleToUserAction, RoleStateAssign, updateUserRoleAction, UserRoleState } from '@/app/lib/actions/roles';
+import { assignRoleToUserAction, deleteUserRoleAction, DeleteUserRoleState, RoleStateAssign, updateUserRoleAction, UserRoleState } from '@/app/lib/actions/roles';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userRoleSchema, UserRoleSchema } from '@/app/lib/schemas/userRoleSchema';
@@ -33,13 +34,16 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
   const [currentUserRole, setCurrentUserRole] = useState<UserRolesAndPermissions | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openAssignModal, setOpenAssignModal] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [selectedUserRole, setSelectedUserRole] = useState<UserRole | null>(null);
-  const initialAssingnRoleState: RoleStateAssign = { success: false, errors: {}, message: null }
+  const initialAssingnRoleState: RoleStateAssign = { success: false, errors: {}, message: null };
   const [assingState, formAssignAction, isAssignLoading] = useActionState<RoleStateAssign, FormData>(assignRoleToUserAction, initialAssingnRoleState);
   const formAssingRef = useRef<HTMLFormElement>(null);
-  const initialState: UserRoleState = { success: false, errors: {}, message: null }
+  const initialState: UserRoleState = { success: false, errors: {}, message: null };
   const [state, formAction, isLoading] = useActionState<UserRoleState, FormData>(updateUserRoleAction, initialState);
   const formRef = useRef<HTMLFormElement>(null);
+  const initialDeleteState: DeleteUserRoleState = { success: false, message: null };
+  const [deleteState, formDeleteAction, isDeletingLoading] = useActionState<DeleteUserRoleState, FormData>(deleteUserRoleAction, initialDeleteState);
 
   const {
     register: assingRegister,
@@ -89,10 +93,13 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
     state.errors = {}
     assingState.message = null;
     assingState.errors = {}
+    deleteState.message = null;
+    deleteState.success = false;
     setOpenModal(false);
     setOpenAssignModal(false);
     setSelectedUserRole(null);
-  }, [reset, state, assingReset, assingState]);
+    setOpenDeleteModal(false);
+  }, [reset, state, assingReset, assingState, deleteState]);
 
   useEffect(() => {
     if (assingState.success) {
@@ -110,6 +117,14 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
     }
   }, [state.success, handleCancel, router, showToast, hypName])
 
+  useEffect(() => {
+    if (deleteState.success) {
+      handleCancel();
+      showToast('Role de usuario eliminado correctamente!', 'success');
+      router.push(`/musicalbands/${hypName}/roles-and-permissions`);
+    }
+  }, [deleteState.success, handleCancel, router, showToast, hypName])
+
   const rolesOptions: OptionInputSelect[] | undefined = roles
     ?.sort((a, b) => a.name.localeCompare(b.name))
     .map((role) => (
@@ -126,6 +141,11 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
     setSelectedUserRole(userRole);
     setValue("role", userRole.role.id.toString())
     setOpenModal(true);
+  }
+
+  const handleDelete = (userRole: UserRole) => {
+    setOpenDeleteModal(true);
+    setSelectedUserRole(userRole);
   }
 
   useEffect(() => {
@@ -162,6 +182,13 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
                       variant="tertiary"
                     >
                       <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                    </CustomButton>
+                    <CustomButton
+                      disabled={currentUserRole?.role.id === userRole.role.id && userRole.user.id === currentUserId}
+                      variant='tertiary'
+                      onClick={() => handleDelete(userRole)}
+                    >
+                      <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
                     </CustomButton>
                   </div>
                 </td>
@@ -259,6 +286,37 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
               </CustomButton>
             </div>
 
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        size="sm"
+        isOpen={openDeleteModal}
+        title="Eliminar role de usuario"
+      >
+        <form action={formDeleteAction} className={stylesModal.modalContent}>
+
+          <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
+
+          <p>Al hacerlo, el usuario perderá los permisos que tenía. </p>
+
+          {deleteState?.message && (
+            <p className={stylesForm.errorMessage}>
+              {deleteState?.message}
+            </p>
+          )}
+
+          <input type="hidden" name="userId" value={selectedUserRole?.user?.id} />
+          <input type="hidden" name="musicalBandId" value={musicalBandId} />
+
+          <div className={stylesModal.buttonsContainer}>
+            <CustomButton type='button' variant='secondary' onClick={handleCancel}>
+              Cancelar
+            </CustomButton>
+            <CustomButton isLoading={isDeletingLoading} type='submit'>
+              Eliminar
+            </CustomButton>
           </div>
         </form>
       </Modal>

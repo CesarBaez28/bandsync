@@ -257,3 +257,30 @@ export async function deleteRoleById({ musicalBandId, roleId }: DeleteRoleByIdPr
 
   return await response.json();
 }
+
+export async function deleteUserRole({ musicalBandId, userId }: { musicalBandId: UUID; userId: UUID }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  }
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${ROLES_PATH}/delete/user/${userId}/musicalBand/${musicalBandId}`, {
+    method: 'DELETE',
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Error while deleting user role");
+  }
+
+  return await response.json();
+}

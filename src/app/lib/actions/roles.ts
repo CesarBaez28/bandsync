@@ -4,7 +4,7 @@ import { UUID } from "node:crypto";
 import { roleSchema } from "../schemas/roleSchema";
 import { ApiResponse, RoleAndPermissions, User } from "../definitions";
 import { handleAsync } from "../utils";
-import { AssignRoleToUserParams, assingRoleToUserInBand, createRole, CreateRoleAndPermissionsParams, deleteRoleById, updateRoleAndPermissions, UpdateRoleAndPermissionsParams, updateUserRole, UpdateUserRoleProps } from "../api/roles";
+import { AssignRoleToUserParams, assingRoleToUserInBand, createRole, CreateRoleAndPermissionsParams, deleteRoleById, deleteUserRole, updateRoleAndPermissions, UpdateRoleAndPermissionsParams, updateUserRole, UpdateUserRoleProps } from "../api/roles";
 import { userRoleSchema } from "../schemas/userRoleSchema";
 import { assingRoleToUserSchema } from "../schemas/assingRoleToUserSchema";
 
@@ -247,6 +247,41 @@ export async function assignRoleToUserAction(prevState: RoleStateAssign, formDat
     console.error("Error assigning role to user:", error);
     return {
       message: "Ocurrió un error al asignar el rol al usuario. Por favor, inténtelo de nuevo.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: false
+    };
+  }
+
+  return {
+    success: true
+  };
+}
+
+export type DeleteUserRoleState = {
+  message?: string | null;
+  success: boolean;
+}
+
+export async function deleteUserRoleAction(prevState: DeleteUserRoleState, formData: FormData) {
+
+  const userId = formData.get("userId") as UUID;
+  const musicalBandId = formData.get("musicalBandId") as UUID;
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(deleteUserRole({
+    musicalBandId,
+    userId
+  }));
+
+  if (error) {
+    console.error("Error deleting user role:", error);
+    return {
+      message: "Ocurrió un error al eliminar el rol del usuario. Por favor, inténtelo de nuevo.",
       success: false
     };
   }
