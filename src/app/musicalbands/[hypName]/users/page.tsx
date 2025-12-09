@@ -42,6 +42,8 @@ export default async function UsersPage(props: UsersPageProps) {
     }))
   ])
 
+  console.log(musicalRoles);
+
   return (
     <div>
       <h2>Integrantes</h2>

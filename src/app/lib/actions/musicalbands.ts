@@ -1,6 +1,6 @@
 'use server';
 import { auth } from "@/auth";
-import { InvitationProps, saveMusicalBand, sendInvitationEmail, updateMusicalBand } from "../api/musicalBands";
+import { deleteMusicalBand, InvitationProps, saveMusicalBand, sendInvitationEmail, updateMusicalBand } from "../api/musicalBands";
 import { ApiResponse, MusicalBand, MusicalBandInfo } from "../definitions";
 import { createMusicalBandSchema } from "../schemas/createMusicalBandSchema";
 import { handleAsync } from "../utils";
@@ -177,6 +177,36 @@ export async function sendInvitationEmailAction(prevState: InvitationState, form
     console.error("Error sending invitation email:", errors);
     return {
       message: "Ocurrió un error al enviar la invitación. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true,
+  }
+}
+
+export type DeleteMusicalBandActionState = {
+  message?: string | null;
+  success: boolean;
+}
+
+export async function deleteMusicalBandAction(prevState: DeleteMusicalBandActionState, formData: FormData) {
+  const musicalBandId = formData.get("musicalBandId") as UUID;
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(deleteMusicalBand({ musicalBandId }));
+
+  if (error) {
+    console.error("Error deleting musical band:", error);
+    return {
+      message: "Ocurrió un error eliminar la banda. Por favor, inténtelo de nuevo más tarde.",
       success: false
     }
   }

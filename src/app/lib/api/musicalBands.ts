@@ -134,3 +134,24 @@ export async function updateMusicalBand(musicalBandId: UUID, formData: FormData)
 
   return await response.json();
 }
+
+export async function deleteMusicalBand({ musicalBandId }: { musicalBandId: UUID }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  }
+
+  headers[config.musicalBandHeader] = musicalBandId;
+
+  const response = await fetch(`${config.api}/musical-bands/delete/${musicalBandId}`, {
+    method: 'DELETE',
+    headers
+  });
+
+  return await response.json();
+}

@@ -3,6 +3,7 @@
 import { MusicalBand, MusicalBandInfo } from "@/app/lib/definitions";
 import styles from './settings-container.module.css';
 import stylesForm from '../../../styles/form.module.css';
+import stylesModal from '../../../styles/modal.module.css'
 import CustomImage from "../../image/CustomImage";
 import CustomButton from "../../button/CustomButton";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
@@ -12,8 +13,10 @@ import CustomInput from "../../Inputs/CustomInput";
 import CustomFileInput from "../../Inputs/CustomFileInput";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateMusicalBandAction, UpdateMusicalBandState } from "@/app/lib/actions/musicalbands";
+import { deleteMusicalBandAction, DeleteMusicalBandActionState, updateMusicalBandAction, UpdateMusicalBandState } from "@/app/lib/actions/musicalbands";
 import { createMusicalBandSchema, CreateMusicalBandSchema } from "@/app/lib/schemas/createMusicalBandSchema";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {
   readonly musicalBand: MusicalBand | undefined
@@ -22,9 +25,13 @@ type Props = {
 export default function SettingsContent({ musicalBand }: Props) {
   const [band, setBand] = useState<MusicalBandInfo | undefined>(musicalBand);
   const { showToast } = useToast();
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const initialStateDelete: DeleteMusicalBandActionState = { success: false, message: null };
+  const [deleteState, formActionDelete, isDeletingPending] = useActionState<DeleteMusicalBandActionState, FormData>(deleteMusicalBandAction, initialStateDelete);
   const initialState: UpdateMusicalBandState = { errors: {}, message: null, success: false, band: musicalBand };
   const [state, formAction, isPending] = useActionState<UpdateMusicalBandState, FormData>(updateMusicalBandAction, initialState);
 
@@ -62,7 +69,7 @@ export default function SettingsContent({ musicalBand }: Props) {
         phone: state.band?.phone,
         email: state.band?.email,
       });
-    } 
+    }
 
     formRef.current?.reset();
     if (fileInputRef.current) {
@@ -80,6 +87,13 @@ export default function SettingsContent({ musicalBand }: Props) {
     }
   }, [state, handleCancel, showToast])
 
+  useEffect(() => {
+    if (deleteState.success) {
+      showToast('¡Banda eliminada exitosamente!', 'success')
+      router.push(`/`);
+    }
+  }, [router, showToast, deleteState])
+
   return (
     <main className={`${styles.mainContent} col-12 col-sm-8 col-md-6 col-lg-6`} id="modal-root">
 
@@ -89,7 +103,7 @@ export default function SettingsContent({ musicalBand }: Props) {
         <header className={styles['header']}>
           <CustomImage
             src={band?.logo}
-            alt={'Foto de perfil'}
+            alt={'logo de la banda'}
             width={80}
             height={80}
             fallBackSrc='/person_24dp.svg'
@@ -113,10 +127,28 @@ export default function SettingsContent({ musicalBand }: Props) {
             <p>Teléfono:</p>
             <p className={styles['color-gray-300']}>{band?.phone !== '' ? band?.phone : 'No disponible'}</p>
           </div>
-          <div>
-            <CustomButton type='button' onClick={() => setOpen(true)}>
-              Editar información
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+            <CustomButton
+              iconLeft={<Image src="/edit_24dp_FFF.svg" alt="Editar" width={18} height={18} />}
+              type='button'
+              onClick={() => setOpen(true)}
+            >
+              Editar
             </CustomButton>
+
+            <form action={formActionDelete}>
+
+              <input type="hidden" name="musicalBandId" value={musicalBand?.id} />
+
+              <CustomButton
+                onClick={() => setOpenDelete(true)}
+                iconLeft={<Image src="/delete_24dp_FFF.svg" alt="Eliminar" width={18} height={18} />}
+                type="button"
+              >
+                Eliminar
+              </CustomButton>
+            </form>
+
           </div>
         </div>
       </div>
@@ -185,6 +217,36 @@ export default function SettingsContent({ musicalBand }: Props) {
                 Guardar
               </CustomButton>
             </div>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        size="sm"
+        isOpen={openDelete}
+        title="Eliminar banda musical"
+      >
+        <form action={formActionDelete} className={stylesModal.modalContent}>
+
+          <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
+
+          <p>Toda la información relacionada con esta banda será eliminada. Esta acción no se puede revertir. </p>
+
+          {deleteState?.message && (
+            <p className={stylesForm.errorMessage}>
+              {deleteState?.message}
+            </p>
+          )}
+
+          <input type="hidden" name="musicalBandId" value={musicalBand?.id} />
+
+          <div className={stylesModal.buttonsContainer}>
+            <CustomButton type='button' variant='secondary' onClick={() => setOpenDelete(false)}>
+              Cancelar
+            </CustomButton>
+            <CustomButton isLoading={isDeletingPending} type='submit'>
+              Eliminar
+            </CustomButton>
           </div>
         </form>
       </Modal>
