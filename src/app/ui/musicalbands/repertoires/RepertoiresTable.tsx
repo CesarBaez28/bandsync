@@ -82,7 +82,7 @@ export default function RepertoiresTable({ data, musicalBandId, hypName }: Reper
         </table>) : (
         <div className="message">
           <h2>¡No se encontraron resultados!</h2>
-          <p>Registre una canción usando el botón Agregar o cambie los valores de su búsqueda</p>
+          <p>Registre un repertorio usando el botón Agregar o cambie los valores de su búsqueda</p>
         </div>)
       }
 
