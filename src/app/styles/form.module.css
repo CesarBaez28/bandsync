@@ -14,3 +14,17 @@
   align-items: center;
   gap: .3rem;
 }
+
+.inputWithButtonContainer {
+  display: flex;
+  justify-content: center;
+  gap: .3rem;
+}
+
+.alingItemsCenter {
+  align-items: center;
+}
+
+.alingItemsFlexEnd {
+  align-items: flex-end;
+}

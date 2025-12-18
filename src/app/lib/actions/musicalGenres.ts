@@ -12,6 +12,7 @@ export type MusicalGenreActionState = {
   };
   message?: string | null;
   success: boolean;
+  data?: MusicalGenre
 }
 
 export async function createMusicalGenreAction(prevState: MusicalGenreActionState, formData: FormData) {
@@ -50,7 +51,8 @@ export async function createMusicalGenreAction(prevState: MusicalGenreActionStat
   }
 
   return {
-    success: response.success
+    success: response.success,
+    data: response.data
   }
 }
 

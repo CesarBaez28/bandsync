@@ -11,6 +11,7 @@ export type ArtistActionState = {
     name?: string[];
   };
   message?: string | null;
+  data?: Artist;
   success: boolean;
 }
 
@@ -51,7 +52,8 @@ export async function createArtistAction(prevState: ArtistActionState, formData:
   }
 
   return {
-    success: response.success
+    success: response.success,
+    data: response.data
   }
 }
 

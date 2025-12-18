@@ -1,6 +1,6 @@
 'use client';
 
-import { startTransition, useActionState, useEffect, useRef } from 'react';
+import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import stylesForm from '../../../styles/form.module.css';
 import CustomButton from "../../button/CustomButton";
 import CustomInput from "../../Inputs/CustomInput";
@@ -15,6 +15,9 @@ import CustomFileInput from '../../Inputs/CustomFileInput';
 import { Artist, MusicalGenre } from '@/app/lib/definitions';
 import { useToast } from '../../toast/ToastContext';
 import { useRouter } from 'next/navigation';
+import AddArtist from './AddArtist';
+import AddGenre from './AddGenre';
+import clsx from 'clsx';
 
 type FormProps = {
   readonly musicalBandId: UUID | undefined;
@@ -24,6 +27,8 @@ type FormProps = {
 }
 
 export default function Form({ musicalBandId, artists, genres, hypName }: FormProps) {
+  const [artistsState, setArtistsState] = useState<Artist[] | undefined>(artists);
+  const [genresState, setGenresState] = useState<MusicalGenre[] | undefined>(genres);
   const { showToast } = useToast();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -31,13 +36,13 @@ export default function Form({ musicalBandId, artists, genres, hypName }: FormPr
   const initialState: SongState = { errors: {}, message: null, success: false };
   const [state, formAction, isPending] = useActionState<SongState, FormData>(createSongAction, initialState);
 
-  const artistsOptions: OptionInputSelect[] | undefined = artists
+  const artistsOptions: OptionInputSelect[] | undefined = artistsState
     ?.sort((a, b) => a.name.localeCompare(b.name))
     .map((artist) => (
       { label: artist.name, value: artist.id.toString() }
     ));
 
-  const genresOption: OptionInputSelect[] | undefined = genres
+  const genresOption: OptionInputSelect[] | undefined = genresState
     ?.sort((a, b) => a.name.localeCompare(b.name))
     .map((genre) => (
       { label: genre.name, value: genre.id.toString() }
@@ -83,19 +88,43 @@ export default function Form({ musicalBandId, artists, genres, hypName }: FormPr
           error={errors.name}
         />
 
-        <CustomSelect
-          label="Artista:"
-          options={artistsOptions}
-          {...register("artist")}
-          error={errors.artist}
-        />
+        <div
+          className={clsx(
+            stylesForm.inputWithButtonContainer,
+            errors.artist ? stylesForm.alingItemsCenter : stylesForm.alingItemsFlexEnd
+          )}
+        >
+          <CustomSelect
+            fullWidth={true}
+            label="Artista:"
+            options={artistsOptions}
+            {...register("artist")}
+            error={errors.artist}
+          />
+          <AddArtist
+            setArtistsState={setArtistsState}
+            musicalBandId={musicalBandId}
+          />
+        </div>
 
-        <CustomSelect
-          label="Género:"
-          options={genresOption}
-          {...register("genre")}
-          error={errors.genre}
-        />
+        <div
+          className={clsx(
+            stylesForm.inputWithButtonContainer,
+            errors.genre ? stylesForm.alingItemsCenter : stylesForm.alingItemsFlexEnd
+          )}
+        >
+          <CustomSelect
+            fullWidth={true}
+            label="Género:"
+            options={genresOption}
+            {...register("genre")}
+            error={errors.genre}
+          />
+          <AddGenre
+            setGenresState={setGenresState}
+            musicalBandId={musicalBandId}
+          />
+        </div>
 
         <CustomInput
           label='Tonalidad:'

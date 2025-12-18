@@ -4,7 +4,7 @@ import stylesForm from '../../../styles/form.module.css'
 import { Artist, MusicalGenre, Song } from "@/app/lib/definitions";
 import { UUID } from "crypto";
 import { useToast } from "../../toast/ToastContext";
-import { startTransition, useActionState, useEffect, useRef } from "react";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import CustomSelect, { OptionInputSelect } from "../../Inputs/CustomSelect";
 import CustomInput from "../../Inputs/CustomInput";
 import CustomLink from "../../link/CustomLink";
@@ -15,6 +15,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { UpdateSongState, updateSongAction } from '@/app/lib/actions/songs';
 import { useRouter } from 'next/navigation';
+import clsx from 'clsx';
+import AddArtist from './AddArtist';
+import AddGenre from './AddGenre';
 
 type FormProps = {
   readonly song: Song | undefined
@@ -25,6 +28,8 @@ type FormProps = {
 }
 
 export default function Form({ song, musicalBandId, artists, genres, hypName }: FormProps) {
+  const [artistsState, setArtistsState] = useState<Artist[] | undefined>(artists);
+  const [genresState, setGenresState] = useState<MusicalGenre[] | undefined>(genres);
   const { showToast } = useToast();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -32,13 +37,13 @@ export default function Form({ song, musicalBandId, artists, genres, hypName }: 
   const initialState: UpdateSongState = { errors: {}, message: null, success: false, song };
   const [state, formAction, isPending] = useActionState<UpdateSongState, FormData>(updateSongAction, initialState);
 
-  const artistsOptions: OptionInputSelect[] | undefined = artists
+  const artistsOptions: OptionInputSelect[] | undefined = artistsState
     ?.sort((a, b) => a.name.localeCompare(b.name))
     .map((artist) => (
       { label: artist.name, value: artist.id.toString() }
     ));
 
-  const genresOption: OptionInputSelect[] | undefined = genres
+  const genresOption: OptionInputSelect[] | undefined = genresState
     ?.sort((a, b) => a.name.localeCompare(b.name))
     .map((genre) => (
       { label: genre.name, value: genre.id.toString() }
@@ -91,19 +96,43 @@ export default function Form({ song, musicalBandId, artists, genres, hypName }: 
           error={errors.name}
         />
 
-        <CustomSelect
-          label="Artista:"
-          options={artistsOptions}
-          {...register("artist")}
-          error={errors.artist}
-        />
+        <div
+          className={clsx(
+            stylesForm.inputWithButtonContainer,
+            errors.artist ? stylesForm.alingItemsCenter : stylesForm.alingItemsFlexEnd
+          )}
+        >
+          <CustomSelect
+            fullWidth={true}
+            label="Artista:"
+            options={artistsOptions}
+            {...register("artist")}
+            error={errors.artist}
+          />
+          <AddArtist
+            setArtistsState={setArtistsState}
+            musicalBandId={musicalBandId}
+          />
+        </div>
 
-        <CustomSelect
-          label="Género:"
-          options={genresOption}
-          {...register("genre")}
-          error={errors.genre}
-        />
+        <div
+          className={clsx(
+            stylesForm.inputWithButtonContainer,
+            errors.genre ? stylesForm.alingItemsCenter : stylesForm.alingItemsFlexEnd
+          )}
+        >
+          <CustomSelect
+            fullWidth={true}
+            label="Género:"
+            options={genresOption}
+            {...register("genre")}
+            error={errors.genre}
+          />
+          <AddGenre
+            setGenresState={setGenresState}
+            musicalBandId={musicalBandId}
+          />
+        </div>
 
         <CustomInput
           label='Tonalidad:'
