@@ -39,7 +39,7 @@ export default async function RolesAndPermissionsPage(props: PageProps) {
 
   const roles: Role[] | undefined = rolesAndPermissions?.data?.map(rp => rp.role);
   const currentUserId = sessions?.user.id;
-  const filteredUsers = users?.data?.filter(u => u.id !== currentUserId);
+  const filteredUsers = users?.data?.filter(u => !usersRoles?.data?.some(ur => ur.user.id === u.id));
 
   const tabs = [
     {
