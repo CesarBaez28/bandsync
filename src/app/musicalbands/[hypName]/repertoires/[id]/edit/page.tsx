@@ -6,10 +6,16 @@ import { getRepertoireById, getRepertoireSongs } from "@/app/lib/api/repertoires
 import { UUID } from "node:crypto";
 import Form from "@/app/ui/musicalbands/repertoires/EditForm";
 import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
+import { Metadata } from "next";
 
 type EdtitRepertoiresPageProps = {
   params: Promise<{ hypName: string; id: UUID }>;
 }
+
+export const metadata: Metadata = {
+  title: "Editar repertorio",
+  description: "Editar repertorio",
+};
 
 export default async function EditRepertoirePage(props: EdtitRepertoiresPageProps) {
   const { hypName, id } = await props.params;

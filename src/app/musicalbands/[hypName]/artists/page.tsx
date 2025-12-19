@@ -6,6 +6,7 @@ import { getArtistsByMusicalBandIdAndName } from "@/app/lib/api/artists";
 import Pagination from "@/app/ui/pagination/Pagination";
 import InputContainer from "@/app/ui/musicalbands/artists/InputContainer";
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
+import { Metadata } from 'next';
 
 type ArtistPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -14,6 +15,11 @@ type ArtistPageProps = {
     page?: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: "Artistas",
+  description: "Artistas",
+};
 
 export default async function ArtistsPage(props: ArtistPageProps) {
   const searchParams = await props.searchParams;

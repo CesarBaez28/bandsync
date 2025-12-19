@@ -5,10 +5,16 @@ import { ApiResponse, Repertoire, Song } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import RepertoireSongsTable from '@/app/ui/musicalbands/repertoires/SeeRepertoireSongsTable';
 import { UUID } from "node:crypto";
+import { Metadata } from 'next';
 
 type Props = {
   params: Promise<{ hypName: string; id: UUID }>;
 }
+
+export const metadata: Metadata = {
+  title: "Ver repertorio",
+  description: "Ver repertorio",
+};
 
 export default async function SeeRepertoireSongsPage(props: Props) {
   const { hypName, id } = await props.params;

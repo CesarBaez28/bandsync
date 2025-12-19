@@ -2,6 +2,12 @@ import { getUserById } from "@/app/lib/api/users";
 import { ApiResponse, User } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import ProfileContent from "@/app/ui/profile/ProfileContent";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Perfil",
+  description: "Perfil",
+};
 
 export default async function ProfilePage() {
   const [response, error] = await handleAsync<ApiResponse<User>>(getUserById());

@@ -4,10 +4,16 @@ import { getAllSongsByMusicalBandId } from "@/app/lib/api/songs";
 import { ApiResponse, Song } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import Form from "@/app/ui/musicalbands/repertoires/CreateForm";
+import { Metadata } from 'next';
 
 type CreateRepertoirePageProps = {
   params: Promise<{ hypName: string; }>;
 }
+
+export const metadata: Metadata = {
+  title: "Crear repertorio",
+  description: "Crear repertorios",
+};
 
 export default async function CreateRepertoirePage(props: CreateRepertoirePageProps) {
   const { hypName } = await props.params;

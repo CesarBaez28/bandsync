@@ -6,6 +6,7 @@ import { handleAsync } from "@/app/lib/utils";
 import InputContainer from "@/app/ui/musicalbands/repertoires/InputContainer";
 import RepertoiresTable from "@/app/ui/musicalbands/repertoires/RepertoiresTable";
 import Pagination from "@/app/ui/pagination/Pagination";
+import { Metadata } from 'next';
 
 type RepertoiresPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -14,6 +15,11 @@ type RepertoiresPageProps = {
     page?: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: "Repertorios",
+  description: "Repertorios de la banda",
+};
 
 export default async function RepertoiresPage(props: RepertoiresPageProps) {
   const [{ hypName }, { query = '', page = '1' } = {}] = await Promise.all([

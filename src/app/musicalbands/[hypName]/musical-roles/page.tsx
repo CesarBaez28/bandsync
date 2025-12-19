@@ -6,6 +6,7 @@ import { handleAsync } from "@/app/lib/utils";
 import InputContainer from '@/app/ui/musicalbands/musical-roles/InputContaimer';
 import MusicalRoleTable from '@/app/ui/musicalbands/musical-roles/MusicalRoleTable';
 import Pagination from "@/app/ui/pagination/Pagination";
+import { Metadata } from 'next';
 
 type MusicalRolesPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -14,6 +15,11 @@ type MusicalRolesPageProps = {
     page?: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: "Roles musicales",
+  description: "Roles musicales",
+};
 
 export default async function MusicalRolesPage(props: MusicalRolesPageProps) {
   const searchParams = await props.searchParams;

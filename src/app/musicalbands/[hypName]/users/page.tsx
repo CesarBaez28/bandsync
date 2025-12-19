@@ -9,6 +9,7 @@ import { getAllByMusicalBandId } from '@/app/lib/api/musicalRolesUsers';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import { auth } from '@/auth';
 import { getAllMusicalRolesByMusicalBandId } from '@/app/lib/api/musicalRoles';
+import { Metadata } from 'next';
 
 type UsersPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -17,6 +18,11 @@ type UsersPageProps = {
     page?: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: "Integrantes",
+  description: "Integrantes de la banda",
+};
 
 export default async function UsersPage(props: UsersPageProps) {
   const [{ hypName }, { query = '', page = '1' } = {}, session] = await Promise.all([
@@ -41,8 +47,6 @@ export default async function UsersPage(props: UsersPageProps) {
       musicalBandId: musicalBand?.id
     }))
   ])
-
-  console.log(musicalRoles);
 
   return (
     <div>

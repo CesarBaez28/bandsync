@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "./ui/toast/ToastContext";
 import ToastContainer from "./ui/toast/ToastContainer";
+import { config } from "./lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +15,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const appName = config.appName;
+
 export const metadata: Metadata = {
-  title: "BandSync app",
-  description: "Band Sync app",
+  title: {
+    template: '%s :: ' + appName,
+    default: appName,
+  },
+  description: "Bandssync app",
 };
 
 export default function RootLayout({

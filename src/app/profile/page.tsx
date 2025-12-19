@@ -8,6 +8,12 @@ import { ApiResponse, User } from "../lib/definitions";
 import { handleAsync } from "../lib/utils";
 import { getUserById } from "../lib/api/users";
 import styles from './profile.module.css';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Perfil",
+  description: "Perfil",
+};
 
 export default async function Profile() {
   const [response, error] = await handleAsync<ApiResponse<User>>(getUserById());

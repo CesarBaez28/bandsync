@@ -5,10 +5,16 @@ import { getById } from "@/app/lib/api/songs";
 import { ApiResponse, Artist, MusicalGenre, Song } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import Form from "@/app/ui/musicalbands/songs/EditForm";
+import { Metadata } from "next";
 
 type EdtitSongPageProps = {
   params: Promise<{ hypName: string; id: string }>;
 }
+
+export const metadata: Metadata = {
+  title: "Editar canción",
+  description: "Editar canción",
+};
 
 export default async function editSongPage(props: EdtitSongPageProps) {
   const { hypName, id } = await props.params;

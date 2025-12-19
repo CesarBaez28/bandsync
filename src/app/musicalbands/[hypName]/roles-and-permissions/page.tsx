@@ -10,10 +10,16 @@ import UsersRolesContent from '@/app/ui/musicalbands/role-and-permissions/UsersR
 import Tabs from '@/app/ui/tabs/Tabs';
 import { auth } from '@/auth';
 import { getAllUsersByMusicalBandId } from '@/app/lib/api/users';
+import { Metadata } from 'next';
 
 type PageProps = {
   params: Promise<{ hypName: string; }>;
 }
+
+export const metadata: Metadata = {
+  title: "Roles y permisos",
+  description: "Roles y permisos",
+};
 
 export default async function RolesAndPermissionsPage(props: PageProps) {
   const [{ hypName }, sessions] = await Promise.all([

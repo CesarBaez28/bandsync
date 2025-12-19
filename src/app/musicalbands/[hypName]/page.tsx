@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import styles from './page.module.css'
 import Image from 'next/image';
 import CustomLink from '@/app/ui/link/CustomLink';
+import { Metadata } from 'next';
 
 type MenuItem = {
   label: string;
@@ -13,6 +14,16 @@ type Props = {
   params: Promise<{ hypName: string; }>;
 }
 
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
+  const hypName = (await params).hypName
+
+  return {
+    title: `Menú principal :: ${hypName}`,
+    description: 'Banda musical',
+  };
+}
 export default async function MusicalBandPage(props: Props) {
   const hypName = (await props.params).hypName;
 

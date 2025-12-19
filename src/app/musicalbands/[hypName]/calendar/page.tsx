@@ -6,10 +6,16 @@ import { EventInput } from "@fullcalendar/core/index.js";
 import Calendar from '@/app/ui/musicalbands/calendar/Calendar';
 import { getAllRepertoiresByMusicalBandId } from '@/app/lib/api/repertoires';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
+import { Metadata } from 'next';
 
 type CalendarPageProps = {
   params: Promise<{ hypName: string; }>;
 }
+
+export const metadata: Metadata = {
+  title: "Calendario",
+  description: "Calendario",
+};
 
 export default async function CalendarPage(props: CalendarPageProps) {
   const { hypName } = await props.params;

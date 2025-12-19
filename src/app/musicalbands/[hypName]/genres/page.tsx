@@ -6,6 +6,7 @@ import { handleAsync } from '@/app/lib/utils';
 import { getMusicalGenresByMusicalBandIdAndName } from '@/app/lib/api/musicalGenres';
 import MusicalGenresTable from '@/app/ui/musicalbands/genres/MusicalGenresTable';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
+import { Metadata } from 'next';
 
 type GenresPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -14,6 +15,11 @@ type GenresPageProps = {
     page?: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: "Géneros musicales",
+  description: "Géneros musicales",
+};
 
 export default async function GenresPage(props: GenresPageProps) {
   const searchParams = await props.searchParams;

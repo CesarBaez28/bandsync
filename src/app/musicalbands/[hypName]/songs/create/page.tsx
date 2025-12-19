@@ -4,10 +4,16 @@ import { handleAsync } from '@/app/lib/utils';
 import { getAllArtistsByMusicalBandId } from '@/app/lib/api/artists';
 import { getAllMusicalGenresByMusicalBandId } from '@/app/lib/api/musicalGenres';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
+import { Metadata } from 'next';
 
 type CreateSongPageProps = {
   params: Promise<{ hypName: string; }>;
 }
+
+export const metadata: Metadata = {
+  title: "Registrar canción",
+  description: "Registar canción",
+};
 
 export default async function CreateSongPage(props: CreateSongPageProps) {
   const { hypName } = await props.params;

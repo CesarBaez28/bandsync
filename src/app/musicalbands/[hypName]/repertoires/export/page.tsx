@@ -4,10 +4,16 @@ import { ApiResponse, Repertoire } from "@/app/lib/definitions";
 import { getAllRepertoiresByMusicalBandId } from "@/app/lib/api/repertoires";
 import ExportRerpertoiresContent from "@/app/ui/musicalbands/repertoires/ExportRepertoiresContent";
 import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
+import { Metadata } from 'next';
 
 type Props = {
   params: Promise<{ hypName: string; }>;
 }
+
+export const metadata: Metadata = {
+  title: "Exportar repertorio",
+  description: "Exportar repertorio",
+};
 
 export default async function ExportPage(props: Props) {
   const { hypName } = await props.params;

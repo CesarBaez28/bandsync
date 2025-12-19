@@ -6,6 +6,7 @@ import InputContainer from '@/app/ui/musicalbands/songs/InputContainer';
 import SongsTable from '@/app/ui/musicalbands/songs/SongsTable';
 import { getSongsByMusicalBandIdAndSearchTerm } from '@/app/lib/api/songs';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
+import { Metadata } from 'next';
 
 type SongsPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -14,6 +15,11 @@ type SongsPageProps = {
     page?: string;
   }>;
 }
+
+export const metadata: Metadata = {
+  title: "Canciones",
+  description: "Canciones de la banda",
+};
 
 export default async function SongsPage(props: SongsPageProps) {
   const [{ hypName }, { query = '', page = '1' } = {}] = await Promise.all([
