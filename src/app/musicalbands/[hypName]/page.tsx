@@ -89,7 +89,7 @@ export default async function MusicalBandPage(props: Props) {
     },
     {
       label: 'Configuración',
-      icon: <Image src='/settings_24dp.svg' alt='Ingegrantes' width={36} height={36} />,
+      icon: <Image src='/settings_24dp.svg' alt='Configuración' width={36} height={36} />,
       subItems: [
         {
           label: 'Banda',
