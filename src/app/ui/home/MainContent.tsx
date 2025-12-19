@@ -8,14 +8,15 @@ import { useState } from "react";
 import HomeHeader from "./HomeHeader";
 
 type MainContentProps = {
-  readonly musicalBands: MusicalBand[] | null
+  readonly musicalBands: MusicalBand[] | null;
+  readonly appName: string;
 }
 
-export default function MainContent({ musicalBands }: MainContentProps) {
+export default function MainContent({ musicalBands, appName }: MainContentProps) {
   const [data, setData] = useState<MusicalBand[] | null>(musicalBands);
 
   return <>
-    <HomeHeader setData={setData} />
+    <HomeHeader setData={setData} appName={appName}/>
     <main className={styles['main']}>
       <section>
         {data?.length != 0

@@ -13,10 +13,11 @@ type LayoutProps = {
   params: Promise<{ hypName: string }>;
 }
 
+const appName = config.appName;
+
 export async function generateMetadata(
   { params }: LayoutProps
 ): Promise<Metadata> {
-  const appName = config.appName;
   const hypName = (await params).hypName
 
   return {
@@ -37,7 +38,7 @@ export default async function Layout({ children, params }: LayoutProps) {
   return (
     <PermissionsProvider session={session}>
       <SideNavProvider>
-        <MainHeader hypName={hypName} />
+        <MainHeader hypName={hypName} appName={appName}/>
         <div className={styles['layout-content']}>
           <SideNav hypName={hypName} />
           <div className={styles.mainContainer}>

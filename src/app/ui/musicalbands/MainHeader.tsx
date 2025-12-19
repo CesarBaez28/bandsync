@@ -7,7 +7,7 @@ import Header from "../header/Header";
 import { useSideNav } from "../sidenav/SideNavContext";
 import { signOutAction } from "@/app/lib/actions/auth";
 
-export default function MainHeader({ hypName }: { readonly hypName: string }) {
+export default function MainHeader({ hypName, appName }: { readonly hypName: string, readonly appName: string }) {
   const { toggleSideNav } = useSideNav();
 
   return (
@@ -16,7 +16,7 @@ export default function MainHeader({ hypName }: { readonly hypName: string }) {
         <CustomButton onClick={toggleSideNav} variant="tertiary">
           <Image src="/menu_24dp.svg" alt="perfil" width={24} height={24} />
         </CustomButton>
-        <h2>BandSync</h2>
+        <h2>{appName}</h2>
       </div>
       <div>
         <DropdownMenu

@@ -19,9 +19,10 @@ import { useToast } from '../toast/ToastContext';
 
 type HomeHeaderProps = {
   readonly setData: Dispatch<SetStateAction<MusicalBand[] | null>>;
+  readonly appName: string;
 };
 
-export default function HomeHeader({ setData }: HomeHeaderProps) {
+export default function HomeHeader({ setData, appName }: HomeHeaderProps) {
   const { showToast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -68,7 +69,7 @@ export default function HomeHeader({ setData }: HomeHeaderProps) {
 
   return <>
     <Header>
-      <h2>BandSync</h2>
+      <h2>{appName}</h2>
       <div className={styles['header-buttons']}>
         <CustomButton
           iconLeft={<Image
