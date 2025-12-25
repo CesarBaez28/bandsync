@@ -121,13 +121,13 @@ export default async function MusicalBandPage(props: Props) {
         {menuItems.map((item) => (
           <article className={styles.optionContainer} key={item.label}>
             <header className={styles.optionHeader}>
-              <h2>{item.label}</h2>
+              <h2 className={styles.label}>{item.label}</h2>
               {item.icon}
             </header>
             <ul className={styles.itemsContainer}>
               {item.subItems?.map((subItem) => (
                 <li className={styles.item} key={subItem.label}>
-                  <CustomLink variant='tertiary' href={subItem.href}>
+                  <CustomLink style={{textDecoration: 'none'}} variant='tertiary' href={subItem.href}>
                     {subItem.label}
                   </CustomLink>
                 </li>
