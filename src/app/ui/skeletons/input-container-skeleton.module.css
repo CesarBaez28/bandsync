@@ -1,0 +1,11 @@
+.searchInputContainer {
+  margin-top: 1rem;
+  display: flex;
+  gap: .6rem;
+}
+
+.searchInput {
+  padding-left: 2.5rem;
+  width: 100%;
+  border-radius: 8px;
+}

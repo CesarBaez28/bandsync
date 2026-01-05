@@ -1,0 +1,63 @@
+.wrapper {
+	margin-bottom: 1rem;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	gap: .2rem;
+}
+
+.paginationNumber {
+	display: flex;
+	gap: .2rem;
+}
+
+.pageSkeleton,
+.arrowSkeleton {
+	position: relative;
+	overflow: hidden;
+	background-color: var(--color-white-200);
+	border-radius: 6px;
+}
+
+.pageSkeleton::after,
+.arrowSkeleton::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -150%;
+	width: 150%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.6),
+		transparent
+	);
+	animation: skeleton-loading 1.4s infinite;
+}
+
+@keyframes skeleton-loading {
+	0% {
+		left: -150%;
+	}
+	100% {
+		left: 150%;
+	}
+}
+
+.pageSkeleton {
+	height: 32px;
+	width: 36px;
+}
+
+.pageSkeleton.active {
+	background-color: var(--color-white-100);
+}
+
+.arrowSkeleton {
+	height: 32px;
+	width: 32px;
+	border-radius: 8px;
+}
