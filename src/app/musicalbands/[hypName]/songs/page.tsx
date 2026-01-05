@@ -1,12 +1,11 @@
 import styles from './songs.module.css'
-import { ApiResponse, PagedData, Song } from '@/app/lib/definitions';
-import { handleAsync } from '@/app/lib/utils';
-import Pagination from '@/app/ui/pagination/Pagination';
 import InputContainer from '@/app/ui/musicalbands/songs/InputContainer';
-import SongsTable from '@/app/ui/musicalbands/songs/SongsTable';
-import { getSongsByMusicalBandIdAndSearchTerm } from '@/app/lib/api/songs';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
+import SongsTableDataProvider from '@/app/ui/musicalbands/songs/SongsTableDataProvider';
+import PaginationSkeleton from '@/app/ui/skeletons/PaginationSkeleton';
+import TableSkeleton from '@/app/ui/skeletons/TableSkeleton';
 
 type SongsPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -29,12 +28,6 @@ export default async function SongsPage(props: SongsPageProps) {
 
   const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
-  const [response, error] = await handleAsync<ApiResponse<PagedData<Song>>>(getSongsByMusicalBandIdAndSearchTerm({
-    musicalBandId: musicalBand?.id,
-    query,
-    page: Number(page)
-  }));
-
   return (
     <div>
       <h2>Canciones</h2>
@@ -42,18 +35,18 @@ export default async function SongsPage(props: SongsPageProps) {
       <InputContainer hypName={hypName} />
 
       <main className={styles.mainContainer}>
-        {error
-          ? <div className="message">
-            <h2>¡Lo sentimos!</h2>
-            <p>Hubo un error al traer los datos. Intente refrescar la página o vuelva a visitar la página más tarde.</p>
-          </div>
-          : (
-            <div>
-              <Pagination totalPages={response?.data?.totalPages ?? 0} />
-              <SongsTable data={response?.data} musicalBandId={musicalBand?.id} hypName={hypName} />
-            </div>
-          )
-        }
+        <Suspense fallback={
+          <>
+            <PaginationSkeleton showArrows={false} pages={3} />
+            <TableSkeleton columns={5} rows={6} />
+          </>
+        }>
+          <SongsTableDataProvider
+            musicalBandId={musicalBand?.id}
+            hypName={hypName}
+            query={query} page={Number(page)}
+          />
+        </Suspense>
       </main>
 
     </div>
