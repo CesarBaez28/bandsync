@@ -99,6 +99,10 @@ export async function getUsersRoles({ musicalBandId }: { musicalBandId: UUID | u
     Authorization: `Bearer ${session.accessToken}`,
   };
 
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
   const response = await fetch(`${config.api}/${ROLES_PATH}/users/musicalBand/${musicalBandId}`, {
     headers
   });
