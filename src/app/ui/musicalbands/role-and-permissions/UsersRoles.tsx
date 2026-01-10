@@ -3,7 +3,6 @@
 import stylesForm from '../../../styles/form.module.css'
 import stylesModal from '../../../styles/modal.module.css';
 import { Role, User, UserRole, UserRolesAndPermissions } from "@/app/lib/definitions";
-import { usePermissionsStore } from "@/app/store/usePermissionsStore";
 import CustomButton from "../../button/CustomButton";
 import Image from "next/image";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
@@ -17,6 +16,7 @@ import { userRoleSchema, UserRoleSchema } from '@/app/lib/schemas/userRoleSchema
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
 import { assingRoleToUserSchema, AssingRoleToUserSchema } from '@/app/lib/schemas/assingRoleToUserSchema';
+import { usePermissions } from '@/app/lib/customHooks';
 
 type Props = {
   readonly hypName: string;
@@ -30,7 +30,7 @@ type Props = {
 export default function UsersRolesContent({ currentUserId, users, usersRoles, roles, musicalBandId, hypName }: Props) {
   const router = useRouter();
   const { showToast } = useToast();
-  const { userRolesAndPermissions } = usePermissionsStore();
+  const { userRolesAndPermissions } = usePermissions();
   const [currentUserRole, setCurrentUserRole] = useState<UserRolesAndPermissions | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openAssignModal, setOpenAssignModal] = useState<boolean>(false);

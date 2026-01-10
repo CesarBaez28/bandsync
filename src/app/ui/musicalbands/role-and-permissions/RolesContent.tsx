@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { createRoleAction, deleteRoleAction, RoleState, RoleStateDelete, updateRoleAction } from '@/app/lib/actions/roles';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
-import { usePermissionsStore } from '@/app/store/usePermissionsStore';
+import { usePermissions } from '@/app/lib/customHooks';
 
 type Props = {
   readonly hypName: string;
@@ -27,7 +27,7 @@ type Props = {
 };
 
 export default function RolesContent({ hypName, musicalBandId, rolesAndPermissions, permissions, typeOfPermissions }: Props) {
-  const { userRolesAndPermissions } = usePermissionsStore();
+  const { userRolesAndPermissions } = usePermissions();
   const router = useRouter();
   const { showToast } = useToast();
   const [selectedRoleAndPermissions, setSelectedRoleAndPermissions] = useState<RoleAndPermissions | null>(null);

@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect } from "react";
-import { usePermissionsStore } from "../store/usePermissionsStore";
 import { handleAsync } from "../lib/utils";
 import { ApiResponse, UserRolesAndPermissions } from "../lib/definitions";
 import { getUserRolesAndPermissions } from "../lib/api/roles";
 import { Session } from "next-auth";
+import { usePermissions } from "../lib/customHooks";
 
 export default function PermissionsProvider({ session, children }: { readonly session: Session | null, readonly children: React.ReactNode }) {
-  const { setUserRolesAndPermissions, clearUserRolesAndPermissions } = usePermissionsStore();
+  const { setUserRolesAndPermissions, clearUserRolesAndPermissions } = usePermissions();
 
   useEffect(() => {
     async function loadPermissions() {

@@ -9,17 +9,22 @@ import Image from 'next/image';
 import CustomButton from '../button/CustomButton';
 import CustomLink from '../link/CustomLink';
 import styles from './sidenav.module.css';
+import { UserPermissions } from '@/app/lib/permisions';
+import { usePermissions } from '@/app/lib/customHooks';
+import { UUID } from 'node:crypto';
 
 type NavItem = {
   label: string;
   href?: string;
   icon?: ReactNode
-  subItems?: { label: string; href: string; icon?: ReactNode }[];
+  subItems?: { label: string; href: string; icon?: ReactNode; permission?: string; }[];
+  permission?: string;
 };
 
 const MOBILE_BREAKPOINT = 768;
 
-export default function SideNav({ hypName }: { readonly hypName: string }) {
+export default function SideNav({ hypName, musicalBandId }: { readonly hypName: string; readonly musicalBandId: UUID }) {
+  const { hasPermission } = usePermissions();
   const { isCollapsed, setCollapsed, mounted } = useSideNav();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const [isMobile, setIsMobile] = useState(false);
@@ -46,7 +51,8 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
     {
       label: 'Integrantes',
       href: `/musicalbands/${hypName}/users`,
-      icon: <Image src="/group_24dp.svg" alt="Integrantes" width={24} height={24} />
+      icon: <Image src="/group_24dp.svg" alt="Integrantes" width={24} height={24} />,
+      permission: UserPermissions.VIEW_MEMBERS
     },
     {
       label: 'Repertorios', icon: <Image src="/library_music_24dp.svg" alt="Repertorios" width={24} height={24} />,
@@ -71,7 +77,7 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
       label: 'Configuración', icon: <Image src="/settings_24dp.svg" alt="Configuración" width={24} height={24} />,
       subItems: [
         { label: 'Banda', href: `/musicalbands/${hypName}/settings`, icon: <Image src="/music_note_24dp.svg" alt="Configuración banda" width={24} height={24} /> },
-        { label: 'Roles y permisos', href: `/musicalbands/${hypName}/roles-and-permissions`, icon: <Image src="/admin_panel_settings_24dp.svg" alt="Configuración" width={24} height={24} /> },
+        { label: 'Roles y permisos', href: `/musicalbands/${hypName}/roles-and-permissions`, icon: <Image src="/admin_panel_settings_24dp.svg" alt="Configuración" width={24} height={24} />, permission: UserPermissions.VIEW_ROLES_AND_PERMISSIONS },
       ]
     },
   ];
@@ -111,6 +117,10 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
             const isActive = item.href === pathname;
             const icon = item.icon;
 
+            const hasItemPermission = item.permission ? hasPermission(item.permission, musicalBandId) : true;
+
+            if (!hasItemPermission) return null;
+
             return (
               <li key={item.label} className={styles.navItem}>
                 {item.subItems ? (
@@ -138,6 +148,11 @@ export default function SideNav({ hypName }: { readonly hypName: string }) {
                     {openMenus[item.label] && (
                       <ul className={styles.subNavList}>
                         {item.subItems.map((subItem) => {
+
+                          const hasSubItemPermission = subItem.permission ? hasPermission(subItem.permission, musicalBandId) : true;
+
+                          if (!hasSubItemPermission) return null;
+
                           const subIcon = subItem.icon;
 
                           const isSubActive = subItem.href === pathname;
