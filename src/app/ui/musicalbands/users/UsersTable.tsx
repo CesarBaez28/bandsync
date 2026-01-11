@@ -15,6 +15,8 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
 import CustomSelect, { OptionInputSelect } from '../../Inputs/CustomSelect';
 import { assignMusicalRolesToUserAction, AssignMusicalRolesToUserActionState } from '@/app/lib/actions/muscalRoles';
+import { Can } from '../../authorization/Can';
+import { UserPermissions } from '@/app/lib/permisions';
 
 type Props = {
   readonly musicalBandId: UUID | undefined;
@@ -110,7 +112,9 @@ export default function UsersTable({
         <table>
           <thead>
             <tr>
-              <th>Acciones</th>
+              <Can anyOf={[UserPermissions.UPDATE_MEMBER, UserPermissions.DELETE_MEMBER]} musicalBandId={musicalBandId}>
+                <th>Acciones</th>
+              </Can>
               <th>Usuario</th>
               <th>Nombre</th>
               <th>Correo</th>
@@ -121,16 +125,22 @@ export default function UsersTable({
           <tbody>
             {users?.content.map((user) => (
               <tr key={user.id}>
-                <td>
-                  <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <CustomButton variant="tertiary">
-                      <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} onClick={() => handleEdit(user)} />
-                    </CustomButton>
-                    <CustomButton disabled={user.id === currentUserId} onClick={() => handleDelete(user)} variant="tertiary" type="button">
-                      <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
-                    </CustomButton>
-                  </div>
-                </td>
+                <Can anyOf={[UserPermissions.UPDATE_MEMBER, UserPermissions.DELETE_MEMBER]} musicalBandId={musicalBandId}>
+                  <td>
+                    <div style={{ display: 'flex', gap: '.6rem' }}>
+                      <Can permission={UserPermissions.UPDATE_MEMBER} musicalBandId={musicalBandId}>
+                        <CustomButton variant="tertiary">
+                          <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} onClick={() => handleEdit(user)} />
+                        </CustomButton>
+                      </Can>
+                      <Can permission={UserPermissions.DELETE_MEMBER} musicalBandId={musicalBandId}>
+                        <CustomButton disabled={user.id === currentUserId} onClick={() => handleDelete(user)} variant="tertiary" type="button">
+                          <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                        </CustomButton>
+                      </Can>
+                    </div>
+                  </td>
+                </Can>
                 <td>
                   <span className={styles.usernameContainer}>
                     <CustomImage

@@ -14,6 +14,8 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
 import { UUID } from 'crypto';
+import { Can } from '../../authorization/Can';
+import { UserPermissions } from '@/app/lib/permisions';
 
 type Props = {
   readonly hypName: string;
@@ -69,9 +71,15 @@ export default function InputContainer({ hypName, musicalBandId, userId }: Props
     <div id='modal-root' className={styles.inputContainer}>
       <Search placeholder="Nombre, apellido, email..." />
 
-      <CustomButton type='button' onClick={() => setOpenModal(true)}>
-        Agregar
-      </CustomButton>
+      <Can
+        permission={UserPermissions.ADD_MEMBER}
+        musicalBandId={musicalBandId}
+      >
+        <CustomButton type='button' onClick={() => setOpenModal(true)}>
+          Agregar
+        </CustomButton>
+      </Can>
+
 
       <Modal
         size="sm"
@@ -88,7 +96,7 @@ export default function InputContainer({ hypName, musicalBandId, userId }: Props
               label='Correo electrónico:'
               type='email'
               {...register("email")}
-              error={errors.email} 
+              error={errors.email}
             />
 
             <input type="hidden" name="musicalBandId" value={musicalBandId} />
