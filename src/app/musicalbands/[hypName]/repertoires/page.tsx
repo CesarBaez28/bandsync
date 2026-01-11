@@ -32,7 +32,7 @@ export default async function RepertoiresPage(props: RepertoiresPageProps) {
     <div>
       <h2>Repertorios</h2>
 
-      <InputContainer hypName={hypName} />
+      <InputContainer hypName={hypName} musicalBandId={musicalBand?.id} />
 
       <main className={styles.mainContainer}>
         <Suspense fallback={

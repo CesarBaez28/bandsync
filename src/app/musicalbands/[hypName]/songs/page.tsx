@@ -32,7 +32,7 @@ export default async function SongsPage(props: SongsPageProps) {
     <div>
       <h2>Canciones</h2>
 
-      <InputContainer hypName={hypName} />
+      <InputContainer hypName={hypName} musicalBandId={musicalBand?.id} />
 
       <main className={styles.mainContainer}>
         <Suspense fallback={

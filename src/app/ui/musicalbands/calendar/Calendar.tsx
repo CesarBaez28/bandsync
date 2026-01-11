@@ -21,6 +21,9 @@ import { EventSchema, eventSchema } from '@/app/lib/schemas/eventSchema';
 import { formatDate } from '@/app/lib/utils';
 import { createEventAction, deleteEventAction, DeleteEventProps, EventState, updateEventAction } from '@/app/lib/actions/events';
 import { useToast } from '../../toast/ToastContext';
+import { Can } from '../../authorization/Can';
+import { UserPermissions } from '@/app/lib/permisions';
+import { usePermissions } from '@/app/lib/customHooks';
 
 type Props = {
   readonly events: Event[] | undefined;
@@ -29,7 +32,19 @@ type Props = {
   readonly musicalBand: MusicalBand | undefined;
 };
 
+type Permisions = {
+  canAddEvent: boolean;
+  canUpdateEvent: boolean;
+  canDeleteEvent: boolean;
+}
+
 export default function Calendar({ events, fullcalendarEvents, repertoires, musicalBand }: Props) {
+  const { hasPermission } = usePermissions();
+  const [permissions, setPermissions] = useState<Permisions>({
+    canAddEvent: false,
+    canUpdateEvent: false,
+    canDeleteEvent: false
+  });
   const [fullcalendarEventsState, setFullcalendarEventsState] = useState<EventInput[] | undefined>(fullcalendarEvents);
   const [eventsState, setEventsState] = useState<Event[] | undefined>(events);
   const { showToast } = useToast();
@@ -45,6 +60,17 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    const canAddEvent = hasPermission(UserPermissions.ADD_EVENT, musicalBand?.id);
+    const canUpdateEvent = hasPermission(UserPermissions.UPDATE_EVENT, musicalBand?.id);
+    const canDeleteEvent = hasPermission(UserPermissions.DELETE_EVENT, musicalBand?.id);
+    setPermissions({
+      canAddEvent,
+      canUpdateEvent,
+      canDeleteEvent
+    });
+  }, [hasPermission, musicalBand]);
 
   const repertoiresOptions: OptionInputSelect[] | undefined = repertoires
     ?.sort((a, b) => a.name.localeCompare(b.name))
@@ -64,6 +90,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
   });
 
   const handleDateClick = (arg: DateClickArg) => {
+    if (!permissions.canAddEvent) return;
     setValueCreate('date', arg.dateStr);
     setOpenCreateModal(true);
   }
@@ -248,9 +275,11 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
   return (
     <section id="modal-root">
       <div style={{ marginBottom: '1rem' }}>
-        <CustomButton iconLeft={<Image src={'/calendar_add_on_24dp.svg'} width={24} height={24} alt="Añadir" />} type="button" onClick={() => handleCreateEvent()}>
-          Agregar evento
-        </CustomButton>
+        <Can permission={UserPermissions.ADD_EVENT} musicalBandId={musicalBand?.id}>
+          <CustomButton iconLeft={<Image src={'/calendar_add_on_24dp.svg'} width={24} height={24} alt="Añadir" />} type="button" onClick={() => handleCreateEvent()}>
+            Agregar evento
+          </CustomButton>
+        </Can>
       </div>
       <div style={{ height: '80vh', width: '100%', overflowX: 'auto' }}>
         <FullCalendar
@@ -360,7 +389,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
       <Modal
         size={isMobile ? "sm" : "md"}
         isOpen={openEditModal}
-        title="Editar Evento"
+        title="Información del Evento"
       >
         <form
           ref={formRefEdit}
@@ -370,6 +399,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
           <div className={stylesForm.fieldsContainer}>
 
             <CustomSelect
+              disabled={!permissions.canUpdateEvent}
               label="Selecione el repertorio:"
               options={repertoiresOptions}
               {...registerEdit("repertoire")}
@@ -377,6 +407,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomInput
+              disabled={!permissions.canUpdateEvent}
               label="Nombre del evento:"
               type="text"
               {...registerEdit("name")}
@@ -384,6 +415,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomInput
+              disabled={!permissions.canUpdateEvent}
               label="Fecha del evento:"
               type="date"
               {...registerEdit("date")}
@@ -391,12 +423,14 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomTextArea
+              disabled={!permissions.canUpdateEvent}
               label="Descripción:"
               {...registerEdit("description")}
               error={errorsEdit.description}
             />
 
             <CustomInput
+              disabled={!permissions.canUpdateEvent}
               label="Lugar:"
               type="text"
               {...registerEdit("place")}
@@ -404,6 +438,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomInput
+              disabled={!permissions.canUpdateEvent}
               label="Ubicación (Google Maps):"
               type="text"
               {...registerEdit("location")}
@@ -421,20 +456,24 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
 
             <div className={stylesForm.buttonsContainer}>
               <CustomButton type='button' variant='secondary' onClick={handleEditCancel}>
-                Cancelar
+                Cerrar
               </CustomButton>
-              <CustomButton
-                isLoading={isDeleteLoading}
-                style={{ backgroundColor: 'var(--color-error)', color: 'var(--color-white)' }}
-                type='button'
-                variant='secondary'
-                onClick={onSubmitDelete}
-              >
-                Eliminar
-              </CustomButton>
-              <CustomButton isLoading={isEditLoading} type='submit'>
-                Guardar
-              </CustomButton>
+              <Can permission={UserPermissions.DELETE_EVENT} musicalBandId={musicalBand?.id}>
+                <CustomButton
+                  isLoading={isDeleteLoading}
+                  style={{ backgroundColor: 'var(--color-error)', color: 'var(--color-white)' }}
+                  type='button'
+                  variant='secondary'
+                  onClick={onSubmitDelete}
+                >
+                  Eliminar
+                </CustomButton>
+              </Can>
+              <Can permission={UserPermissions.UPDATE_EVENT} musicalBandId={musicalBand?.id}>
+                <CustomButton isLoading={isEditLoading} type='submit'>
+                  Guardar
+                </CustomButton>
+              </Can>
             </div>
 
           </div>

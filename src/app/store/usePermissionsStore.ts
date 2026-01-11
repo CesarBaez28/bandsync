@@ -7,8 +7,8 @@ type UserRolesPermissionsState = {
   permissionsIndex: Set<string>;
   setUserRolesAndPermissions: (permissions: UserRolesAndPermissions[]) => void;
   clearUserRolesAndPermissions: () => void;
-  hasPermission: (permissionName: string, musicalBandId: UUID) => boolean;
-  hasAnyPermission: (permissionNames: string[], musicalBandId: UUID) => boolean;
+  hasPermission: (permissionName: string, musicalBandId: UUID | undefined) => boolean;
+  hasAnyPermission: (permissionNames: string[], musicalBandId: UUID | undefined) => boolean;
 };
 
 export const usePermissionsStore = create<UserRolesPermissionsState>((set, get) => ({
@@ -35,10 +35,12 @@ export const usePermissionsStore = create<UserRolesPermissionsState>((set, get) 
   clearUserRolesAndPermissions: () => set({ userRolesAndPermissions: [] }),
 
   hasPermission: (permissionName, musicalBandId) => {
+    if (!musicalBandId) return false;
     return get().permissionsIndex.has(`${musicalBandId}-${permissionName}`);
   },
 
   hasAnyPermission: (permissionNames, musicalBandId) => {
+    if (!musicalBandId) return false;
     const index = get().permissionsIndex;
     return permissionNames.some((name) => index.has(`${musicalBandId}-${name}`));
   }

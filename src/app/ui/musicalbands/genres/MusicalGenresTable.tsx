@@ -15,6 +15,8 @@ import Image from "next/image";
 import CustomInput from "../../Inputs/CustomInput";
 import stylesModal from "../../../styles/modal.module.css";
 import { UUID } from "crypto";
+import { Can } from "../../authorization/Can";
+import { UserPermissions } from "@/app/lib/permisions";
 
 type MusicalGenresTableProps = {
   readonly data: PagedData<MusicalGenre> | undefined;
@@ -101,23 +103,31 @@ export default function MusicalGenresTable({ data, hypName, musicalBandId }: Mus
       <table>
         <thead>
           <tr>
-            <th>Acciones</th>
+            <Can anyOf={[UserPermissions.UPDATE_MUSICAL_GENRE, UserPermissions.DELETE_MUSICAL_GENRE]} musicalBandId={musicalBandId}>
+              <th>Acciones</th>
+            </Can>
             <th>Nombre</th>
           </tr>
         </thead>
         <tbody>
           {data?.content.map((musicalGenre) => (
             <tr key={musicalGenre.id}>
-              <td>
-                <div style={{ display: 'flex', gap: '.6rem' }}>
-                  <CustomButton onClick={() => handleEdit(musicalGenre)} variant="tertiary" type="button">
-                    <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
-                  </CustomButton>
-                  <CustomButton onClick={() => handleDelete(musicalGenre)} variant="tertiary" type="button">
-                    <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
-                  </CustomButton>
-                </div>
-              </td>
+              <Can anyOf={[UserPermissions.UPDATE_MUSICAL_GENRE, UserPermissions.DELETE_MUSICAL_GENRE]} musicalBandId={musicalBandId}>
+                <td>
+                  <div style={{ display: 'flex', gap: '.6rem' }}>
+                    <Can permission={UserPermissions.UPDATE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
+                      <CustomButton onClick={() => handleEdit(musicalGenre)} variant="tertiary" type="button">
+                        <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                      </CustomButton>
+                    </Can>
+                    <Can permission={UserPermissions.DELETE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
+                      <CustomButton onClick={() => handleDelete(musicalGenre)} variant="tertiary" type="button">
+                        <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                      </CustomButton>
+                    </Can>
+                  </div>
+                </td>
+              </Can>
               <td>{musicalGenre.name}</td>
             </tr>
           ))}

@@ -1,6 +1,6 @@
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import styles from './musical-roles.module.css';
-import InputContainer from '@/app/ui/musicalbands/musical-roles/InputContaimer';
+import InputContainer from '@/app/ui/musicalbands/musical-roles/InputContainer';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import MusicalRolesTableDataProvider from '@/app/ui/musicalbands/musical-roles/MusicalRolesTableDataProvider';

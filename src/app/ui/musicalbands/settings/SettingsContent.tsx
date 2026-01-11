@@ -17,6 +17,8 @@ import { deleteMusicalBandAction, DeleteMusicalBandActionState, updateMusicalBan
 import { createMusicalBandSchema, CreateMusicalBandSchema } from "@/app/lib/schemas/createMusicalBandSchema";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Can } from "../../authorization/Can";
+import { UserPermissions } from "@/app/lib/permisions";
 
 type Props = {
   readonly musicalBand: MusicalBand | undefined
@@ -127,29 +129,38 @@ export default function SettingsContent({ musicalBand }: Props) {
             <p>Teléfono:</p>
             <p className={styles['color-gray-300']}>{band?.phone !== '' ? band?.phone : 'No disponible'}</p>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
-            <CustomButton
-              iconLeft={<Image src="/edit_24dp_FFF.svg" alt="Editar" width={18} height={18} />}
-              type='button'
-              onClick={() => setOpen(true)}
-            >
-              Editar
-            </CustomButton>
 
-            <form action={formActionDelete}>
+          <Can anyOf={[UserPermissions.UPDATE_BAND, UserPermissions.DELETE_BAND]} musicalBandId={musicalBand?.id}>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
 
-              <input type="hidden" name="musicalBandId" value={musicalBand?.id} />
+              <Can permission={UserPermissions.UPDATE_BAND} musicalBandId={musicalBand?.id}>
+                <CustomButton
+                  iconLeft={<Image src="/edit_24dp_FFF.svg" alt="Editar" width={18} height={18} />}
+                  type='button'
+                  onClick={() => setOpen(true)}
+                >
+                  Editar
+                </CustomButton>
+              </Can>
 
-              <CustomButton
-                onClick={() => setOpenDelete(true)}
-                iconLeft={<Image src="/delete_24dp_FFF.svg" alt="Eliminar" width={18} height={18} />}
-                type="button"
-              >
-                Eliminar
-              </CustomButton>
-            </form>
+              <Can permission={UserPermissions.DELETE_BAND} musicalBandId={musicalBand?.id}>
+                <form action={formActionDelete}>
 
-          </div>
+                  <input type="hidden" name="musicalBandId" value={musicalBand?.id} />
+
+                  <CustomButton
+                    onClick={() => setOpenDelete(true)}
+                    iconLeft={<Image src="/delete_24dp_FFF.svg" alt="Eliminar" width={18} height={18} />}
+                    type="button"
+                  >
+                    Eliminar
+                  </CustomButton>
+                </form>
+              </Can>
+
+            </div>
+          </Can>
         </div>
       </div>
 

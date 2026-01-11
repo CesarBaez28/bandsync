@@ -14,6 +14,8 @@ import CustomInput from "../../Inputs/CustomInput";
 import { UUID } from "crypto";
 import { useToast } from "../../toast/ToastContext";
 import { useRouter } from "next/navigation";
+import { Can } from "../../authorization/Can";
+import { UserPermissions } from "@/app/lib/permisions";
 
 type InputContainerProps = {
   readonly musicalBandId: UUID | undefined;
@@ -68,9 +70,12 @@ export default function InputContainer({ musicalBandId, hypName }: InputContaine
     <div id="modal-root" className={styles.inputContainer}>
 
       <Search placeholder="Escriba nombre del artista" />
-      <CustomButton variant="primary" type="button" onClick={() => setOpen(true)}>
-        Agregar
-      </CustomButton>
+
+      <Can permission={UserPermissions.ADD_ARTIST} musicalBandId={musicalBandId}>
+        <CustomButton variant="primary" type="button" onClick={() => setOpen(true)}>
+          Agregar
+        </CustomButton>
+      </Can>
 
       <Modal
         size="sm"

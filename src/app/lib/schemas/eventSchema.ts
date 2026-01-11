@@ -6,7 +6,7 @@ export const eventSchema = z.object({
     .nonempty('Seleccione un repertorio'),
   name: z
     .string()
-    .min(3, 'El apellido debe tener al menos 3 letras'),
+    .min(3, 'El nombre debe tener al menos 3 letras'),
   date: z
     .string()
     .nonempty('Seleccione una fecha'),

@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
 import { assingRoleToUserSchema, AssingRoleToUserSchema } from '@/app/lib/schemas/assingRoleToUserSchema';
 import { usePermissions } from '@/app/lib/customHooks';
+import { Can } from '../../authorization/Can';
+import { UserPermissions } from '@/app/lib/permisions';
 
 type Props = {
   readonly hypName: string;
@@ -159,14 +161,18 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
     <div id="modal-root">
       <section>
 
-        <CustomButton onClick={() => setOpenAssignModal(true)} type='button' style={{ marginBottom: '1rem' }}>
-          Agregar usuario
-        </CustomButton>
+        <Can permission={UserPermissions.ASSIGN_ROLE} musicalBandId={musicalBandId}>
+          <CustomButton onClick={() => setOpenAssignModal(true)} type='button' style={{ marginBottom: '1rem' }}>
+            Agregar usuario
+          </CustomButton>
+        </Can>
 
         <table>
           <thead>
             <tr>
-              <th>Acciones</th>
+              <Can anyOf={[UserPermissions.ASSIGN_ROLE]} musicalBandId={musicalBandId}>
+                <th>Acciones</th>
+              </Can>
               <th>Usuario</th>
               <th>Role</th>
             </tr>
@@ -174,24 +180,26 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
           <tbody>
             {usersRoles?.map((userRole) => (
               <tr key={userRole.user.id}>
-                <td>
-                  <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <CustomButton
-                      onClick={() => handleEdit(userRole)}
-                      disabled={currentUserRole?.role.id === userRole.role.id && userRole.user.id === currentUserId}
-                      variant="tertiary"
-                    >
-                      <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
-                    </CustomButton>
-                    <CustomButton
-                      disabled={currentUserRole?.role.id === userRole.role.id && userRole.user.id === currentUserId}
-                      variant='tertiary'
-                      onClick={() => handleDelete(userRole)}
-                    >
-                      <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
-                    </CustomButton>
-                  </div>
-                </td>
+                <Can anyOf={[UserPermissions.ASSIGN_ROLE]} musicalBandId={musicalBandId}>
+                  <td>
+                    <div style={{ display: 'flex', gap: '.6rem' }}>
+                      <CustomButton
+                        onClick={() => handleEdit(userRole)}
+                        disabled={currentUserRole?.role.id === userRole.role.id && userRole.user.id === currentUserId}
+                        variant="tertiary"
+                      >
+                        <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                      </CustomButton>
+                      <CustomButton
+                        disabled={currentUserRole?.role.id === userRole.role.id && userRole.user.id === currentUserId}
+                        variant='tertiary'
+                        onClick={() => handleDelete(userRole)}
+                      >
+                        <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                      </CustomButton>
+                    </div>
+                  </td>
+                </Can>
                 <td>{userRole.user.username}</td>
                 <td>{userRole.role.name}</td>
               </tr>

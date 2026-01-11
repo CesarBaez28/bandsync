@@ -15,6 +15,8 @@ import { musicalRoleSchema, MusicalRoleSchema } from "@/app/lib/schemas/musicalR
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { UUID } from "crypto";
+import { Can } from "../../authorization/Can";
+import { UserPermissions } from "@/app/lib/permisions";
 
 type MusicalRoleTableProps = {
   readonly data: PagedData<MusicalRole> | undefined;
@@ -102,23 +104,31 @@ export default function MusicalRoleTable({ data, hypName, musicalBandId }: Music
         <table>
           <thead>
             <tr>
-              <th>Acciones</th>
+              <Can anyOf={[UserPermissions.UPDATE_MUSICAL_ROLE, UserPermissions.DELETE_MUSICAL_ROLE]} musicalBandId={musicalBandId}>
+                <th>Acciones</th>
+              </Can>
               <th>Nombre</th>
             </tr>
           </thead>
           <tbody>
             {data?.content.map((role) => (
               <tr key={role.id}>
-                <td>
-                  <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <CustomButton onClick={() => handleEdit(role)} variant="tertiary" type="button">
-                      <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
-                    </CustomButton>
-                    <CustomButton onClick={() => handleDelete(role)} variant="tertiary" type="button">
-                      <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
-                    </CustomButton>
-                  </div>
-                </td>
+                <Can anyOf={[UserPermissions.UPDATE_MUSICAL_ROLE, UserPermissions.DELETE_MUSICAL_ROLE]} musicalBandId={musicalBandId}>
+                  <td>
+                    <div style={{ display: 'flex', gap: '.6rem' }}>
+                      <Can permission={UserPermissions.UPDATE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
+                        <CustomButton onClick={() => handleEdit(role)} variant="tertiary" type="button">
+                          <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                        </CustomButton>
+                      </Can>
+                      <Can permission={UserPermissions.DELETE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
+                        <CustomButton onClick={() => handleDelete(role)} variant="tertiary" type="button">
+                          <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                        </CustomButton>
+                      </Can>
+                    </div>
+                  </td>
+                </Can>
                 <td>{role.name}</td>
               </tr>
             ))}

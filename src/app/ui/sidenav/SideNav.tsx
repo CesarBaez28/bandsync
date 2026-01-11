@@ -58,7 +58,7 @@ export default function SideNav({ hypName, musicalBandId }: { readonly hypName: 
       label: 'Repertorios', icon: <Image src="/library_music_24dp.svg" alt="Repertorios" width={24} height={24} />,
       subItems: [
         { label: 'Ver repertorios', href: `/musicalbands/${hypName}/repertoires`, icon: <Image src="/document_search_24dp.svg" alt="Ver repertorios" width={24} height={24} /> },
-        { label: 'Registrar repertorio', href: `/musicalbands/${hypName}/repertoires/create`, icon: <Image src="/add_24dp.svg" alt="Registrar repertorio" width={24} height={24} /> },
+        { label: 'Registrar repertorio', href: `/musicalbands/${hypName}/repertoires/create`, icon: <Image src="/add_24dp.svg" alt="Registrar repertorio" width={24} height={24} />, permission: UserPermissions.ADD_REPERTOIRE },
         { label: 'Exportar', href: `/musicalbands/${hypName}/repertoires/export`, icon: <Image src="/file_export_24dp.svg" alt="Exportar repertorio" width={24} height={24} /> },
       ]
     },
@@ -66,7 +66,7 @@ export default function SideNav({ hypName, musicalBandId }: { readonly hypName: 
       label: 'Canciones', icon: <Image src="/audio_file_24dp.svg" alt="Canciones" width={24} height={24} />,
       subItems: [
         { label: 'Ver canciones', href: `/musicalbands/${hypName}/songs`, icon: <Image src="/document_search_24dp.svg" alt="Ver canciones" width={24} height={24} /> },
-        { label: 'Registrar canción', href: `/musicalbands/${hypName}/songs/create`, icon: <Image src="/add_24dp.svg" alt="Registrar canción" width={24} height={24} /> },
+        { label: 'Registrar canción', href: `/musicalbands/${hypName}/songs/create`, icon: <Image src="/add_24dp.svg" alt="Registrar canción" width={24} height={24} />, permission: UserPermissions.ADD_SONG },
         { label: 'Artistas', href: `/musicalbands/${hypName}/artists`, icon: <Image src="/artist_24dp.svg" alt="Artistas" width={24} height={24} /> },
         { label: 'Géneros', href: `/musicalbands/${hypName}/genres`, icon: <Image src="/genres_24dp.svg" alt="Géneros Musicales" width={24} height={24} /> },
       ]

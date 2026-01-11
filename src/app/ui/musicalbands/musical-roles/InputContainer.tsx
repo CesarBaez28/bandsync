@@ -14,6 +14,8 @@ import { musicalRoleSchema, MusicalRoleSchema } from '@/app/lib/schemas/musicalR
 import { zodResolver } from '@hookform/resolvers/zod';
 import Modal from '../../modal/Modal';
 import CustomInput from '../../Inputs/CustomInput';
+import { Can } from '../../authorization/Can';
+import { UserPermissions } from '@/app/lib/permisions';
 
 type InputContainerProps = {
   readonly musicalBandId: UUID | undefined;
@@ -67,9 +69,12 @@ export default function InputContainer({ musicalBandId, hypName }: InputContaine
   return (
     <div id="modal-root" className={styles.inputContainer}>
       <Search placeholder="Escriba nombre del role musical" />
-      <CustomButton variant="primary" type="button" onClick={() => setOpen(true)}>
-        Agregar
-      </CustomButton>
+
+      <Can permission={UserPermissions.ADD_MUSICAL_ROLE} musicalBandId={musicalBandId}>
+        <CustomButton variant="primary" type="button" onClick={() => setOpen(true)}>
+          Agregar
+        </CustomButton>
+      </Can>
 
       <Modal
         size="sm"
