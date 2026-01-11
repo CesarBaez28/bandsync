@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { createRoleAction, deleteRoleAction, RoleState, RoleStateDelete, updateRoleAction } from '@/app/lib/actions/roles';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
-import { usePermissions } from '@/app/lib/customHooks';
+import { usePermissions } from '@/app/lib/customHooks/usePermissions';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
 

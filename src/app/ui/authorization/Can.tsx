@@ -1,4 +1,4 @@
-import { usePermissions } from "@/app/lib/customHooks";
+import { usePermissions } from "@/app/lib/customHooks/usePermissions";
 import { UUID } from "node:crypto";
 
 type CanProps = {

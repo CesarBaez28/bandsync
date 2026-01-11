@@ -23,7 +23,7 @@ import { createEventAction, deleteEventAction, DeleteEventProps, EventState, upd
 import { useToast } from '../../toast/ToastContext';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
-import { usePermissions } from '@/app/lib/customHooks';
+import { usePermissions } from '@/app/lib/customHooks/usePermissions';
 
 type Props = {
   readonly events: Event[] | undefined;

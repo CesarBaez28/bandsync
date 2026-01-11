@@ -16,7 +16,7 @@ import { userRoleSchema, UserRoleSchema } from '@/app/lib/schemas/userRoleSchema
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
 import { assingRoleToUserSchema, AssingRoleToUserSchema } from '@/app/lib/schemas/assingRoleToUserSchema';
-import { usePermissions } from '@/app/lib/customHooks';
+import { usePermissions } from '@/app/lib/customHooks/usePermissions';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
 

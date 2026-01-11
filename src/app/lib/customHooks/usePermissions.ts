@@ -1,4 +1,4 @@
-import { usePermissionsStore } from "../store/usePermissionsStore";
+import { usePermissionsStore } from "../../store/usePermissionsStore";
 
 export function usePermissions() {
   const {

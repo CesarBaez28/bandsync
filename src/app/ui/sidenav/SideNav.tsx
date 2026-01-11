@@ -10,7 +10,7 @@ import CustomButton from '../button/CustomButton';
 import CustomLink from '../link/CustomLink';
 import styles from './sidenav.module.css';
 import { UserPermissions } from '@/app/lib/permisions';
-import { usePermissions } from '@/app/lib/customHooks';
+import { usePermissions } from '@/app/lib/customHooks/usePermissions';
 import { UUID } from 'node:crypto';
 
 type NavItem = {

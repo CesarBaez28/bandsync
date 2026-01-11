@@ -1,6 +1,6 @@
 'use client'
 
-import { usePermissions } from "@/app/lib/customHooks";
+import { usePermissions } from "@/app/lib/customHooks/usePermissions";
 import { UserPermissions } from "@/app/lib/permisions";
 import Image from "next/image";
 import { UUID } from "node:crypto";

@@ -5,7 +5,7 @@ import { handleAsync } from "../lib/utils";
 import { ApiResponse, UserRolesAndPermissions } from "../lib/definitions";
 import { getUserRolesAndPermissions } from "../lib/api/roles";
 import { Session } from "next-auth";
-import { usePermissions } from "../lib/customHooks";
+import { usePermissions } from "../lib/customHooks/usePermissions";
 
 export default function PermissionsProvider({ session, children }: { readonly session: Session | null, readonly children: React.ReactNode }) {
   const { setUserRolesAndPermissions, clearUserRolesAndPermissions } = usePermissions();
