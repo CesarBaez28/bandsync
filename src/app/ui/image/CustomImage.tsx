@@ -1,49 +1,57 @@
-'use cliente';
+'use client';
 
 import clsx from "clsx";
 import Image, { ImageProps } from "next/image";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import styles from '@/ui/image/custom-image.module.css'
 
 type CustomImageProps = {
-  src?: string,
-  alt: string,
-  fallBackSrc?: string,
-  width: number,
-  height: number,
-  className?: string
-} & Omit<ImageProps, 'src' | 'alt' | 'width' | 'height'>;
+  src?: string | null;
+  alt: string;
+  fallback?: ReactNode;
+  width: number;
+  height: number;
+  className?: string;
+} & Omit<ImageProps, "src" | "alt" | "width" | "height">;
 
 export default function CustomImage({
   src,
   alt,
-  fallBackSrc,
+  fallback,
   width,
   height,
   className,
   ...props
 }: CustomImageProps) {
 
-  const validSrc = src && src !== "" ? src : fallBackSrc;
-  const [imgSrc, setImgSrc] = useState(validSrc);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    setImgSrc(validSrc);
-  }, [validSrc]);
+    setHasError(false);
+  }, [src]);
 
-  const handleError = () => {
-    if (imgSrc != fallBackSrc) {
-      setImgSrc(fallBackSrc);
-    }
+  const isValidSrc = typeof src === "string" && src.trim().length > 0;
+
+  if (!isValidSrc || hasError) {
+    return (
+      <div style={{ width, height }} className={clsx(styles.imageError, className)}>
+        {fallback ?? (
+          <span>
+            Imagen no disponible
+          </span>
+        )}
+      </div>
+    );
   }
 
   return (
     <Image
-      src={imgSrc ?? ""}
+      src={src}
       alt={alt}
       width={width}
       height={height}
-      onError={handleError}
       className={clsx(className)}
+      onError={() => setHasError(true)}
       {...props}
     />
   );

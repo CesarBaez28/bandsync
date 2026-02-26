@@ -19,8 +19,8 @@
 }
 
 .primary {
-  color: white;
-  background-color: var(--color-main-background)
+  background: var(--color-main);
+  color: var(--color-white);
 }
 
 .primary:hover {

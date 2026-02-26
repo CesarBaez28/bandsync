@@ -9,11 +9,14 @@ import { useToast } from "../../toast/ToastContext";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import CustomLink from "../../link/CustomLink";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import Modal from "../../modal/Modal";
 import { deleteRepertoireAction, DeleteRepertoireActionState } from "@/app/lib/actions/repertoires";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
+import EditIcon from '@/public/edit_24dp.svg'
+import DeleteIcon from '@/public/delete_24dp.svg'
+import LinkIcon from '@/public/link_24dp.svg'
+import SeeIcon from '@/public/opsz24.svg'
 
 type RepertoiresTableProps = {
   readonly data: PagedData<Repertoire> | undefined;
@@ -64,19 +67,19 @@ export default function RepertoiresTable({ data, musicalBandId, hypName }: Reper
                   <div style={{ display: 'flex', gap: '.6rem' }}>
                     <Can permission={UserPermissions.UPDATE_REPERTOIRE} musicalBandId={musicalBandId}>
                       <CustomLink href={`/musicalbands/${hypName}/repertoires/${repertoire.id}/edit`} variant="tertiary">
-                        <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                        <EditIcon width={24} height={24} />
                       </CustomLink>
                     </Can>
                     <Can permission={UserPermissions.DELETE_REPERTOIRE} musicalBandId={musicalBandId}>
                       <CustomButton onClick={() => handleDelete(repertoire)} variant="tertiary" type="button">
-                        <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                        <DeleteIcon width={24} height={24} />
                       </CustomButton>
                     </Can>
                     <CustomLink href={repertoire.link} variant="tertiary">
-                      <Image src="/link_24dp.svg" alt="Link del repertorio" width={24} height={24} />
+                      <LinkIcon width={24} height={24} />
                     </CustomLink>
                     <CustomLink href={`/musicalbands/${hypName}/repertoires/${repertoire.id}/see`} variant="tertiary">
-                      <Image src={'/opsz24.svg'} alt="Visualizar canciones del repertorio" width={24} height={24} />
+                      <SeeIcon width={24} height={24} />
                     </CustomLink>
                   </div>
                 </td>

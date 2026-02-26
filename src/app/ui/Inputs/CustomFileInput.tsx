@@ -4,7 +4,8 @@ import { forwardRef, ChangeEvent, useState } from 'react';
 import clsx from 'clsx';
 import styles from './customs-inputs.module.css';
 import CustomButton from '../button/CustomButton';
-import Image from 'next/image';
+import AttachtIcon from '@/public/attach_file_24dp.svg'
+import CloseIcon from '@/public/close_24dp.svg'
 
 export type CustomFileInputProps = {
   label?: string;
@@ -67,12 +68,7 @@ const CustomFileInput = forwardRef<HTMLInputElement, CustomFileInputProps>(
             variant='secondary'
             type='button'
             iconLeft={
-              <Image
-                src={'/attach_file_24dp.svg'}
-                alt='attach icon'
-                width={24}
-                height={24}
-              />
+              <AttachtIcon width={24} height={24} />
             }
             onClick={() => ref && 'current' in ref && ref.current?.click()}
           >
@@ -99,7 +95,7 @@ const CustomFileInput = forwardRef<HTMLInputElement, CustomFileInputProps>(
               >
                 <span>{file.name}</span>
                 <CustomButton variant='tertiary' type='button' onClick={() => handleRemove(idx)} aria-label={`Eliminar ${file.name}`}>
-                  <Image src="/close_24dp.svg" alt="delete file" width={24} height={24} />
+                  <CloseIcon width={24} height={24} />
                 </CustomButton>
               </li>
             ))}

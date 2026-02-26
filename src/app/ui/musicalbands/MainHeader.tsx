@@ -1,11 +1,13 @@
 'use client';
 
-import Image from "next/image";
 import CustomButton from "../button/CustomButton";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import Header from "../header/Header";
 import { useSideNav } from "../sidenav/SideNavContext";
 import { signOutAction } from "@/app/lib/actions/auth";
+import ThemeToggle from "../button/ThemeToggle";
+import MenuIcon from '@/public/menu_24dp.svg'
+import PersonIcon from '@/public/person_24dp.svg'
 
 export default function MainHeader({ hypName, appName }: { readonly hypName: string, readonly appName: string }) {
   const { toggleSideNav } = useSideNav();
@@ -14,15 +16,16 @@ export default function MainHeader({ hypName, appName }: { readonly hypName: str
     <Header>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <CustomButton onClick={toggleSideNav} variant="tertiary">
-          <Image src="/menu_24dp.svg" alt="perfil" width={24} height={24} />
+          <MenuIcon width={24} height={24} />
         </CustomButton>
         <h2>{appName}</h2>
       </div>
-      <div>
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '.6rem'}}>
+        <ThemeToggle />
         <DropdownMenu
           trigger={
             <CustomButton variant="secondary" style={{ padding: '0.4rem' }}>
-              <Image src="/person_24dp.svg" alt="perfil" width={24} height={24} />
+              <PersonIcon width={24} height={24} />
             </CustomButton>
           }
           options={[

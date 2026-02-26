@@ -4,7 +4,6 @@ import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { MusicalRole, PagedData } from "@/app/lib/definitions";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
@@ -17,6 +16,8 @@ import { useForm } from "react-hook-form";
 import { UUID } from "crypto";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
+import EditIcon from "@/public/edit_24dp.svg";
+import DeleteIcon from "@/public/delete_24dp.svg";
 
 type MusicalRoleTableProps = {
   readonly data: PagedData<MusicalRole> | undefined;
@@ -118,12 +119,12 @@ export default function MusicalRoleTable({ data, hypName, musicalBandId }: Music
                     <div style={{ display: 'flex', gap: '.6rem' }}>
                       <Can permission={UserPermissions.UPDATE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
                         <CustomButton onClick={() => handleEdit(role)} variant="tertiary" type="button">
-                          <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                          <EditIcon width={24} height={24} />
                         </CustomButton>
                       </Can>
                       <Can permission={UserPermissions.DELETE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
                         <CustomButton onClick={() => handleDelete(role)} variant="tertiary" type="button">
-                          <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                          <DeleteIcon width={24} height={24} />
                         </CustomButton>
                       </Can>
                     </div>

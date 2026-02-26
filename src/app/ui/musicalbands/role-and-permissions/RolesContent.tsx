@@ -6,7 +6,6 @@ import stylesModal from '../../../styles/modal.module.css'
 import CustomButton from "../../button/CustomButton";
 import { UUID } from 'node:crypto';
 import { Permission, RoleAndPermissions, TypeOfPermission, UserRolesAndPermissions } from '@/app/lib/definitions';
-import Image from 'next/image';
 import { ChangeEvent, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import Modal from '../../modal/Modal';
 import CustomInput from '../../Inputs/CustomInput';
@@ -19,6 +18,8 @@ import { useToast } from '../../toast/ToastContext';
 import { usePermissions } from '@/app/lib/customHooks/usePermissions';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
+import EditIcon from '@/public/edit_24dp.svg'
+import DeleteIcon from '@/public/delete_24dp.svg'
 
 type Props = {
   readonly hypName: string;
@@ -246,12 +247,12 @@ export default function RolesContent({ hypName, musicalBandId, rolesAndPermissio
                     <div style={{ display: 'flex', gap: '.6rem' }}>
                       <Can permission={UserPermissions.UPDATE_ROLE} musicalBandId={musicalBandId}>
                         <CustomButton disabled={currentUserRole?.role.id === roleAndPermission.role.id} onClick={() => handleEditRole(roleAndPermission)} variant="tertiary">
-                          <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                          <EditIcon width={24} height={24} />
                         </CustomButton>
                       </Can>
                       <Can permission={UserPermissions.DELETE_ROLE} musicalBandId={musicalBandId}>
                         <CustomButton disabled={currentUserRole?.role.id === roleAndPermission.role.id} onClick={() => handleDelete(roleAndPermission)} variant="tertiary" type="button">
-                          <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                          <DeleteIcon width={24} height={24} />
                         </CustomButton>
                       </Can>
                     </div>

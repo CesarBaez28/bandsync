@@ -10,9 +10,9 @@ import { musicalGenreSchema, MusicalGenreSchema } from "@/app/lib/schemas/musica
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createMusicalGenreAction, MusicalGenreActionState } from "@/app/lib/actions/musicalGenres";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import Modal from "../../modal/Modal";
 import CustomInput from "../../Inputs/CustomInput";
+import AddIcon from '@/public/add_2_24dp.svg'
 
 type Props = {
   readonly musicalBandId: UUID | undefined;
@@ -64,7 +64,7 @@ export default function AddGenre({ musicalBandId, setGenresState }: Props) {
   return (
     <div id="modal-root">
       <CustomButton type='button' style={{ height: '50%' }} onClick={() => setOpen(true)}>
-        <Image src="/add_2_24dp_FFF.svg" alt="Agregar género musical" width={16} height={16} />
+        <AddIcon width={16} height={16} />
       </CustomButton>
 
       <Modal size="sm" isOpen={open} title="Crear género musical">

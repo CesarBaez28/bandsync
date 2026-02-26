@@ -4,7 +4,6 @@ import { signOutAction } from '@/app/lib/actions/auth';
 import CustomButton from '../button/CustomButton';
 import DropdownMenu from '../dropdown/DropdownMenu';
 import styles from './home-header.module.css'
-import Image from 'next/image';
 import { Dispatch, SetStateAction, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import Modal from '../modal/Modal';
 import { createMusicalBandAction, CreateMusicalBandState } from '@/app/lib/actions/musicalbands';
@@ -16,6 +15,8 @@ import CustomFileInput from '../Inputs/CustomFileInput';
 import Header from '../header/Header';
 import { MusicalBand } from '@/app/lib/definitions';
 import { useToast } from '../toast/ToastContext';
+import AddIcon from '@/public/add_24dp.svg'
+import PersonIcon from '@/public/person_24dp.svg'
 
 type HomeHeaderProps = {
   readonly setData: Dispatch<SetStateAction<MusicalBand[] | null>>;
@@ -72,13 +73,7 @@ export default function HomeHeader({ setData, appName }: HomeHeaderProps) {
       <h2>{appName}</h2>
       <div className={styles['header-buttons']}>
         <CustomButton
-          iconLeft={<Image
-            src="/add_24dp.svg"
-            alt="Icono de añadir banda"
-            width={24}
-            height={24}
-          />
-          }
+          iconLeft={<AddIcon width={24} height={24} />}
           variant='secondary'
           style={{ padding: '0.4rem 0.4rem' }}
           onClick={() => setOpen(true)}
@@ -89,7 +84,7 @@ export default function HomeHeader({ setData, appName }: HomeHeaderProps) {
         <DropdownMenu
           trigger={
             <CustomButton variant="secondary" style={{ padding: '0.4rem' }}>
-              <Image src="/person_24dp.svg" alt="perfil" width={24} height={24} />
+              <PersonIcon width={24} height={24} />
             </CustomButton>
           }
           options={[

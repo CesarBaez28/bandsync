@@ -2,7 +2,6 @@
 
 import { Artist, PagedData } from "@/app/lib/definitions";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
@@ -17,6 +16,8 @@ import stylesModal from "../../../styles/modal.module.css";
 import { UUID } from "crypto";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
+import EditIcon from "@/public/edit_24dp.svg";
+import DeleteIcon from "@/public/delete_24dp.svg";
 
 type ArtistTableProps = {
   readonly data: PagedData<Artist> | undefined;
@@ -118,12 +119,12 @@ export default function ArtistTable({ data, hypName, musicalBandId }: ArtistTabl
                   <div style={{ display: 'flex', gap: '.6rem' }}>
                     <Can permission={UserPermissions.UPDATE_ARTIST} musicalBandId={musicalBandId}>
                       <CustomButton onClick={() => handleEdit(artist)} variant="tertiary" type="button">
-                        <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                        <EditIcon width={24} height={24} />
                       </CustomButton>
                     </Can>
                     <Can permission={UserPermissions.DELETE_ARTIST} musicalBandId={musicalBandId}>
                       <CustomButton onClick={() => handleDelete(artist)} variant="tertiary" type="button">
-                        <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                        <DeleteIcon width={24} height={24} />
                       </CustomButton>
                     </Can>
                   </div>

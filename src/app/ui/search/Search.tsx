@@ -1,9 +1,11 @@
 "use client";
 
-import Image from 'next/image';
-import styles from './search.module.css';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useDebouncedCallback } from 'use-debounce';
+import styles from "./search.module.css";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
+import { useState, useEffect } from "react";
+import CustomButton from "../button/CustomButton";
+import SearchIcon from '@/public/search_24dp.svg'
 
 type SearchProps = {
   readonly placeholder?: string;
@@ -14,26 +16,46 @@ export default function Search({ placeholder = "Buscar..." }: SearchProps) {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleSearch = useDebouncedCallback((term: string) => {
-    console.log(`Searching... ${term}`);
+  const initialQuery = searchParams.get("query") ?? "";
+  const [term, setTerm] = useState(initialQuery);
 
+  useEffect(() => {
+    setTerm(initialQuery);
+  }, [initialQuery]);
+
+  const updateUrl = (value: string) => {
     const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
 
-    params.set('page', '1');
-
-    if (term) {
-      params.set('query', term);
+    if (value) {
+      params.set("query", value);
     } else {
-      params.delete('query');
+      params.delete("query");
     }
 
     replace(`${pathname}?${params.toString()}`);
-  }, 300)
+  };
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    updateUrl(value);
+  }, 300);
+
+  const handleChange = (value: string) => {
+    setTerm(value);
+    handleSearch(value);
+  };
+
+  const handleClear = () => {
+    setTerm("");
+    updateUrl("");
+  };
 
   return (
-    <div className={`${styles.searchContainer} col-12 col-sm-8 col-md-6 col-lg-6`}>
+    <div
+      className={`${styles.searchContainer} col-12 col-sm-8 col-md-6 col-lg-6`}
+    >
       <span className={styles.icon}>
-        <Image src="/search_24dp.svg" alt="Menú principal" width={24} height={24} />
+       <SearchIcon width={22} height={22} />
       </span>
       <input
         id="search"
@@ -41,9 +63,21 @@ export default function Search({ placeholder = "Buscar..." }: SearchProps) {
         type="search"
         placeholder={placeholder}
         className={styles.searchInput}
-        onChange={(e) => handleSearch(e.target.value)}
-        defaultValue={searchParams.get('query')?.toString()}
+        value={term}
+        onChange={(e) => handleChange(e.target.value)}
       />
+
+      {term && (
+        <CustomButton
+          variant="tertiary"
+          type="button"
+          onClick={handleClear}
+          className={styles.clearButton}
+          aria-label="Limpiar búsqueda"
+        >
+          ✕
+        </CustomButton>
+      )}
     </div>
   );
 }

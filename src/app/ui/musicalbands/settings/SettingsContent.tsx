@@ -15,10 +15,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteMusicalBandAction, DeleteMusicalBandActionState, updateMusicalBandAction, UpdateMusicalBandState } from "@/app/lib/actions/musicalbands";
 import { createMusicalBandSchema, CreateMusicalBandSchema } from "@/app/lib/schemas/createMusicalBandSchema";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
+import PersonIcon from '@/public/person_24dp.svg'
+import EditIcon from '@/public/edit_24dp.svg'
+import DeleteIcon from '@/public/delete_24dp.svg'
 
 type Props = {
   readonly musicalBand: MusicalBand | undefined
@@ -108,7 +110,7 @@ export default function SettingsContent({ musicalBand }: Props) {
             alt={'logo de la banda'}
             width={80}
             height={80}
-            fallBackSrc='/person_24dp.svg'
+            fallback={<PersonIcon width={80} height={80} />}
             className={band?.logo ? styles['image'] : styles['fall-back']}
           />
           <div>
@@ -136,7 +138,7 @@ export default function SettingsContent({ musicalBand }: Props) {
 
               <Can permission={UserPermissions.UPDATE_BAND} musicalBandId={musicalBand?.id}>
                 <CustomButton
-                  iconLeft={<Image src="/edit_24dp_FFF.svg" alt="Editar" width={18} height={18} />}
+                  iconLeft={<EditIcon width={20} height={20} />}
                   type='button'
                   onClick={() => setOpen(true)}
                 >
@@ -151,7 +153,7 @@ export default function SettingsContent({ musicalBand }: Props) {
 
                   <CustomButton
                     onClick={() => setOpenDelete(true)}
-                    iconLeft={<Image src="/delete_24dp_FFF.svg" alt="Eliminar" width={18} height={18} />}
+                    iconLeft={<DeleteIcon width={20} height={20} />}
                     type="button"
                   >
                     Eliminar

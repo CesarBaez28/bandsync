@@ -7,7 +7,6 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { startTransition, useActionState, useEffect, useRef, useState, useCallback } from "react";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import { Event, MusicalBand, Repertoire } from "@/app/lib/definitions";
 import { EventInput } from "@fullcalendar/core/index.js";
 import type { EventClickArg, EventContentArg } from "@fullcalendar/core";
@@ -24,6 +23,7 @@ import { useToast } from '../../toast/ToastContext';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
 import { usePermissions } from '@/app/lib/customHooks/usePermissions';
+import CalendarIcon from "@/public/calendar_add_on_24dp.svg";
 
 type Props = {
   readonly events: Event[] | undefined;
@@ -276,7 +276,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
     <section id="modal-root">
       <div style={{ marginBottom: '1rem' }}>
         <Can permission={UserPermissions.ADD_EVENT} musicalBandId={musicalBand?.id}>
-          <CustomButton iconLeft={<Image src={'/calendar_add_on_24dp.svg'} width={24} height={24} alt="Añadir" />} type="button" onClick={() => handleCreateEvent()}>
+          <CustomButton iconLeft={<CalendarIcon width={24} height={24} />} type="button" onClick={() => handleCreateEvent()}>
             Agregar evento
           </CustomButton>
         </Can>

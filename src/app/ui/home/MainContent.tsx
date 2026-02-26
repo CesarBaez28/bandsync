@@ -35,7 +35,7 @@ export default function MainContent({ musicalBands, appName }: MainContentProps)
                       alt={`Logo de la banda musical ${musicalBand.name}`}
                       width={120}
                       height={120}
-                      fallBackSrc='/image_48dp.svg'
+                      fallBack='/image_48dp.svg'
                       className={musicalBand.logo ? styles.image : ''}
                     />
                     <div>

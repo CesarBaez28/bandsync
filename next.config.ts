@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '5mb',
     },
   },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        // Treat the loaded file as JS (so importing returns a component)
+        as: '*.js',
+      },
+    },
+  },
 };
 
 export default nextConfig;

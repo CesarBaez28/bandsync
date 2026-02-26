@@ -4,7 +4,6 @@ import stylesForm from '../../../styles/form.module.css'
 import stylesModal from '../../../styles/modal.module.css';
 import { Role, User, UserRole, UserRolesAndPermissions } from "@/app/lib/definitions";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { UUID } from "node:crypto";
 import Modal from "../../modal/Modal";
@@ -19,6 +18,8 @@ import { assingRoleToUserSchema, AssingRoleToUserSchema } from '@/app/lib/schema
 import { usePermissions } from '@/app/lib/customHooks/usePermissions';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
+import EditIcon from '@/public/edit_24dp.svg'
+import DeleteIcon from '@/public/delete_24dp.svg'
 
 type Props = {
   readonly hypName: string;
@@ -188,14 +189,14 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
                         disabled={currentUserRole?.role.id === userRole.role.id && userRole.user.id === currentUserId}
                         variant="tertiary"
                       >
-                        <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                        <EditIcon width={24} height={24} />
                       </CustomButton>
                       <CustomButton
                         disabled={currentUserRole?.role.id === userRole.role.id && userRole.user.id === currentUserId}
                         variant='tertiary'
                         onClick={() => handleDelete(userRole)}
                       >
-                        <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                        <DeleteIcon width={24} height={24} />
                       </CustomButton>
                     </div>
                   </td>

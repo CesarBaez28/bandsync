@@ -4,7 +4,6 @@ import styles from './users-table.module.css';
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { MusicalRole, MusicalRolesUsers, PagedData, User } from "@/app/lib/definitions";
-import Image from "next/image";
 import CustomButton from "../../button/CustomButton";
 import CustomImage from "../../image/CustomImage";
 import Modal from '../../modal/Modal';
@@ -17,6 +16,10 @@ import CustomSelect, { OptionInputSelect } from '../../Inputs/CustomSelect';
 import { assignMusicalRolesToUserAction, AssignMusicalRolesToUserActionState } from '@/app/lib/actions/muscalRoles';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
+import EditIcon from '@/public/edit_24dp.svg';
+import DeleteIcon from '@/public/delete_24dp.svg';
+import AddIcon from '@/public/add_2_24dp.svg';
+import PersonIcon from '@/public/person_24dp.svg'
 
 type Props = {
   readonly musicalBandId: UUID | undefined;
@@ -129,13 +132,13 @@ export default function UsersTable({
                   <td>
                     <div style={{ display: 'flex', gap: '.6rem' }}>
                       <Can permission={UserPermissions.UPDATE_MEMBER} musicalBandId={musicalBandId}>
-                        <CustomButton variant="tertiary">
-                          <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} onClick={() => handleEdit(user)} />
+                        <CustomButton variant="tertiary" type='button' onClick={() => handleEdit(user)}>
+                          <EditIcon width={24} height={24} />
                         </CustomButton>
                       </Can>
                       <Can permission={UserPermissions.DELETE_MEMBER} musicalBandId={musicalBandId}>
                         <CustomButton disabled={user.id === currentUserId} onClick={() => handleDelete(user)} variant="tertiary" type="button">
-                          <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                          <DeleteIcon width={24} height={24} />
                         </CustomButton>
                       </Can>
                     </div>
@@ -148,7 +151,7 @@ export default function UsersTable({
                       alt={'Foto de perfil'}
                       width={48}
                       height={48}
-                      fallBackSrc='/person_24dp.svg'
+                      fallback={<PersonIcon width={24} height={24} />}
                       className={user?.photo ? styles['image'] : styles['fall-back']}
                     />
                     {user.username}
@@ -192,8 +195,8 @@ export default function UsersTable({
               options={options || []}
               onChange={(e) => setSelectedRole(e.target.value)}
             />
-            <CustomButton onClick={handleAddRole} style={{ color: 'white' }} type='button'>
-              <Image src="/add_2_24dp_FFF.svg" alt="Agregar" width={16} height={16} />
+            <CustomButton onClick={handleAddRole} type='button'>
+              <AddIcon width={16} height={16} />
             </CustomButton>
           </div>
 
@@ -204,7 +207,7 @@ export default function UsersTable({
                   <div className={styles.roleContent}>
                     <span>{mr.name}</span>
                     <CustomButton onClick={() => handleDeleteRole(mr)} type='button' variant='tertiary'>
-                      <Image src="/delete_24dp.svg" alt="Eliminar" width={20} height={20} />
+                      <DeleteIcon width={20} height={20} />
                     </CustomButton>
                   </div>
                 </div>

@@ -13,7 +13,7 @@
 }
 .modalContent {
   position: relative;
-  background-color: #fff;
+  background-color: var(--color-white);
   border-radius: 8px;
   border: 1px solid var(--color-gray-200);
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);

@@ -1,7 +1,6 @@
 'use client';
 
 import stylesForm from '../../../styles/form.module.css'
-import Image from "next/image";
 import CustomButton from "../../button/CustomButton";
 import { Dispatch, SetStateAction, startTransition, useActionState, useCallback, useEffect, useState } from "react";
 import { useToast } from "../../toast/ToastContext";
@@ -13,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArtistSchema, artistSchema } from '@/app/lib/schemas/artistSchema';
 import { UUID } from 'node:crypto';
 import { Artist } from '@/app/lib/definitions';
+import AddIcon from '@/public/add_2_24dp.svg'
 
 type Props = {
   readonly musicalBandId: UUID | undefined;
@@ -62,7 +62,7 @@ export default function AddArtist({ musicalBandId, setArtistsState }: Props) {
   return (
     <div id='modal-root'>
       <CustomButton type='button' style={{ height: '50%' }} onClick={() => setOpen(true)}>
-        <Image src="/add_2_24dp_FFF.svg" alt="Agregar Artista" width={16} height={16} />
+        <AddIcon width={16} height={16} />
       </CustomButton>
 
       <Modal size="sm" isOpen={open} title="Crear Artista">

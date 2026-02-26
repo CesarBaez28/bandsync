@@ -11,6 +11,19 @@
   cursor: pointer;
 }
 
+.toggle {
+  background: var(--color-main);
+  color: var(--color-white);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background: var(--color-main-hover);
+}
+
 .fullWidth {
   width: 100%;
 }
@@ -22,8 +35,8 @@
 
 /* Variantes */
 .primary {
-  background-color: var(--color-main-background); 
-  color: white;
+  background: var(--color-main);
+  color: var(--color-white);
 }
 
 .primary:hover:not(:disabled) {

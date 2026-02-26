@@ -1,7 +1,7 @@
 import { Song } from "@/app/lib/definitions";
-import React from "react";
 import CustomLink from "../../link/CustomLink";
-import Image from "next/image";
+import LinkIcon from "@/public/link_24dp.svg";
+import DocsIcon from "@/public/docs_24dp.svg";
 
 type Props = {
   readonly songs: Song[] | undefined;
@@ -26,10 +26,10 @@ export default function RepertoireSongsTable({ songs }: Props) {
             <tr key={song.id}>
               <td style={{ display: 'flex', gap: '.6rem' }}>
                 <CustomLink href={song.link} variant="tertiary">
-                  <Image src={'/link_24dp.svg'} alt="Link de la canción" width={24} height={24} />
+                  <LinkIcon width={24} height={24} />
                 </CustomLink>
                 <CustomLink href={song.sheetMusic} variant="tertiary">
-                  <Image src={'/docs_24dp.svg'} alt="Partitura o documento de la canción" width={24} height={24} />
+                  <DocsIcon width={24} height={24} />
                 </CustomLink>
               </td>
               <td>{song.name}</td>

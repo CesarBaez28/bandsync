@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { signOutAction } from "../lib/actions/auth";
 import CustomButton from "../ui/button/CustomButton";
 import DropdownMenu from "../ui/dropdown/DropdownMenu";
@@ -9,6 +8,7 @@ import { handleAsync } from "../lib/utils";
 import { getUserById } from "../lib/api/users";
 import styles from './profile.module.css';
 import { Metadata } from "next";
+import PersonIcon from '@/public/person_24dp.svg'
 
 export const metadata: Metadata = {
   title: "Perfil",
@@ -26,7 +26,7 @@ export default async function Profile() {
           <DropdownMenu
             trigger={
               <CustomButton variant="secondary" style={{ padding: '0.4rem' }}>
-                <Image src="/person_24dp.svg" alt="perfil" width={24} height={24} />
+                <PersonIcon width={24} height={24} />
               </CustomButton>
             }
             options={[

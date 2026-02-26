@@ -83,7 +83,7 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
             alt={'Foto de perfil'}
             width={80}
             height={80}
-            fallBackSrc='/person_24dp.svg'
+            fallBack='/person_24dp.svg'
             className={state.user?.photo ? styles['profile-photo'] : styles['profile-fall-back']}
           />
           <div>

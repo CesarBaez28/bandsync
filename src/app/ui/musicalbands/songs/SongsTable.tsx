@@ -4,7 +4,6 @@ import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { PagedData, Song } from "@/app/lib/definitions";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import CustomLink from "../../link/CustomLink";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import Modal from "../../modal/Modal";
@@ -14,6 +13,10 @@ import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
+import EditIcon from "@/public/edit_24dp.svg";
+import DeleteIcon from "@/public/delete_24dp.svg";
+import LinkIcon from "@/public/link_24dp.svg";
+import DocsIcon from "@/public/docs_24dp.svg";
 
 type SongsTableProps = {
   readonly data: PagedData<Song> | undefined;
@@ -66,19 +69,19 @@ export default function SongsTable({ data, musicalBandId, hypName }: SongsTableP
                   <div style={{ display: 'flex', gap: '.6rem' }}>
                     <Can permission={UserPermissions.UPDATE_SONG} musicalBandId={musicalBandId}>
                       <CustomLink href={`/musicalbands/${hypName}/songs/${song.id}/edit`} variant="tertiary">
-                        <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                        <EditIcon width={24} height={24} />
                       </CustomLink>
                     </Can>
                     <Can permission={UserPermissions.DELETE_SONG} musicalBandId={musicalBandId}>
                       <CustomButton onClick={() => handleDelete(song)} variant="tertiary" type="button">
-                        <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                        <DeleteIcon width={24} height={24} />
                       </CustomButton>
                     </Can>
                     <CustomLink href={song.link} variant="tertiary">
-                      <Image src="/link_24dp.svg" alt="Link canción" width={24} height={24} />
+                      <LinkIcon width={24} height={24} />
                     </CustomLink>
                     <CustomLink href={song.sheetMusic} variant="tertiary">
-                      <Image src="/docs_24dp.svg" alt="Archivo o partitura de la canción" width={24} height={24} />
+                      <DocsIcon width={24} height={24} />
                     </CustomLink>
                   </div>
                 </td>

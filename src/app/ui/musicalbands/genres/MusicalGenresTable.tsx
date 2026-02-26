@@ -11,12 +11,13 @@ import { musicalGenreSchema, MusicalGenreSchema } from "@/app/lib/schemas/musica
 import { zodResolver } from "@hookform/resolvers/zod";
 import Modal from "../../modal/Modal";
 import CustomButton from "../../button/CustomButton";
-import Image from "next/image";
 import CustomInput from "../../Inputs/CustomInput";
 import stylesModal from "../../../styles/modal.module.css";
 import { UUID } from "crypto";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
+import EditIcon from "@/public/edit_24dp.svg";
+import DeleteIcon from "@/public/delete_24dp.svg";
 
 type MusicalGenresTableProps = {
   readonly data: PagedData<MusicalGenre> | undefined;
@@ -117,12 +118,12 @@ export default function MusicalGenresTable({ data, hypName, musicalBandId }: Mus
                   <div style={{ display: 'flex', gap: '.6rem' }}>
                     <Can permission={UserPermissions.UPDATE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
                       <CustomButton onClick={() => handleEdit(musicalGenre)} variant="tertiary" type="button">
-                        <Image src="/edit_24dp.svg" alt="Editar" width={24} height={24} />
+                        <EditIcon width={24} height={24} />
                       </CustomButton>
                     </Can>
                     <Can permission={UserPermissions.DELETE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
                       <CustomButton onClick={() => handleDelete(musicalGenre)} variant="tertiary" type="button">
-                        <Image src="/delete_24dp.svg" alt="Eliminar" width={24} height={24} />
+                        <DeleteIcon width={24} height={24} />
                       </CustomButton>
                     </Can>
                   </div>

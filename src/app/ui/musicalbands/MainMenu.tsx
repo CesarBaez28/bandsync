@@ -2,11 +2,16 @@
 
 import { usePermissions } from "@/app/lib/customHooks/usePermissions";
 import { UserPermissions } from "@/app/lib/permisions";
-import Image from "next/image";
 import { UUID } from "node:crypto";
 import { ReactNode } from "react";
-import styles from './main-menu.module.css'
-import CustomLink from "../link/CustomLink";
+import styles from '@/ui/musicalbands/main-menu.module.css';
+import CustomLink from "@/ui/link/CustomLink";
+import GroupIcon from '@/public/group_24dp.svg';
+import LibraryMusicIcon from '@/public/library_music_24dp.svg';
+import AudioFileIcon from '@/public/audio_file_24dp.svg';
+import AdaptiveAudioMicIcon from '@/public/adaptive_audio_mic_24dp.svg';
+import CalendarMonthIcon from '@/public/calendar_month_24dp.svg';
+import SettingsIcon from '@/public/settings_24dp.svg';
 
 type Props = {
   readonly hypName: string;
@@ -27,7 +32,7 @@ export default function MainMenu({ hypName, musicalBandId }: Props) {
   const menuItems: MenuItem[] = [
     {
       label: 'Integrantes',
-      icon: <Image src="/group_24dp.svg" alt='Ingegrantes' width={36} height={36} />,
+      icon: <GroupIcon width={36} height={36} />,
       subItems: [
         {
           label: 'Integrantes',
@@ -38,7 +43,7 @@ export default function MainMenu({ hypName, musicalBandId }: Props) {
     },
     {
       label: 'Repertorios',
-      icon: <Image src='/library_music_24dp.svg' alt='Repertorios' width={36} height={36} />,
+      icon: <LibraryMusicIcon width={36} height={36} />,
       subItems: [
         {
           label: 'Ver repertorios',
@@ -57,7 +62,7 @@ export default function MainMenu({ hypName, musicalBandId }: Props) {
     },
     {
       label: 'Canciones',
-      icon: <Image src='/audio_file_24dp.svg' alt='Canciones' width={36} height={36} />,
+      icon: <AudioFileIcon width={36} height={36} />,
       subItems: [
         {
           label: 'Ver canciones',
@@ -80,7 +85,7 @@ export default function MainMenu({ hypName, musicalBandId }: Props) {
     },
     {
       label: 'Roles musicales',
-      icon: <Image src='/adaptive_audio_mic_24dp.svg' alt='Roles musicales' width={36} height={36} />,
+      icon: <AdaptiveAudioMicIcon width={36} height={36} />,
       subItems: [
         {
           label: 'Roles musicales',
@@ -90,7 +95,7 @@ export default function MainMenu({ hypName, musicalBandId }: Props) {
     },
     {
       label: 'Calendario',
-      icon: <Image src='/calendar_month_24dp.svg' alt='Calendario' width={36} height={36} />,
+      icon: <CalendarMonthIcon width={36} height={36} />,
       subItems: [
         {
           label: 'Calendario',
@@ -100,7 +105,7 @@ export default function MainMenu({ hypName, musicalBandId }: Props) {
     },
     {
       label: 'Configuración',
-      icon: <Image src='/settings_24dp.svg' alt='Configuración' width={36} height={36} />,
+      icon: <SettingsIcon width={36} height={36} />,
       subItems: [
         {
           label: 'Banda',

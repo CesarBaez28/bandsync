@@ -10,23 +10,39 @@
 
 /* CustomSelect styles */
 
+.selectWrapper {
+  position: relative;
+}
+
 .select {
   appearance: none;
-  /* Elimina el estilo nativo */
   -webkit-appearance: none;
   -moz-appearance: none;
 
+  width: 100%;
+
   padding: .625rem;
+  padding-right: 2rem; 
+
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: inherit;
   font-family: inherit;
+
   background-color: var(--color-white);
-  background-image: url("/keyboard_arrow_down_24dp.svg");
-  background-repeat: no-repeat;
-  background-position: right 0.50rem center;
+  color: var(--color-text);
+
   outline: none;
   cursor: pointer;
+}
+
+.icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text); 
 }
 
 /* CustomFileInput styles */
@@ -39,7 +55,21 @@
 
 .label {
   font-weight: 500;
-  color: #333;
+  color: var(--color-text);
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text); 
 }
 
 .input {
