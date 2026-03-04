@@ -7,7 +7,7 @@ export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <CustomButton style={{padding: "0.4rem"}} onClick={toggleTheme}>
+    <CustomButton style={{padding: "0.6rem"}} onClick={toggleTheme}>
       {theme === 'dark' ? '🌙 Oscuro' : '☀️ Claro'}
     </CustomButton>
   );

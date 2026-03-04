@@ -37,6 +37,12 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
             </span>
           )}
         </div>
+        
+        {error && (
+          <p className={styles["error-message"]} role="alert">
+            {error.message}
+          </p>
+        )}
       </div>
     );
   }
