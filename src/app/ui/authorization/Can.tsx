@@ -17,10 +17,14 @@ export function Can({
   fallback = null,
 }: CanProps) {
 
-  const { hasPermission, hasAnyPermission } = usePermissions();
+  const { hasPermission, hasAnyPermission, permissionsLoaded } = usePermissions();
 
-  if (musicalBandId === undefined) {
-    return <>{fallback}</>;
+  if (!permissionsLoaded) return null;
+
+  if (!musicalBandId) return <>{fallback}</>;
+
+  if (permission && anyOf) {
+    throw new Error("Can: use either 'permission' or 'anyOf'");
   }
 
   let allowed = false;

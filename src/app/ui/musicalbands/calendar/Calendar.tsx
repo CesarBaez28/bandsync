@@ -32,19 +32,8 @@ type Props = {
   readonly musicalBand: MusicalBand | undefined;
 };
 
-type Permisions = {
-  canAddEvent: boolean;
-  canUpdateEvent: boolean;
-  canDeleteEvent: boolean;
-}
-
 export default function Calendar({ events, fullcalendarEvents, repertoires, musicalBand }: Props) {
-  const { hasPermission } = usePermissions();
-  const [permissions, setPermissions] = useState<Permisions>({
-    canAddEvent: false,
-    canUpdateEvent: false,
-    canDeleteEvent: false
-  });
+  const { hasPermission, permissionsLoaded } = usePermissions();
   const [fullcalendarEventsState, setFullcalendarEventsState] = useState<EventInput[] | undefined>(fullcalendarEvents);
   const [eventsState, setEventsState] = useState<Event[] | undefined>(events);
   const { showToast } = useToast();
@@ -61,16 +50,11 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
 
-  useEffect(() => {
-    const canAddEvent = hasPermission(UserPermissions.ADD_EVENT, musicalBand?.id);
-    const canUpdateEvent = hasPermission(UserPermissions.UPDATE_EVENT, musicalBand?.id);
-    const canDeleteEvent = hasPermission(UserPermissions.DELETE_EVENT, musicalBand?.id);
-    setPermissions({
-      canAddEvent,
-      canUpdateEvent,
-      canDeleteEvent
-    });
-  }, [hasPermission, musicalBand]);
+  const canAddEvent = permissionsLoaded &&
+    hasPermission(UserPermissions.ADD_EVENT, musicalBand?.id);
+
+  const canUpdateEvent = permissionsLoaded &&
+    hasPermission(UserPermissions.UPDATE_EVENT, musicalBand?.id);
 
   const repertoiresOptions: OptionInputSelect[] | undefined = repertoires
     ?.sort((a, b) => a.name.localeCompare(b.name))
@@ -90,7 +74,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
   });
 
   const handleDateClick = (arg: DateClickArg) => {
-    if (!permissions.canAddEvent) return;
+    if (!canAddEvent) return;
     setValueCreate('date', arg.dateStr);
     setOpenCreateModal(true);
   }
@@ -104,8 +88,12 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
   const handleCreateCancel = useCallback(() => {
     setOpenCreateModal(false);
     setValueCreate('date', '');
+    createState.errors = {};
+    createState.message = null;
+    createState.success = false;
+    createState.newEvent = undefined;
     resetCreate();
-  }, [setOpenCreateModal, setValueCreate, resetCreate]);
+  }, [setOpenCreateModal, setValueCreate, resetCreate, createState]);
 
   const onSubmitCreate = () => {
     if (!formRefCreate.current) return;
@@ -169,6 +157,14 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
     });
   };
 
+  const handleEditCancel = useCallback(() => {
+    editState.errors = {};
+    editState.message = null;
+    editState.success = false;
+    setOpenEditModal(false);
+    resetEdit();
+  }, [resetEdit, editState]);
+
   useEffect(() => {
     if (!editState?.success) return;
 
@@ -212,11 +208,9 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
       })
     );
 
-    setOpenEditModal(false);
-    resetEdit();
+    handleEditCancel();
     showToast("Evento actualizado exitosamente.", "success");
-  }, [editState?.success, getValuesEdit, repertoires, resetEdit, selectedEventId, showToast]);
-
+  }, [editState, getValuesEdit, repertoires, resetEdit, selectedEventId, showToast, handleEditCancel]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -241,11 +235,6 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
     }
   }
 
-  const handleEditCancel = () => {
-    setOpenEditModal(false);
-    resetEdit();
-  }
-
   const onSubmitDelete = () => {
     startTransition(() => {
       if (!selectedEventId || !musicalBand?.id) return;
@@ -259,6 +248,13 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
     });
   }
 
+  const handleDeleteCancel = useCallback(() => {
+    deleteState.message = null;
+    deleteState.success = false;
+    setOpenEditModal(false);
+    resetEdit();
+  }, [resetEdit, deleteState]);
+
   useEffect(() => {
     if (!deleteState?.success) return;
 
@@ -266,10 +262,9 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
 
     setFullcalendarEventsState(prev => prev?.filter(ev => ev.id !== selectedEventId));
 
-    setOpenEditModal(false);
-    resetEdit();
+    handleDeleteCancel();
     showToast("Evento eliminado exitosamente.", "success");
-  }, [deleteState?.success, resetEdit, selectedEventId, showToast]);
+  }, [deleteState, resetEdit, selectedEventId, showToast, handleDeleteCancel]);
 
 
   return (
@@ -399,7 +394,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
           <div className={stylesForm.fieldsContainer}>
 
             <CustomSelect
-              disabled={!permissions.canUpdateEvent}
+              disabled={!canUpdateEvent}
               label="Selecione el repertorio:"
               options={repertoiresOptions}
               {...registerEdit("repertoire")}
@@ -407,7 +402,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomInput
-              disabled={!permissions.canUpdateEvent}
+              disabled={!canUpdateEvent}
               label="Nombre del evento:"
               type="text"
               {...registerEdit("name")}
@@ -415,7 +410,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomInput
-              disabled={!permissions.canUpdateEvent}
+              disabled={!canUpdateEvent}
               label="Fecha del evento:"
               type="date"
               {...registerEdit("date")}
@@ -423,14 +418,14 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomTextArea
-              disabled={!permissions.canUpdateEvent}
+              disabled={!canUpdateEvent}
               label="Descripción:"
               {...registerEdit("description")}
               error={errorsEdit.description}
             />
 
             <CustomInput
-              disabled={!permissions.canUpdateEvent}
+              disabled={!canUpdateEvent}
               label="Lugar:"
               type="text"
               {...registerEdit("place")}
@@ -438,7 +433,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             />
 
             <CustomInput
-              disabled={!permissions.canUpdateEvent}
+              disabled={!canUpdateEvent}
               label="Ubicación (Google Maps):"
               type="text"
               {...registerEdit("location")}

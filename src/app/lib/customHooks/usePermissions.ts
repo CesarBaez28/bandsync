@@ -3,6 +3,7 @@ import { usePermissionsStore } from "../../store/usePermissionsStore";
 export function usePermissions() {
   const {
     userRolesAndPermissions,
+    permissionsLoaded,
     setUserRolesAndPermissions,
     clearUserRolesAndPermissions,
     hasPermission,
@@ -11,6 +12,7 @@ export function usePermissions() {
 
   return {
     userRolesAndPermissions,
+    permissionsLoaded,
     setUserRolesAndPermissions,
     clearUserRolesAndPermissions,
     hasPermission,

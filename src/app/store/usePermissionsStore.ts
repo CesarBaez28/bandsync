@@ -5,8 +5,11 @@ import { UUID } from 'node:crypto';
 type UserRolesPermissionsState = {
   userRolesAndPermissions: UserRolesAndPermissions[];
   permissionsIndex: Set<string>;
+  permissionsLoaded: boolean;
+
   setUserRolesAndPermissions: (permissions: UserRolesAndPermissions[]) => void;
   clearUserRolesAndPermissions: () => void;
+
   hasPermission: (permissionName: string, musicalBandId: UUID | undefined) => boolean;
   hasAnyPermission: (permissionNames: string[], musicalBandId: UUID | undefined) => boolean;
 };
@@ -14,6 +17,7 @@ type UserRolesPermissionsState = {
 export const usePermissionsStore = create<UserRolesPermissionsState>((set, get) => ({
   userRolesAndPermissions: [],
   permissionsIndex: new Set<string>(),
+  permissionsLoaded: false,
 
   setUserRolesAndPermissions: (permissions) => {
     const index = new Set<string>();
@@ -28,11 +32,17 @@ export const usePermissionsStore = create<UserRolesPermissionsState>((set, get) 
 
     set({
       userRolesAndPermissions: permissions,
-      permissionsIndex: index
+      permissionsIndex: index,
+      permissionsLoaded: true
     });
   },
 
-  clearUserRolesAndPermissions: () => set({ userRolesAndPermissions: [] }),
+  clearUserRolesAndPermissions: () =>
+    set({
+      userRolesAndPermissions: [],
+      permissionsIndex: new Set(),
+      permissionsLoaded: true
+    }),
 
   hasPermission: (permissionName, musicalBandId) => {
     if (!musicalBandId) return false;
