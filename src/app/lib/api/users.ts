@@ -166,3 +166,34 @@ export async function leaveMusicalBand(userId: UUID, musicalBandId: UUID): Promi
 
   return await response.json();
 }
+
+export type ChangePasswordRequest = {
+  oldPassword: string;
+  newPassword: string;
+}
+
+export async function changePassword({oldPassword, newPassword }: ChangePasswordRequest): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const username = session.user?.username;
+
+  const response = await fetch(`${config.api}/${USER_PATH}/change-password`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ username, oldPassword, newPassword })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error changing password");
+  }
+
+  return await response.json();
+} 

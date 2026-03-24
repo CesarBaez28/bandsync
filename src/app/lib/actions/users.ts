@@ -1,12 +1,13 @@
 "use server";
 
 import { auth, unstable_update } from "@/auth";
-import { leaveMusicalBand, registerUser, registerUserFromInvitation, updateUser } from "../api/users";
+import { changePassword, ChangePasswordRequest, leaveMusicalBand, registerUser, registerUserFromInvitation, updateUser } from "../api/users";
 import { ApiResponse, MusicalBand } from "../definitions";
 import { editUserSchema } from "../schemas/editUserSchema";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
 import { handleAsync } from "../utils";
 import { UUID } from "crypto";
+import { changePasswordSchema } from "../schemas/changePasswordSchema";
 
 export type RegisterUserState = {
   errors?: {
@@ -167,6 +168,58 @@ export async function leaveMusicalBandAction(prevState: LeaveMusicalBandState, F
     console.error("Error leaving musical band:", errors);
     return {
       message: "Ocurrió un error al salir de la banda musical. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true
+  }
+}
+
+export type ChangePasswordState = {
+  errors?: {
+    currentPassword?: string[];
+    newPassword?: string[];
+    confirmNewPassword?: string[];
+  };
+  message?: string | null;
+  success: boolean;
+}
+
+export async function changePasswordAction(prevState: ChangePasswordState, formData: FormData): Promise<ChangePasswordState> {
+  const validateFields = changePasswordSchema.safeParse({
+    currentPassword: formData.get("currentPassword"),
+    newPassword: formData.get("newPassword"),
+    confirmNewPassword: formData.get("confirmNewPassword"),
+  });
+
+  if (!validateFields.success) {
+    return {
+      errors: validateFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    }
+  }
+
+  const requestBody: ChangePasswordRequest = {
+    oldPassword: validateFields.data.currentPassword,
+    newPassword: validateFields.data.newPassword,
+  }
+
+  const [response, errors] = await handleAsync<ApiResponse<void>>(changePassword(requestBody));
+
+  if (errors) {
+    console.error("Error changing password:", errors);
+    return {
+      message: errors.message || "Ocurrió un error al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde.",
       success: false
     }
   }

@@ -9,13 +9,18 @@ export const metadata: Metadata = {
   description: "Perfil",
 };
 
-export default async function ProfilePage() {
+type Props = {
+  readonly params: Promise<{ hypName: string; }>;
+}
+
+export default async function ProfilePage(props: Props) {
+  const { hypName } = await props.params;
   const [response, error] = await handleAsync<ApiResponse<User>>(getUserById());
 
   return (
     <div>
       {error == null ? (
-        <ProfileContent user={response?.data} />
+        <ProfileContent user={response?.data} hypName={hypName} />
       ) : (
         <div className="message">
           <h2>¡Lo sentimos!</h2>

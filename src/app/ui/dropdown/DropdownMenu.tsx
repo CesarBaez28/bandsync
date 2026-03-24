@@ -5,7 +5,7 @@ import CustomButton from '../button/CustomButton';
 import styles from './user-menu.module.css';
 import CustomLink from '../link/CustomLink';
 
-type DropdownOption = {
+export type DropdownOption = {
   label: string;
   href?: string;
   icon?: React.ReactNode;

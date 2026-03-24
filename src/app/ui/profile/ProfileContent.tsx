@@ -14,8 +14,14 @@ import CustomInput from '../Inputs/CustomInput';
 import CustomFileInput from '../Inputs/CustomFileInput';
 import { updateUserAction, UpdateUserState } from '@/app/lib/actions/users';
 import { useToast } from '../toast/ToastContext';
+import PersonSvg from '@/public/person_24dp.svg'
 
-export default function ProfileContent({ user }: Readonly<{ user: User | undefined }>) {
+type Props = {
+  readonly user: User | undefined;
+  readonly hypName?: string;
+}
+
+export default function ProfileContent({ user, hypName }: Props) {
   const { showToast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -83,7 +89,7 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
             alt={'Foto de perfil'}
             width={80}
             height={80}
-            fallBack='/person_24dp.svg'
+            fallback={<PersonSvg width={60} height={60} />}
             className={state.user?.photo ? styles['profile-photo'] : styles['profile-fall-back']}
           />
           <div>
@@ -116,7 +122,7 @@ export default function ProfileContent({ user }: Readonly<{ user: User | undefin
         <div className={styles['security-container']}>
           <h3>Seguridad</h3>
           <div>
-            <CustomLink variant="secondary" href={'/change-password'}>
+            <CustomLink variant="secondary" href={hypName ? `/musicalbands/${hypName}/change-password` : '/change-password'}>
               Cambiar contraseña
             </CustomLink>
           </div>

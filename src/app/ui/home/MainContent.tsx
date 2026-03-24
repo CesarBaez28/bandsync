@@ -6,6 +6,7 @@ import Link from "next/link";
 import CustomImage from "../image/CustomImage";
 import { useState } from "react";
 import HomeHeader from "./HomeHeader";
+import imageSVG from '@/public/image_48dp.svg'
 
 type MainContentProps = {
   readonly musicalBands: MusicalBand[] | null;
@@ -35,7 +36,7 @@ export default function MainContent({ musicalBands, appName }: MainContentProps)
                       alt={`Logo de la banda musical ${musicalBand.name}`}
                       width={120}
                       height={120}
-                      fallBack='/image_48dp.svg'
+                      fallback={imageSVG}
                       className={musicalBand.logo ? styles.image : ''}
                     />
                     <div>
