@@ -6,8 +6,11 @@ import { ApiResponse, MusicalBand } from "../definitions";
 import { editUserSchema } from "../schemas/editUserSchema";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
 import { handleAsync } from "../utils";
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { changePasswordSchema } from "../schemas/changePasswordSchema";
+import { forgotPasswordSchema } from "../schemas/forgotPasswordSchema";
+import { forgotPassword, ForgotPasswordRequest, resetPassword, ResetPasswordRequest } from "../api/auth";
+import { resetPasswordSchema } from "../schemas/resetPasswordSchema";
 
 export type RegisterUserState = {
   errors?: {
@@ -220,6 +223,108 @@ export async function changePasswordAction(prevState: ChangePasswordState, formD
     console.error("Error changing password:", errors);
     return {
       message: errors.message || "Ocurrió un error al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true
+  }
+}
+
+export type ForgotPasswordState = {
+  errors?: {
+    email?: string[];
+  };
+  message?: string | null;
+  success: boolean;
+}
+
+export async function forgotPasswordAction(prevState: ForgotPasswordState, formData: FormData): Promise<ForgotPasswordState> {
+
+  const validatedFields = forgotPasswordSchema.safeParse({
+    email: formData.get("email")
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const requestBody: ForgotPasswordRequest = {
+    email: validatedFields.data.email,
+  }
+
+  const [response, errors] = await handleAsync<ApiResponse<void>>(forgotPassword(requestBody));
+
+  if (errors) {
+    console.error("Error processing forgot password request:", errors);
+    return {
+      message: errors.message || "Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    }
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true
+  }
+}
+
+export type ResetPasswordState = {
+  errors?: {
+    password?: string[];
+    confirmPassword?: string[];
+  };
+  message?: string | null;
+  success: boolean;
+}
+
+export async function resetPasswordAction(prev: ResetPasswordState, formData: FormData): Promise<ResetPasswordState> {
+  const validatedFields = resetPasswordSchema.safeParse({
+    newPassword: formData.get("newPassword"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    }
+  }
+
+  const token = formData.get("token") as string;
+
+  console.log("Token recibido en resetPasswordAction:", token);
+
+  const requestBody: ResetPasswordRequest = {
+    token,
+    newPassword: validatedFields.data.newPassword,
+  }
+
+  const [response, errors] = await handleAsync<ApiResponse<void>>(resetPassword(requestBody));
+
+  if (errors) {
+    console.error("Error resetting password:", errors);
+    return {
+      message: errors.message || "Ocurrió un error al restablecer la contraseña. Por favor, inténtelo de nuevo más tarde.",
       success: false
     }
   }

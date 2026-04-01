@@ -17,6 +17,7 @@ import { MusicalBand } from '@/app/lib/definitions';
 import { useToast } from '../toast/ToastContext';
 import AddIcon from '@/public/add_24dp.svg'
 import PersonIcon from '@/public/person_24dp.svg'
+import ThemeToggle from '../button/ThemeToggle';
 
 type HomeHeaderProps = {
   readonly setData: Dispatch<SetStateAction<MusicalBand[] | null>>;
@@ -80,6 +81,8 @@ export default function HomeHeader({ setData, appName }: HomeHeaderProps) {
         >
           Crear una banda
         </CustomButton>
+
+        <ThemeToggle />
 
         <DropdownMenu
           trigger={

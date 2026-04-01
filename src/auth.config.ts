@@ -21,13 +21,18 @@ export const authConfig = {
   },
   callbacks: {
     async authorized({ request }) {
-      const isOnLoginPage = request.nextUrl.pathname.startsWith('/login');
-      const isOnRegisterPage = request.nextUrl.pathname.startsWith('/register');
-      const isOnInvitationPage = request.nextUrl.pathname.startsWith('/invitation');
 
-      if (isOnRegisterPage) return true;
+      const allowPublicAccess = new Set([
+        '/login',
+        '/register',
+        '/invitation',
+        '/forgot-password',
+        '/reset-password'
+      ]);
 
-      if (isOnInvitationPage) return true;
+      if (allowPublicAccess.has(request.nextUrl.pathname)) {
+        return true;
+      }
 
       const raw = await getToken({ req: request, secret: config.authSecret });
 
@@ -37,7 +42,7 @@ export const authConfig = {
 
       if (!isAccessTokenValid) return false;
 
-      if (isOnLoginPage) {
+      if (request.nextUrl.pathname === '/login') {
         return Response.redirect(new URL('/', request.nextUrl));
       }
 

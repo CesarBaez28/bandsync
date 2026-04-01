@@ -172,7 +172,7 @@ export type ChangePasswordRequest = {
   newPassword: string;
 }
 
-export async function changePassword({oldPassword, newPassword }: ChangePasswordRequest): Promise<ApiResponse<void>> {
+export async function changePassword({ oldPassword, newPassword }: ChangePasswordRequest): Promise<ApiResponse<void>> {
   const session = await auth();
 
   if (!session?.accessToken) {
@@ -196,4 +196,4 @@ export async function changePassword({oldPassword, newPassword }: ChangePassword
   }
 
   return await response.json();
-} 
+}
