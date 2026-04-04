@@ -1,0 +1,103 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Step block */
+.stepBlock {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 32px;
+}
+
+/* Círculo */
+.circle {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Estados */
+.circleActive {
+  background-color: var(--color-info);
+}
+
+.circleCompleted {
+  background-color: var(--color-success);
+}
+
+.circleInactive {
+  background-color: #ccc;
+}
+
+/* Línea vertical */
+.line {
+  width: 2px;
+  flex-grow: 1;
+  background: var(--color-gray-250);
+  margin-top: 4px;
+}
+
+/* Contenido */
+.content {
+  flex: 1;
+}
+
+.title {
+  margin-bottom: 0.5rem;
+}
+
+.titleActive {
+  font-weight: bold;
+}
+
+/* Contenido interno */
+.innerContent {
+  padding: 0.75rem 0;
+  animation: fadeIn 0.2s ease-in;
+}
+
+/* QR */
+.qrContainer {
+  display: flex;
+}
+
+/* Botones */
+.actionsRow {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.actionsEnd {
+  display: flex;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

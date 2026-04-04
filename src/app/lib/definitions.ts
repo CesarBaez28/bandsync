@@ -98,6 +98,8 @@ export type User = {
   phone: string;
   photo: string;
   status: boolean;
+  secret2FA: string | null;
+  is2FAEnabled: boolean;
 };
 
 export type Role = {

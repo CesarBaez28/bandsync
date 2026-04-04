@@ -197,3 +197,78 @@ export async function changePassword({ oldPassword, newPassword }: ChangePasswor
 
   return await response.json();
 }
+
+export type SetUp2FA = {
+  qrUrl: string;
+  secret: string;
+}
+
+export async function setUp2FA(): Promise<ApiResponse<SetUp2FA>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const response = await fetch(`${config.api}/${USER_PATH}/auth/2fa/setup`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json'
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error setting up 2FA");
+  }
+
+  return await response.json();
+}
+
+export async function verify2FA(code: string | undefined, secret: string | undefined): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const response = await fetch(`${config.api}/${USER_PATH}/auth/2fa/verify`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ secret, code })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error verifying 2FA");
+  }
+
+  return await response.json();
+}
+
+export async function disable2FA(): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.");
+  }
+
+  const response = await fetch(`${config.api}/${USER_PATH}/auth/2fa/disable`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json'
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error disabling 2FA");
+  }
+
+  return await response.json();
+}

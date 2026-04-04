@@ -197,6 +197,12 @@ tbody tr:last-child td:last-child {
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
+.mainContent {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
 .message {
 	padding-top: 4rem;
 	display: flex;

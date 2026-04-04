@@ -127,7 +127,7 @@ export default function ProfileContent({ user, hypName }: Props) {
             </CustomLink>
           </div>
           <div>
-            <CustomLink variant="secondary" href={'/two-factor'}>
+            <CustomLink variant="secondary" href={hypName ? `/musicalbands/${hypName}/two-factor` : '/two-factor'}>
               Autenticación en dos pasos
             </CustomLink>
           </div>
