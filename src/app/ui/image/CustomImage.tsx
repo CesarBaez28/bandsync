@@ -47,6 +47,7 @@ export default function CustomImage({
   return (
     <Image
       src={src}
+      loading="eager"
       alt={alt}
       width={width}
       height={height}

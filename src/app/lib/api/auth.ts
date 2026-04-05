@@ -14,6 +14,18 @@ export async function signInWithApi({ username, password }: { username: string, 
   return result.data;
 }
 
+export async function verifyTwofaLogin({ tempToken, code }: { tempToken: string, code: string }) {
+  const response = await fetch(`${config.api}/users/auth/verify-2fa-login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ tempToken, code }),
+  })
+
+  return await response.json();
+}
+
 export type ForgotPasswordRequest = {
   email: string;
 }

@@ -2,16 +2,29 @@ import { authConfig } from "@/auth.config";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signInWithApi } from "./app/lib/api/auth";
-import { UserSesion } from "./app/lib/definitions";
-import { UUID } from "crypto";
+import { RequiredTwoFactorResponse, UserSesion } from "./app/lib/definitions";
+import { UUID } from "node:crypto";
 import { formLoginSchema } from "./app/lib/schemas/formLoginSchema";
 import { handleAsync } from "./app/lib/utils";
+
+function isUserSesion(user: UserSesion | RequiredTwoFactorResponse): user is UserSesion {
+  return (
+    typeof (user as UserSesion).id === "string" &&
+    typeof (user as UserSesion).username === "string" &&
+    typeof (user as UserSesion).accessToken === "string"
+  );
+}
 
 export const { auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
+
+        // This means the user was successfully auhenticated using two factor authentication
+        if (credentials?.accessToken) {
+          return credentials as UserSesion;
+        }
 
         const parsedCredentials = formLoginSchema.safeParse(credentials);
 
@@ -20,19 +33,26 @@ export const { auth, signIn, signOut, unstable_update } = NextAuth({
           return null;
         }
 
-        const [user, error] = await handleAsync<UserSesion>(signInWithApi(parsedCredentials.data));
+        const [response, error] = await handleAsync<UserSesion | RequiredTwoFactorResponse>(signInWithApi(parsedCredentials.data));
 
         if (error) {
-          console.log('Error traying to authenticate with API: ', error);
-          throw new Error('Error traying to authenticate with API');
+          console.log("Error traying to authenticate with API: ", error);
+          throw new Error("Error traying to authenticate with API");
         }
 
-        if (!user) {
-          console.error('User not found or invalid credentials');
+        if (!response) {
+          console.error("User not found or invalid credentials");
           return null;
         }
 
-        return user
+        if (!isUserSesion(response)) {
+          console.error("Two-factor authentication response received during authorize");
+          throw new Error(JSON.stringify({
+            tempToken: response.tempToken
+          }));
+        }
+
+        return response;
       },
     }),
   ],

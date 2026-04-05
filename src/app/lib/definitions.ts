@@ -55,7 +55,7 @@ export type MusicalRole = {
   status: boolean;
 };
 
-export type MusicalRolesUsers  = {
+export type MusicalRolesUsers = {
   userId: UUID;
   musicalRoles: MusicalRole[];
 }
@@ -78,7 +78,7 @@ export type Repertoire = {
   status: boolean;
 }
 
-export type Event  = {
+export type Event = {
   id: UUID;
   repertoire: Repertoire;
   date: Date;
@@ -139,7 +139,7 @@ export type UserRole = {
 }
 
 export type UserSesion = User & {
-  rolesAndPermissions: UserRolesAndPermissions [],
+  rolesAndPermissions: UserRolesAndPermissions[],
   accessToken: string;
 }
 
@@ -147,4 +147,9 @@ export type AcceptInvitation = {
   userExist: boolean,
   bandName: string,
   email: string
+}
+
+export type RequiredTwoFactorResponse = {
+  status: string;
+  tempToken: string;
 }

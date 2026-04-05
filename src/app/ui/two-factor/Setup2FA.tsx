@@ -2,7 +2,7 @@
 
 import styles from '@/ui/two-factor/Setup2FAView.module.css';
 import stylesForm from '@/app/styles/form.module.css';
-import { useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { verify2FAAction, Verify2FAState } from "@/app/lib/actions/2fa";
 import QRCode from "qrcode";
 import CustomButton from "../button/CustomButton";
@@ -10,6 +10,9 @@ import Image from "next/image";
 import CustomInput from "../Inputs/CustomInput";
 import Card from '@/ui/Card/Card';
 import { SetUp2FA } from '@/app/lib/api/users';
+import { twoFactorSchema, TwoFactorSchema } from '@/app/lib/schemas/twoFactorSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 type Props = {
   readonly setUpResponse: SetUp2FA | null;
@@ -18,6 +21,7 @@ type Props = {
 type Step = 1 | 2 | 3;
 
 export default function Setup2FAView({ setUpResponse }: Props) {
+  const formRef = useRef<HTMLFormElement>(null);
 
   const initialVerifyState = { message: null, success: false };
 
@@ -26,6 +30,26 @@ export default function Setup2FAView({ setUpResponse }: Props) {
 
   const [qr, setQr] = useState<string | null>(null);
   const [step, setStep] = useState<Step>(1);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<TwoFactorSchema>({
+    resolver: zodResolver(twoFactorSchema),
+    mode: "onChange",
+  });
+
+  const onSubmit = () => {
+    if (!formRef.current) return;
+
+    const fd = new FormData(formRef.current);
+
+    startTransition(() => {
+      verifyAction(fd);
+    });
+  };
 
   useEffect(() => {
     if (setUpResponse?.qrUrl) {
@@ -40,7 +64,11 @@ export default function Setup2FAView({ setUpResponse }: Props) {
   }, [verifyState]);
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3) as Step);
-  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1) as Step);
+
+  const prevStep = () => {
+    reset();
+    setStep((prev) => Math.max(prev - 1, 1) as Step);
+  };
 
   return (
     <Card>
@@ -53,7 +81,7 @@ export default function Setup2FAView({ setUpResponse }: Props) {
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <p>
-              Escanea este código con Google Authenticator.
+              Descargue la aplicación de Google Authenticator y escanea el código.
             </p>
 
             {qr ? (
@@ -77,16 +105,27 @@ export default function Setup2FAView({ setUpResponse }: Props) {
           step={2}
           label="Verificar código"
         >
-          <form action={verifyAction} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <form
+            ref={formRef}
+            action={verifyAction}
+            onSubmit={handleSubmit(onSubmit)}
+            style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+          >
 
             <p>Introduce el código de 6 dígitos generado por la aplicación.</p>
 
             <CustomInput
-              label="Código de verificación"
-              name="code"
-              placeholder="123456"
-              required
+              label="Código:"
+              placeholder='123456'
+              {...register("code")}
+              error={errors.code}
             />
+
+            {verifyState?.message && (
+              <p className={stylesForm.errorMessage}>
+                {verifyState?.message}
+              </p>
+            )}
 
             <input type="hidden" name="secret" value={setUpResponse?.secret || ''} />
 
@@ -99,10 +138,6 @@ export default function Setup2FAView({ setUpResponse }: Props) {
                 Confirmar
               </CustomButton>
             </div>
-
-            {verifyState?.message && (
-              <p className={stylesForm.errorMessage}>{verifyState.message}</p>
-            )}
 
           </form>
         </StepBlock>

@@ -1,7 +1,7 @@
 .card {
   display: flex;
   gap: 1rem;
-  background: var(--color-gray-100);
+  background: var(--color-white-100);
   padding: 1rem;
   border-radius: 8px;
 }
