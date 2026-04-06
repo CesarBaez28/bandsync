@@ -4,6 +4,13 @@ import { AcceptInvitation, ApiResponse } from "../lib/definitions";
 import { handleAsync } from "../lib/utils";
 import CustomLink from "../ui/link/CustomLink";
 import { Footer } from "../ui/footer/Footer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Invitación",
+  description: "Página de invitación para unirse a una banda",
+};
+
 
 type Props = {
   readonly searchParams?: Promise<{

@@ -2,6 +2,12 @@ import { getUserById } from "@/app/lib/api/users";
 import { ApiResponse, User } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import TwoFactorOptions from "@/app/ui/two-factor/2FAOptions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Autenticación en dos pasos",
+  description: "Autenticación en dos pasos",
+};
 
 type Props = {
   readonly params: Promise<{ hypName: string; }>;

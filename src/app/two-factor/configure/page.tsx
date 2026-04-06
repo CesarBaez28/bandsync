@@ -4,6 +4,12 @@ import { ApiResponse } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import HomeHeader from "@/app/ui/header/HomeHeader";
 import Setup2FAView from "@/app/ui/two-factor/Setup2FA";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Configurar autenticación en dos pasos",
+  description: "Configurar autenticación en dos pasos",
+};
 
 export default async function Configure2FAPage() {
   const [setupResponse, setupError] = await handleAsync<ApiResponse<SetUp2FA>>(setUp2FA());

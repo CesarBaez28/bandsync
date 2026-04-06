@@ -4,6 +4,12 @@ import { handleAsync } from "@/app/lib/utils";
 import { ApiResponse, User } from "@/app/lib/definitions";
 import { getUserById } from "@/app/lib/api/users";
 import TwoFactorOptions from "@/ui/two-factor/2FAOptions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Autenticación en dos pasos",
+  description: "Autenticación en dos pasos",
+};
 
 export default async function TwoFactorPage() {
   const [response, error] = await handleAsync<ApiResponse<User>>(getUserById());

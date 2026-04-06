@@ -1,6 +1,13 @@
 import HomeHeader from "@/ui/header/HomeHeader";
 import ForgotPasswordForm from "@/ui/forgot-passoword/ForgotPasswordForm";
 import styles from '@/app/forgot-password/forgot-password.module.css'
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Recuperar contraseña",
+  description: "recuperar contraseña",
+};
+
 
 export default function forgotPasswordPage() {
   return <>

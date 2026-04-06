@@ -1,6 +1,13 @@
+import { Metadata } from "next";
 import HomeHeader from "../ui/header/HomeHeader";
 import ResetPasswordForm from "../ui/reset-password/ResetPasswordForm";
 import styles from '@/app/reset-password/reset-password.module.css'
+
+export const metadata: Metadata = {
+  title: "Restablecer contraseña",
+  description: "Restablecer contraseña",
+};
+
 
 type Props = {
   readonly searchParams?: Promise<{

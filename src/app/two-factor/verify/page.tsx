@@ -1,6 +1,12 @@
 import TwoFactorForm from "@/app/ui/two-factor/TwoFactorForm";
 import styles from '@/app/two-factor/verify/verify.module.css'
 import { Footer } from "@/app/ui/footer/Footer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Verificar autenticación en dos pasos",
+  description: "Verificar autenticación en dos pasos",
+};
 
 type Props = {
   readonly searchParams?: Promise<{
@@ -13,7 +19,7 @@ export default async function TwoFactorVerifyPage(props: Props) {
 
   return (
     <main className={styles.main}>
-      <div className={styles.mainContent}>
+      <div className={styles.mainContent}>  
         <div className={styles.container}>
           {token == undefined ? (
             <p>Token no valido</p>
