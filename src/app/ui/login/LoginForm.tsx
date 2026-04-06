@@ -10,7 +10,11 @@ import CustomInput from '../Inputs/CustomInput';
 import CustomButton from '../button/CustomButton';
 import CustomLink from '../link/CustomLink';
 
-export default function LoginForm() {
+type Props = {
+  appName: string;
+}
+
+export default function LoginForm({ appName }: Props) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') ?? '/';
   const formRef = useRef<HTMLFormElement>(null);
@@ -43,7 +47,7 @@ export default function LoginForm() {
     >
       <div>
         <header className={styles['header']}>
-          <h1>BandSync</h1>
+          <h1>{appName}</h1>
           <p className={styles['header-description']}>
             Ingrese las credenciales para <br /> entrar con tu cuenta
           </p>
@@ -72,12 +76,12 @@ export default function LoginForm() {
           </div>
           <input type="hidden" name="redirectTo" value={callbackUrl} />
           <div>
-            <CustomButton style={{fontSize: '1rem'}} type='submit' isLoading={isPending} fullWidth>
+            <CustomButton style={{ fontSize: '1rem' }} type='submit' isLoading={isPending} fullWidth>
               Iniciar sesión
             </CustomButton>
             <div className={styles['footer-container']}>
               <p>¿No tienes cuenta?</p>
-              <CustomLink style={{fontWeight: 'bold', textDecoration: 'none'}} variant='tertiary' href={'/register'}>
+              <CustomLink style={{ fontWeight: 'bold', textDecoration: 'none' }} variant='tertiary' href={'/register'}>
                 Regístrate
               </CustomLink>
             </div>
