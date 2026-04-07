@@ -12,10 +12,11 @@ import CustomLink from "../link/CustomLink";
 import Modal from "../modal/Modal";
 
 type Props = {
-  token: string | undefined;
+  readonly token: string | undefined;
+  readonly appName: string;
 }
 
-export default function RegisterForm({ token }: Props) {
+export default function RegisterForm({ token, appName }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const initialState: RegisterUserState = { errors: {}, message: null, success: false };
   const [state, formAction, isPending] = useActionState<RegisterUserState, FormData>(registerAction, initialState);
@@ -47,7 +48,7 @@ export default function RegisterForm({ token }: Props) {
     >
       <div>
         <header className={styles['header']}>
-          <h1>BandSync</h1>
+          <h1>{appName}</h1>
           <p className={styles['header-description']}>
             Ingrese los siguientes datos para <br /> registrar tu cuenta
           </p>
