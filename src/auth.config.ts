@@ -39,12 +39,13 @@ export const authConfig = {
 
       const apiJwtString = raw?.accessToken as string | undefined;
 
-      console.log("API TOKEN: " + apiJwtString)
-
+      
       const isAccessTokenValid = checkAccessToken(apiJwtString);
-
+      
       console.log("TOKEN VALIDO: " + isAccessTokenValid)
-
+      
+      console.log("API TOKEN: " + apiJwtString)
+      
       if (!isAccessTokenValid) return false;
 
       if (request.nextUrl.pathname === '/login') {
