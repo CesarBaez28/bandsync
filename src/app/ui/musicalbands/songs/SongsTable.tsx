@@ -4,7 +4,7 @@ import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { PagedData, Song } from "@/app/lib/definitions";
 import CustomButton from "../../button/CustomButton";
-import CustomLink from "../../link-temporal/CustomLink";
+import CustomLink from "../../link/CustomLink";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import Modal from "../../modal/Modal";
 import { deleteSongAction, DeleteSongActionState } from "@/app/lib/actions/songs";

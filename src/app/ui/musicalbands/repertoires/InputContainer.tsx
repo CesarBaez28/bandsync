@@ -1,6 +1,6 @@
 'use client';
 
-import CustomLink from '../../link-temporal/CustomLink';
+import CustomLink from '../../link/CustomLink';
 import Search from '../../search/Search';
 import styles from '../../../styles/input-container.module.css';
 import { Can } from '../../authorization/Can';

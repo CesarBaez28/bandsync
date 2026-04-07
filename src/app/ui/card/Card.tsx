@@ -1,4 +1,4 @@
-import styles from '@/ui/card-temporal/card.module.css'
+import styles from '@/ui/card/card.module.css'
 
 export default function Card({ children }: { readonly children: React.ReactNode }) {
   return (

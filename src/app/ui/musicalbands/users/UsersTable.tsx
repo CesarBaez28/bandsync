@@ -12,7 +12,7 @@ import { leaveMusicalBandAction, LeaveMusicalBandState } from '@/app/lib/actions
 import { UUID } from 'crypto';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
-import CustomSelect, { OptionInputSelect } from '../../inputs-temporal/CustomSelect';
+import CustomSelect, { OptionInputSelect } from '../../inputs/CustomSelect';
 import { assignMusicalRolesToUserAction, AssignMusicalRolesToUserActionState } from '@/app/lib/actions/muscalRoles';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';

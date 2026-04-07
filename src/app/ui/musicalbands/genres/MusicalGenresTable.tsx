@@ -11,7 +11,7 @@ import { musicalGenreSchema, MusicalGenreSchema } from "@/app/lib/schemas/musica
 import { zodResolver } from "@hookform/resolvers/zod";
 import Modal from "../../modal/Modal";
 import CustomButton from "../../button/CustomButton";
-import CustomInput from "../../inputs-temporal/CustomInput";
+import CustomInput from "../../inputs/CustomInput";
 import stylesModal from "../../../styles/modal.module.css";
 import { UUID } from "crypto";
 import { Can } from "../../authorization/Can";

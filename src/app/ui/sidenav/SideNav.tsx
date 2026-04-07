@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSideNav } from '@/ui/sidenav/SideNavContext';
 import CustomButton from '@/ui/button/CustomButton';
-import CustomLink from '@/app/ui/link-temporal/CustomLink';
+import CustomLink from '@/app/ui/link/CustomLink';
 import styles from '@/ui/sidenav/sidenav.module.css';
 import { UserPermissions } from '@/app/lib/permisions';
 import { usePermissions } from '@/app/lib/customHooks/usePermissions';
