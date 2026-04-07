@@ -38,9 +38,9 @@ export const authConfig = {
       const raw = await getToken({
         req: request,
         secret: config.authSecret,
-        secureCookie: true,
+        secureCookie: process.env.NODE_ENV === "production",
       });
-      
+
       const apiJwtString = raw?.accessToken as string | undefined;
 
       const isAccessTokenValid = checkAccessToken(apiJwtString);
