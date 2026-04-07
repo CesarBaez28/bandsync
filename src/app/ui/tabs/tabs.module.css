@@ -1,0 +1,49 @@
+.tabsContainer {
+  width: 100%;
+}
+
+.tabList {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+}
+
+.tabButton {
+  position: relative;
+  color: var(--text-muted);
+  transition: color 0.2s ease-in-out;
+}
+
+.tabButton:hover {
+  color: var(--color-main-hover);
+}
+
+.active {
+  color: var(--color-main);
+}
+
+.activeIndicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background-color: var(--color-main);
+  border-radius: 2px;
+}
+
+.tabContent {
+  margin-top: 1rem;
+  animation: fadeIn 0.25s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

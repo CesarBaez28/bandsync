@@ -1,0 +1,15 @@
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.titleSize {
+  font-size: 1rem;
+}
+
+.buttonsContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}

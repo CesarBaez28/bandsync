@@ -1,0 +1,8 @@
+.imageError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-white);
+  color: var(--color-text);
+  font-size: 14px;
+}

@@ -6,4 +6,7 @@ const getEnvVar = (key: string): string => {
 
 export const config = {
   api: getEnvVar('API'),
+  authSecret: getEnvVar('AUTH_SECRET'),
+  musicalBandHeader: getEnvVar('MUSICAL_BAND_HEADER'),
+  appName: getEnvVar('APP_NAME')
 };

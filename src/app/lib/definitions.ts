@@ -1,5 +1,23 @@
 import { UUID } from "crypto";
 
+export interface ApiResponse<T = unknown> {
+  errors?: T;
+  success: boolean;
+  message: string;
+  timestamp: string;
+  data?: T;
+}
+
+export interface PagedData<T> {
+  content: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
 export type MusicalBand = {
   id: UUID;
   name: string;
@@ -10,3 +28,128 @@ export type MusicalBand = {
   email: string
   status: boolean
 };
+
+export type MusicalBandInfo = {
+  name: string;
+  logo: string;
+  address: string;
+  phone: string
+  email: string
+}
+
+export type Artist = {
+  id: number;
+  name: string;
+  status: boolean;
+};
+
+export type MusicalGenre = {
+  id: number;
+  name: string;
+  status: boolean;
+};
+
+export type MusicalRole = {
+  id: number;
+  name: string;
+  status: boolean;
+};
+
+export type MusicalRolesUsers = {
+  userId: UUID;
+  musicalRoles: MusicalRole[];
+}
+
+export type Song = {
+  id: number;
+  name: string;
+  artist: Artist;
+  genre: MusicalGenre;
+  tonality: string;
+  link: string;
+  sheetMusic: string;
+};
+
+export type Repertoire = {
+  id: UUID;
+  name: string;
+  description: string;
+  link: string;
+  status: boolean;
+}
+
+export type Event = {
+  id: UUID;
+  repertoire: Repertoire;
+  date: Date;
+  name: string;
+  description: string;
+  place: string;
+  location: string;
+  status: boolean;
+}
+
+export type User = {
+  id: UUID;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  photo: string;
+  status: boolean;
+  secret2FA: string | null;
+  is2FAEnabled: boolean;
+};
+
+export type Role = {
+  id: number;
+  name: string;
+  status: boolean;
+}
+
+export type Permission = {
+  id: number;
+  typeOfPermission: TypeOfPermission;
+  name: string;
+  status: boolean;
+}
+
+export type TypeOfPermission = {
+  id: number;
+  name: string;
+  status: boolean;
+}
+
+export type RoleAndPermissions = {
+  role: Role;
+  permissions: Permission[];
+}
+
+export type UserRolesAndPermissions = {
+  role: Role;
+  musicalBand: MusicalBand;
+  permissions: Permission[];
+}
+
+export type UserRole = {
+  user: User,
+  role: Role,
+  musicalBand: MusicalBand
+}
+
+export type UserSesion = User & {
+  rolesAndPermissions: UserRolesAndPermissions[],
+  accessToken: string;
+}
+
+export type AcceptInvitation = {
+  userExist: boolean,
+  bandName: string,
+  email: string
+}
+
+export type RequiredTwoFactorResponse = {
+  status: string;
+  tempToken: string;
+}

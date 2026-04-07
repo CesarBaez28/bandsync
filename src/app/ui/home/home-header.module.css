@@ -1,0 +1,26 @@
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.profile-button {
+  border-radius: 50%;
+}
+
+.error-message {
+  font-size: .9rem;
+  color: var(--color-error);
+}
+
+.fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}

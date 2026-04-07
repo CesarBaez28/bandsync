@@ -1,0 +1,38 @@
+'use client';
+
+import { useEffect } from "react";
+import { handleAsync } from "../lib/utils";
+import { ApiResponse, UserRolesAndPermissions } from "../lib/definitions";
+import { getUserRolesAndPermissions } from "../lib/api/roles";
+import { Session } from "next-auth";
+import { usePermissions } from "../lib/customHooks/usePermissions";
+
+export default function PermissionsProvider({ session, children }: { readonly session: Session | null, readonly children: React.ReactNode }) {
+  const { setUserRolesAndPermissions, clearUserRolesAndPermissions } = usePermissions();
+
+  useEffect(() => {
+    async function loadPermissions() {
+      if (session?.accessToken) {
+        const [response, error] = await handleAsync<ApiResponse<UserRolesAndPermissions[]>>(
+          getUserRolesAndPermissions({ userId: session.user.id })
+        );
+
+        if (error || !response?.data) {
+          console.log('Error loading roles and permissions: ', error);
+          clearUserRolesAndPermissions();
+          return;
+        }
+
+        setUserRolesAndPermissions(response.data);
+        return;
+      }
+
+      clearUserRolesAndPermissions();
+    }
+
+    loadPermissions();
+  }, [session, setUserRolesAndPermissions, clearUserRolesAndPermissions]);
+
+
+  return <>{children}</>;
+}

@@ -1,0 +1,13 @@
+.footer {
+  padding: 20px;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.footer-container {
+  color: var(--color-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}

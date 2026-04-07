@@ -1,0 +1,63 @@
+/* Table container */
+.tableSkeleton {
+	table-layout: auto;
+	border-collapse: separate;
+	border-spacing: 0;
+	width: 100%;
+	background-color: var(--color-white);
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+/* Table structure */
+.tableSkeleton th,
+.tableSkeleton td {
+	padding: 1.2rem 1rem;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.tableSkeleton tbody tr:last-child td {
+	border-bottom: none;
+}
+
+/* Header skeleton */
+.header {
+	height: 1rem;
+	width: 70%;
+}
+
+/* Cell skeleton */
+.cell {
+	height: 0.9rem;
+}
+
+/* Width variations for realism */
+.short {
+	width: 40%;
+}
+
+.medium {
+	width: 65%;
+}
+
+.full {
+	width: 100%;
+}
+
+/* Border radius (matching your table) */
+.tableSkeleton thead tr:first-child th:first-child {
+	border-top-left-radius: 8px;
+}
+
+.tableSkeleton thead tr:first-child th:last-child {
+	border-top-right-radius: 8px;
+}
+
+.tableSkeleton tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 8px;
+}
+
+.tableSkeleton tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 8px;
+}
