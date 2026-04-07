@@ -2,7 +2,7 @@
 
 import { disable2FAAction, Disable2FAState } from "@/app/lib/actions/2fa";
 import CustomButton from "@/ui/button/CustomButton";
-import Card from "@/ui/Card/Card";
+import Card from "@/app/ui/card/Card";
 import CustomLink from "@/ui/link/CustomLink";
 import { useActionState, useEffect } from "react";
 import { useToast } from "../toast/ToastContext";

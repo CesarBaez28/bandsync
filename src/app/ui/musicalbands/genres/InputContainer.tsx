@@ -12,7 +12,7 @@ import { musicalGenreSchema, MusicalGenreSchema } from '@/app/lib/schemas/musica
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import Modal from '../../modal/Modal';
-import CustomInput from '../../Inputs/CustomInput';
+import CustomInput from '../../inputs/CustomInput';
 import { useRouter } from 'next/navigation';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';

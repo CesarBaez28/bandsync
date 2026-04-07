@@ -7,7 +7,7 @@ import { useToast } from "../../toast/ToastContext";
 import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { RepertoireState, updateRepertoireAction } from "@/app/lib/actions/repertoires";
-import CustomSelect, { OptionInputSelect } from "../../Inputs/CustomSelect";
+import CustomSelect, { OptionInputSelect } from "../../inputs/CustomSelect";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { repertoireSchema, RepertoireSchema } from "@/app/lib/schemas/repertoireSchema";
@@ -15,8 +15,8 @@ import CustomButton from "../../button/CustomButton";
 import Modal from "../../modal/Modal";
 import RepertoireSongsTable from "./AddAndEditRepertoireSongsTable";
 import CustomLink from "../../link/CustomLink";
-import CustomInput from "../../Inputs/CustomInput";
-import CustomTextArea from "../../Inputs/CustomTextArea";
+import CustomInput from "../../inputs/CustomInput";
+import CustomTextArea from "../../inputs/CustomTextArea";
 
 type FormProps = {
   readonly repertoire: Repertoire | undefined;

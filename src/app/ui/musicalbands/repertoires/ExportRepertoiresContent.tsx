@@ -2,7 +2,7 @@
 
 import stylesForm from '@/app/styles/form.module.css';
 import { startTransition, useActionState, useCallback, useEffect, useRef } from 'react';
-import CustomSelect, { OptionInputSelect } from '../../Inputs/CustomSelect';
+import CustomSelect, { OptionInputSelect } from '../../inputs/CustomSelect';
 import { MusicalBand, Repertoire, Song } from '@/app/lib/definitions';
 import { pdf } from '@react-pdf/renderer';
 import CustomButton from '../../button/CustomButton';
