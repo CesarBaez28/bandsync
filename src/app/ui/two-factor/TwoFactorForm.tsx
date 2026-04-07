@@ -3,7 +3,7 @@
 import styleForm from '@/app/styles/form.module.css'
 import { authenticateWith2FA } from "@/app/lib/actions/auth";
 import { twoFactorSchema, TwoFactorSchema } from "@/app/lib/schemas/twoFactorSchema";
-import CustomInput from "@/app/ui/inputs/CustomInput";
+import CustomInput from "@/app/ui/inputs-temporal/CustomInput";
 import CustomButton from "@/app/ui/button/CustomButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";

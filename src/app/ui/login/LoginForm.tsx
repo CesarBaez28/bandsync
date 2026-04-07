@@ -6,9 +6,9 @@ import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FormLoginSchema, formLoginSchema } from '@/app/lib/schemas/formLoginSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import CustomInput from '../inputs/CustomInput';
+import CustomInput from '../inputs-temporal/CustomInput';
 import CustomButton from '../button/CustomButton';
-import CustomLink from '../link/CustomLink';
+import CustomLink from '../link-temporal/CustomLink';
 
 type Props = {
   appName: string;

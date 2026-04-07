@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
 import { deleteMusicalRoleAction, DeleteMusicalRoleActionState, MusicalRoleActionState, updateMusicalRoleAction } from "@/app/lib/actions/muscalRoles";
 import Modal from "../../modal/Modal";
-import CustomInput from "../../inputs/CustomInput";
+import CustomInput from "../../inputs-temporal/CustomInput";
 import { musicalRoleSchema, MusicalRoleSchema } from "@/app/lib/schemas/musicalRolesSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";

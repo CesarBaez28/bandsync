@@ -1,6 +1,6 @@
 'use client';
 
-import CustomLink from '../../link/CustomLink';
+import CustomLink from '../../link-temporal/CustomLink';
 import Search from '../../search/Search';
 import styles from '../../../styles/input-container.module.css';
 import { UUID } from 'node:crypto';

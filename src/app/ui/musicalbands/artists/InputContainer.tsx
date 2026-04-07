@@ -10,7 +10,7 @@ import { createArtistAction, ArtistActionState } from "@/app/lib/actions/artists
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArtistSchema, artistSchema } from "@/app/lib/schemas/artistSchema";
-import CustomInput from "../../inputs/CustomInput";
+import CustomInput from "../../inputs-temporal/CustomInput";
 import { UUID } from "crypto";
 import { useToast } from "../../toast/ToastContext";
 import { useRouter } from "next/navigation";

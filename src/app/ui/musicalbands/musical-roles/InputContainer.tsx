@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { musicalRoleSchema, MusicalRoleSchema } from '@/app/lib/schemas/musicalRolesSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Modal from '../../modal/Modal';
-import CustomInput from '../../inputs/CustomInput';
+import CustomInput from '../../inputs-temporal/CustomInput';
 import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
 

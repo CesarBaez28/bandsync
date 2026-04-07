@@ -7,7 +7,7 @@ import { UUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
 import { useActionState, useCallback, useEffect, useState } from "react";
-import CustomLink from "../../link/CustomLink";
+import CustomLink from "../../link-temporal/CustomLink";
 import CustomButton from "../../button/CustomButton";
 import Modal from "../../modal/Modal";
 import { deleteRepertoireAction, DeleteRepertoireActionState } from "@/app/lib/actions/repertoires";

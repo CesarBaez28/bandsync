@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useSearchParams } from "next/navigation";
-import CustomLink from "../link/CustomLink";
+import CustomLink from "../link-temporal/CustomLink";
 import Image from "next/image";
 import { generatePagination } from "@/app/lib/utils";
 import styles from './pagination.module.css';

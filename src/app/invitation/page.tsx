@@ -2,7 +2,7 @@ import styles from "./invitation-page.module.css";
 import acceptInvitation from "../lib/api/invitations";
 import { AcceptInvitation, ApiResponse } from "../lib/definitions";
 import { handleAsync } from "../lib/utils";
-import CustomLink from "../ui/link/CustomLink";
+import CustomLink from "../ui/link-temporal/CustomLink";
 import { Footer } from "../ui/footer/Footer";
 import { Metadata } from "next";
 

@@ -10,8 +10,8 @@ import { createMusicalBandAction, CreateMusicalBandState } from '@/app/lib/actio
 import { createMusicalBandSchema, CreateMusicalBandSchema } from '@/app/lib/schemas/createMusicalBandSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import CustomInput from '../inputs/CustomInput';
-import CustomFileInput from '../inputs/CustomFileInput';
+import CustomInput from '../inputs-temporal/CustomInput';
+import CustomFileInput from '../inputs-temporal/CustomFileInput';
 import Header from '../header/Header';
 import { MusicalBand } from '@/app/lib/definitions';
 import { useToast } from '../toast/ToastContext';

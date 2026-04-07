@@ -1,8 +1,8 @@
 'use client';
 
-import CustomInput from "@/app/ui/inputs/CustomInput";
+import CustomInput from "@/app/ui/inputs-temporal/CustomInput";
 import stylesForm from '@/app/styles/form.module.css'
-import CustomLink from "@/ui/link/CustomLink";
+import CustomLink from "@/app/ui/link-temporal/CustomLink";
 import CustomButton from "@/ui/button/CustomButton";
 import { useForm } from "react-hook-form";
 import { ResetPasswordSchema, resetPasswordSchema } from "@/app/lib/schemas/resetPasswordSchema";

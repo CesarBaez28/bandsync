@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, startTransition, useActionState, useCallback,
 import { useToast } from "../../toast/ToastContext";
 import { ArtistActionState, createArtistAction } from "@/app/lib/actions/artists";
 import { useForm } from "react-hook-form";
-import CustomInput from "../../inputs/CustomInput";
+import CustomInput from "../../inputs-temporal/CustomInput";
 import Modal from "../../modal/Modal";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArtistSchema, artistSchema } from '@/app/lib/schemas/artistSchema';

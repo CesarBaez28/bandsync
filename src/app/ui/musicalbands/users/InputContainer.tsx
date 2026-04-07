@@ -6,7 +6,7 @@ import stylesForm from '../../../styles/form.module.css'
 import CustomButton from '../../button/CustomButton';
 import Modal from '../../modal/Modal';
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
-import CustomInput from '../../inputs/CustomInput';
+import CustomInput from '../../inputs-temporal/CustomInput';
 import { InvitationState, sendInvitationEmailAction } from '@/app/lib/actions/musicalbands';
 import { sendInvitationSchema, SendInvitationSchema } from '@/app/lib/schemas/sendInvitationSchema';
 import { zodResolver } from '@hookform/resolvers/zod';

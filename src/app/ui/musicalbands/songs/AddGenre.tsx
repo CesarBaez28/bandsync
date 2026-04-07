@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createMusicalGenreAction, MusicalGenreActionState } from "@/app/lib/actions/musicalGenres";
 import CustomButton from "../../button/CustomButton";
 import Modal from "../../modal/Modal";
-import CustomInput from "../../inputs/CustomInput";
+import CustomInput from "../../inputs-temporal/CustomInput";
 import AddIcon from '@/public/add_2_24dp.svg'
 
 type Props = {

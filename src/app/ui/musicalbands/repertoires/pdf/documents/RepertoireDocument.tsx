@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 "use client";
 import { Song } from "@/app/lib/definitions";
-import { OptionInputSelect } from "@/app/ui/inputs/CustomSelect";
+import { OptionInputSelect } from "@/app/ui/inputs-temporal/CustomSelect";
 import { Table, TD, TH, TR } from "@ag-media/react-pdf-table";
 import { Document, Page, Text, StyleSheet, View, Image } from "@react-pdf/renderer";
 import React from "react";

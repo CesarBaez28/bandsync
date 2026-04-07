@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArtistSchema, artistSchema } from "@/app/lib/schemas/artistSchema";
 import { useForm } from "react-hook-form";
 import Modal from "../../modal/Modal";
-import CustomInput from "../../inputs/CustomInput";
+import CustomInput from "../../inputs-temporal/CustomInput";
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { UUID } from "crypto";

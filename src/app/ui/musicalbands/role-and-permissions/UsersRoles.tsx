@@ -7,7 +7,7 @@ import CustomButton from "../../button/CustomButton";
 import { startTransition, useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { UUID } from "node:crypto";
 import Modal from "../../modal/Modal";
-import CustomSelect, { OptionInputSelect } from '../../inputs/CustomSelect';
+import CustomSelect, { OptionInputSelect } from '../../inputs-temporal/CustomSelect';
 import { assignRoleToUserAction, deleteUserRoleAction, DeleteUserRoleState, RoleStateAssign, updateUserRoleAction, UserRoleState } from '@/app/lib/actions/roles';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

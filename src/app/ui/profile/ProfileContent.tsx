@@ -3,15 +3,15 @@
 import { User } from '@/app/lib/definitions';
 import CustomButton from '../button/CustomButton';
 import CustomImage from '../image/CustomImage';
-import CustomLink from '../link/CustomLink';
+import CustomLink from '../link-temporal/CustomLink';
 import styles from './profile-content.module.css';
 import Modal from '../modal/Modal';
 import { startTransition, useActionState, useEffect, useRef, useState, useCallback } from 'react';
 import { editUserSchema, EditUseSchema } from '@/app/lib/schemas/editUserSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import CustomInput from '../inputs/CustomInput';
-import CustomFileInput from '../inputs/CustomFileInput';
+import CustomInput from '../inputs-temporal/CustomInput';
+import CustomFileInput from '../inputs-temporal/CustomFileInput';
 import { updateUserAction, UpdateUserState } from '@/app/lib/actions/users';
 import { useToast } from '../toast/ToastContext';
 import PersonSvg from '@/public/person_24dp.svg'

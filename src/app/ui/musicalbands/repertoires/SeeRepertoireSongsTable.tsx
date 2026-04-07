@@ -1,5 +1,5 @@
 import { Song } from "@/app/lib/definitions";
-import CustomLink from "../../link/CustomLink";
+import CustomLink from "../../link-temporal/CustomLink";
 import LinkIcon from "@/public/link_24dp.svg";
 import DocsIcon from "@/public/docs_24dp.svg";
 

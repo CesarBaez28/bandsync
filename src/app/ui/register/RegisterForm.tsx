@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useActionState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import CustomButton from "../button/CustomButton";
-import CustomInput from "../inputs/CustomInput";
+import CustomInput from "../inputs-temporal/CustomInput";
 import styles from "../../styles/login-register-form.module.css";
 import { FormRegisterSchema, formRegisterSchema } from "@/app/lib/schemas/formRegisterSchema";
 import { registerAction, RegisterUserState } from "@/app/lib/actions/users";
-import CustomLink from "../link/CustomLink";
+import CustomLink from "../link-temporal/CustomLink";
 import Modal from "../modal/Modal";
 
 type Props = {

@@ -2,14 +2,14 @@
 
 import stylesForm from '@/app/styles/form.module.css'
 import CustomButton from '@/app/ui/button/CustomButton';
-import CustomInput from '@/app/ui/inputs/CustomInput';
+import CustomInput from '@/app/ui/inputs-temporal/CustomInput';
 import { startTransition, useActionState, useEffect, useRef } from 'react';
 import { forgotPasswordAction, ForgotPasswordState } from '@/app/lib/actions/users';
 import { forgotPasswordSchema, ForgotPasswordSchema } from '@/app/lib/schemas/forgotPasswordSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useToast } from '../toast/ToastContext';
-import CustomLink from '@/ui/link/CustomLink';
+import CustomLink from '@/app/ui/link-temporal/CustomLink';
 
 export default function ForgotPasswordForm() {
   const { showToast } = useToast();

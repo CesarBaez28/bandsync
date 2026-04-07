@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, ReactNode } from 'react';
 import CustomButton from '../button/CustomButton';
 import styles from './user-menu.module.css';
-import CustomLink from '../link/CustomLink';
+import CustomLink from '../link-temporal/CustomLink';
 
 export type DropdownOption = {
   label: string;

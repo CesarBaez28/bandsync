@@ -8,15 +8,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { repertoireSchema, RepertoireSchema } from "@/app/lib/schemas/repertoireSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import CustomInput from "../../inputs/CustomInput";
+import CustomInput from "../../inputs-temporal/CustomInput";
 import CustomButton from "../../button/CustomButton";
 import { Song } from "@/app/lib/definitions";
 import RepertoireSongsTable from "./AddAndEditRepertoireSongsTable";
 import Modal from "../../modal/Modal";
-import CustomSelect, { OptionInputSelect } from "../../inputs/CustomSelect";
+import CustomSelect, { OptionInputSelect } from "../../inputs-temporal/CustomSelect";
 import { UUID } from "node:crypto";
-import CustomTextArea from "../../inputs/CustomTextArea";
-import CustomLink from "../../link/CustomLink";
+import CustomTextArea from "../../inputs-temporal/CustomTextArea";
+import CustomLink from "../../link-temporal/CustomLink";
 
 type FormProps = {
   readonly musicalBandId: UUID | undefined;
