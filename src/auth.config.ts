@@ -35,17 +35,16 @@ export const authConfig = {
         return true;
       }
 
-      const raw = await getToken({ req: request, secret: config.authSecret });
-
+      const raw = await getToken({
+        req: request,
+        secret: config.authSecret,
+        secureCookie: true,
+      });
+      
       const apiJwtString = raw?.accessToken as string | undefined;
 
-      
       const isAccessTokenValid = checkAccessToken(apiJwtString);
-      
-      console.log("TOKEN VALIDO: " + isAccessTokenValid)
-      
-      console.log("API TOKEN: " + apiJwtString)
-      
+
       if (!isAccessTokenValid) return false;
 
       if (request.nextUrl.pathname === '/login') {
