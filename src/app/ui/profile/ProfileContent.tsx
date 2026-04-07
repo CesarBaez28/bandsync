@@ -10,8 +10,8 @@ import { startTransition, useActionState, useEffect, useRef, useState, useCallba
 import { editUserSchema, EditUseSchema } from '@/app/lib/schemas/editUserSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import CustomInput from '../Inputs/CustomInput';
-import CustomFileInput from '../Inputs/CustomFileInput';
+import CustomInput from '../inputs/CustomInput';
+import CustomFileInput from '../inputs/CustomFileInput';
 import { updateUserAction, UpdateUserState } from '@/app/lib/actions/users';
 import { useToast } from '../toast/ToastContext';
 import PersonSvg from '@/public/person_24dp.svg'

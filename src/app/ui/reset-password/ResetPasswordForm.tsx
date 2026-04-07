@@ -1,6 +1,6 @@
 'use client';
 
-import CustomInput from "@/ui/Inputs/CustomInput";
+import CustomInput from "@/app/ui/inputs/CustomInput";
 import stylesForm from '@/app/styles/form.module.css'
 import CustomLink from "@/ui/link/CustomLink";
 import CustomButton from "@/ui/button/CustomButton";

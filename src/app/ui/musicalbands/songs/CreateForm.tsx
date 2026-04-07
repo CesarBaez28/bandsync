@@ -3,15 +3,15 @@
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import stylesForm from '../../../styles/form.module.css';
 import CustomButton from "../../button/CustomButton";
-import CustomInput from "../../Inputs/CustomInput";
+import CustomInput from "../../inputs/CustomInput";
 import { UUID } from 'crypto';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomLink from '../../link/CustomLink';
 import { songSchema, SongSchema } from '@/app/lib/schemas/songSchema';
 import { createSongAction, SongState } from '@/app/lib/actions/songs';
-import CustomSelect, { OptionInputSelect } from '../../Inputs/CustomSelect';
-import CustomFileInput from '../../Inputs/CustomFileInput';
+import CustomSelect, { OptionInputSelect } from '../../inputs/CustomSelect';
+import CustomFileInput from '../../inputs/CustomFileInput';
 import { Artist, MusicalGenre } from '@/app/lib/definitions';
 import { useToast } from '../../toast/ToastContext';
 import { useRouter } from 'next/navigation';

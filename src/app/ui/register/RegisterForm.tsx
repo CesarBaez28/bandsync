@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useActionState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import CustomButton from "../button/CustomButton";
-import CustomInput from "../Inputs/CustomInput";
+import CustomInput from "../inputs/CustomInput";
 import styles from "../../styles/login-register-form.module.css";
 import { FormRegisterSchema, formRegisterSchema } from "@/app/lib/schemas/formRegisterSchema";
 import { registerAction, RegisterUserState } from "@/app/lib/actions/users";

@@ -8,7 +8,7 @@ import { UUID } from 'node:crypto';
 import { Permission, RoleAndPermissions, TypeOfPermission, UserRolesAndPermissions } from '@/app/lib/definitions';
 import { ChangeEvent, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import Modal from '../../modal/Modal';
-import CustomInput from '../../Inputs/CustomInput';
+import CustomInput from '../../inputs/CustomInput';
 import { roleSchema, RoleSchema } from '@/app/lib/schemas/roleSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
