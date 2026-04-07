@@ -9,7 +9,7 @@ import { forgotPasswordSchema, ForgotPasswordSchema } from '@/app/lib/schemas/fo
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useToast } from '../toast/ToastContext';
-import CustomLink from '@/ui/link/CustomLink';
+import CustomLink from '@/app/ui/link/CustomLink';
 
 export default function ForgotPasswordForm() {
   const { showToast } = useToast();

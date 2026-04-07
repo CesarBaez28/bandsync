@@ -2,7 +2,7 @@
 
 import CustomInput from "@/app/ui/inputs/CustomInput";
 import stylesForm from '@/app/styles/form.module.css'
-import CustomLink from "@/ui/link/CustomLink";
+import CustomLink from "@/app/ui/link/CustomLink";
 import CustomButton from "@/ui/button/CustomButton";
 import { useForm } from "react-hook-form";
 import { ResetPasswordSchema, resetPasswordSchema } from "@/app/lib/schemas/resetPasswordSchema";

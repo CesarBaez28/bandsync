@@ -10,7 +10,7 @@ import CustomButton from "@/app/ui/button/CustomButton";
 import { changePasswordAction, ChangePasswordState } from "@/app/lib/actions/users";
 import { useToast } from "@/app/ui/toast/ToastContext";
 import { useRouter } from "next/navigation";
-import CustomLink from "@/ui/link/CustomLink";
+import CustomLink from "@/app/ui/link/CustomLink";
 
 type FormProps = {
   readonly hypName?: string;

@@ -5,7 +5,7 @@ import { UserPermissions } from "@/app/lib/permisions";
 import { UUID } from "node:crypto";
 import { ReactNode } from "react";
 import styles from '@/ui/musicalbands/main-menu.module.css';
-import CustomLink from '@/ui/link/CustomLink'
+import CustomLink from '@/app/ui/link/CustomLink'
 import GroupIcon from '@/public/group_24dp.svg';
 import LibraryMusicIcon from '@/public/library_music_24dp.svg';
 import AudioFileIcon from '@/public/audio_file_24dp.svg';
