@@ -24,13 +24,15 @@ export default function RepertoireSongsTable({ songs }: Props) {
         <tbody>
           {songs?.map((song) => (
             <tr key={song.id}>
-              <td style={{ display: 'flex', gap: '.6rem' }}>
-                <CustomLink href={song.link} variant="tertiary">
-                  <LinkIcon width={24} height={24} />
-                </CustomLink>
-                <CustomLink href={song.sheetMusic} variant="tertiary">
-                  <DocsIcon width={24} height={24} />
-                </CustomLink>
+              <td>
+                <div style={{ display: 'flex', gap: '.6rem' }}>
+                  <CustomLink href={song.link} variant="tertiary">
+                    <LinkIcon width={24} height={24} />
+                  </CustomLink>
+                  <CustomLink href={song.sheetMusic} variant="tertiary">
+                    <DocsIcon width={24} height={24} />
+                  </CustomLink>
+                </div>
               </td>
               <td>{song.name}</td>
               <td>{song.artist.name}</td>
