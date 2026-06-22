@@ -1,7 +1,7 @@
 "use server";
 
 import { auth, unstable_update } from "@/auth";
-import { changePassword, ChangePasswordRequest, leaveMusicalBand, registerUser, registerUserFromInvitation, updateUser } from "../api/users";
+import { changePassword, ChangePasswordRequest, deleteAccount, isNeedToAssignAdminRoleBeforeDeletion, leaveMusicalBand, registerUser, registerUserFromInvitation, transferAndDeleteAccount, updateUser } from "../api/users";
 import { ApiResponse, MusicalBand } from "../definitions";
 import { editUserSchema } from "../schemas/editUserSchema";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
@@ -11,6 +11,7 @@ import { changePasswordSchema } from "../schemas/changePasswordSchema";
 import { forgotPasswordSchema } from "../schemas/forgotPasswordSchema";
 import { forgotPassword, ForgotPasswordRequest, resetPassword, ResetPasswordRequest } from "../api/auth";
 import { resetPasswordSchema } from "../schemas/resetPasswordSchema";
+import { TransferSelection } from "@/app/ui/delete-account/DeleteAccountContent";
 
 export type RegisterUserState = {
   errors?: {
@@ -339,4 +340,92 @@ export async function resetPasswordAction(prev: ResetPasswordState, formData: Fo
   return {
     success: true
   }
+}
+
+export type DeleteAccountState = {
+  message?: string | null;
+  hasToAssignAdminRole?: boolean;
+  success: boolean;
+}
+
+export async function deleteAccountAction(prev: DeleteAccountState, formData: FormData): Promise<DeleteAccountState> {
+  const userId = formData.get("userId") as UUID;
+
+  console.log("User ID received in deleteAccountAction:", userId);
+
+  const [response, error] = await handleAsync<ApiResponse<boolean>>(isNeedToAssignAdminRoleBeforeDeletion({ userId }));
+
+  if (error) {
+    console.error("Error checking admin role before deletion:", error);
+    return {
+      message: error.message || "Ocurrió un error al eliminar la cuenta. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    };
+  }
+
+  const hasToAssignAdminRole = response?.data;
+
+  if (hasToAssignAdminRole) {
+    return {
+      hasToAssignAdminRole: true,
+      success: false
+    };
+  }
+
+  const [deleteResponse, deleteError] = await handleAsync<ApiResponse<void>>(deleteAccount());
+
+  if (deleteError) {
+    console.error("Error deleting account:", deleteError);
+    return {
+      message: "Ocurrió un error al eliminar la cuenta. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    };
+  }
+
+  if (!deleteResponse?.success) {
+    return {
+      message: deleteResponse?.message,
+      success: deleteResponse?.success ?? false
+    };
+  }
+
+  return {
+    success: true
+  };
+}
+
+export type TransferAndDeleteAccountState = {
+  message?: string | null;
+  success: boolean;
+}
+
+export async function transferAndDeleteAccountAction(prev: TransferAndDeleteAccountState, formData: FormData): Promise<TransferAndDeleteAccountState> {
+  console.log("Transferir rol de admin a otro usuario con los siguientes datos:", Object.fromEntries(formData.entries()));
+
+  const transfer: TransferSelection[] = [];
+
+  formData.forEach((value) => {
+    transfer.push(JSON.parse(value as string) as TransferSelection);
+  });
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(transferAndDeleteAccount({ transfer }));
+
+  if (error) {
+    console.error("Error transferring admin roles and deleting account:", error);
+    return {
+      message: "Ocurrió un error al eliminar la cuenta. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    };
+  }
+
+  if (!response?.success) {
+    return {
+      message: response?.message,
+      success: response?.success ?? false
+    };
+  }
+
+  return {
+    success: true
+  };
 }

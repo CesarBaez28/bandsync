@@ -153,3 +153,9 @@ export type RequiredTwoFactorResponse = {
   status: string;
   tempToken: string;
 }
+
+export type MusicalBandDeletionCheck = {
+  musicalBand: MusicalBand;
+  adminId: number;
+  members: User[];
+}
