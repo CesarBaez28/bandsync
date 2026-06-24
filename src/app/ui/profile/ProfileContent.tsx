@@ -5,6 +5,8 @@ import CustomButton from '../button/CustomButton';
 import CustomImage from '../image/CustomImage';
 import CustomLink from '../link/CustomLink';
 import styles from './profile-content.module.css';
+import stylesModal from '@/app/styles/modal.module.css';
+import stylesForm from '@/app/styles/form.module.css';
 import Modal from '../modal/Modal';
 import { startTransition, useActionState, useEffect, useRef, useState, useCallback } from 'react';
 import { editUserSchema, EditUseSchema } from '@/app/lib/schemas/editUserSchema';
@@ -12,9 +14,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../inputs/CustomInput';
 import CustomFileInput from '../inputs/CustomFileInput';
-import { updateUserAction, UpdateUserState } from '@/app/lib/actions/users';
+import { deleteAccountAction, DeleteAccountState, updateUserAction, UpdateUserState } from '@/app/lib/actions/users';
 import { useToast } from '../toast/ToastContext';
 import PersonSvg from '@/public/person_24dp.svg'
+import EditIcon from '@/public/edit_24dp.svg'
+import DeleteIcon from '@/public/delete_24dp.svg'
+import { useRouter } from 'next/navigation';
+import { signOutAction } from '@/app/lib/actions/auth';
 
 type Props = {
   readonly user: User | undefined;
@@ -23,11 +29,15 @@ type Props = {
 
 export default function ProfileContent({ user, hypName }: Props) {
   const { showToast } = useToast();
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const initialState: UpdateUserState = { errors: {}, message: null, success: false, user };
+  const initialDeleteState: DeleteAccountState = { message: null, success: false, hasToAssignAdminRole: false };
   const [state, formAction, isPending] = useActionState<UpdateUserState, FormData>(updateUserAction, initialState);
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteState, formActionDelete, isDeletingPending] = useActionState<DeleteAccountState, FormData>(deleteAccountAction, initialDeleteState);
 
   const {
     register,
@@ -72,12 +82,32 @@ export default function ProfileContent({ user, hypName }: Props) {
     setOpen(false);
   }, [reset, formRef, fileInputRef, state]);
 
+  const handleCancelDelete = useCallback(() => {
+    deleteState.message = null;
+    deleteState.success = false;
+    deleteState.hasToAssignAdminRole = false;
+    setOpenDelete(false);
+  }, [deleteState]);
+
   useEffect(() => {
     if (state?.success) {
       handleCancel();
       showToast('¡Usuario actualizado con éxito!', 'success');
     }
   }, [state, showToast, handleCancel]);
+
+  useEffect(() => {
+    if (deleteState?.success) {
+      handleCancelDelete();
+      signOutAction();
+      showToast('¡Cuenta eliminada con éxito!', 'success');
+    }
+
+    if (deleteState?.hasToAssignAdminRole) {
+      handleCancelDelete();
+      router.push(hypName ? `/musicalbands/${hypName}/delete-account` : '/delete-account');
+    }
+  }, [deleteState, showToast, router, handleCancelDelete, hypName]);
 
   return <>
     <div className={`${styles.profile} col-12 col-sm-8 col-md-6 col-lg-6`}>
@@ -110,9 +140,18 @@ export default function ProfileContent({ user, hypName }: Props) {
             <p>Teléfono:</p>
             <p className={styles['color-gray-300']}>{state.user?.phone !== '' ? state.user?.phone : 'No disponible'}</p>
           </div>
-          <div>
-            <CustomButton type='button' onClick={() => setOpen(true)}>
-              Editar información
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+            <CustomButton
+              type='button'
+              iconLeft={<EditIcon width={20} height={20} />}
+              onClick={() => setOpen(true)}>
+              Editar
+            </CustomButton>
+            <CustomButton
+              type='button'
+              iconLeft={<DeleteIcon width={20} height={20} />}
+              onClick={() => setOpenDelete(true)}>
+              Eliminar cuenta
             </CustomButton>
           </div>
         </div>
@@ -197,6 +236,42 @@ export default function ProfileContent({ user, hypName }: Props) {
                 Guardar
               </CustomButton>
             </div>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        isOpen={openDelete}
+        size='sm'
+        title='Eliminar cuenta'
+      >
+        <form
+          action={formActionDelete}
+          className={stylesModal.modalContent}
+        >
+
+          <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
+
+          <p>Tu cuenta será eliminada permanentemente. Esta acción no se puede revertir. </p>
+
+          {deleteState?.message && (
+            <p className={stylesForm.errorMessage}>
+              {deleteState?.message}
+            </p>
+          )}
+
+          <input type="hidden" name="userId" value={user?.id} />
+
+          <div className={stylesModal.buttonsContainer}>
+            <CustomButton type='button' variant='secondary' onClick={() => setOpenDelete(false)}>
+              Cancelar
+            </CustomButton>
+            <CustomButton
+              isLoading={isDeletingPending}
+              type='submit'
+            >
+              Eliminar
+            </CustomButton>
           </div>
         </form>
       </Modal>

@@ -48,7 +48,7 @@ const CustomSelect = forwardRef<HTMLSelectElement, SelectProps>(
             )}
             {...rest}
           >
-            <option value="">{placeholder ?? "Seleccione una opción"}</option>
+            <option value="">{placeholder ?? "Seleccione"}</option>
             {options?.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}

@@ -13,6 +13,7 @@ import { SetUp2FA } from '@/app/lib/api/users';
 import { twoFactorSchema, TwoFactorSchema } from '@/app/lib/schemas/twoFactorSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { StepBlock } from '@/app/ui/steps/StepBlock';
 
 type Props = {
   readonly setUpResponse: SetUp2FA | null;
@@ -78,6 +79,7 @@ export default function Setup2FAView({ setUpResponse }: Props) {
           current={step}
           step={1}
           label="Configurar aplicación"
+          showLine={true}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <p>
@@ -104,6 +106,7 @@ export default function Setup2FAView({ setUpResponse }: Props) {
           current={step}
           step={2}
           label="Verificar código"
+          showLine={true}
         >
           <form
             ref={formRef}
@@ -146,67 +149,12 @@ export default function Setup2FAView({ setUpResponse }: Props) {
           current={step}
           step={3}
           label="Completado"
+          showLine={false}
         >
           <p>✅ Autenticación en dos pasos activada correctamente.</p>
         </StepBlock>
 
       </div>
     </Card>
-  );
-}
-
-type StepBlockProps = {
-  readonly current: number;
-  readonly step: number;
-  readonly label: string;
-  readonly children: React.ReactNode;
-}
-
-function StepBlock({ current, step, label, children }: StepBlockProps) {
-
-  const isActive = current === step;
-  const isCompleted = current > step;
-
-  let circleStatusClass = styles.circleInactive;
-  if (isCompleted) {
-    circleStatusClass = styles.circleCompleted;
-  } else if (isActive) {
-    circleStatusClass = styles.circleActive;
-  }
-
-  const circleClass = `
-    ${styles.circle}
-    ${circleStatusClass}
-  `;
-
-  return (
-    <div className={styles.stepBlock}>
-
-      {/* Timeline */}
-      <div className={styles.timeline}>
-
-        <div className={circleClass}>
-          {isCompleted ? '✓' : step}
-        </div>
-
-        {step !== 3 && <div className={styles.line} />}
-
-      </div>
-
-      {/* Content */}
-      <div className={styles.content}>
-
-        <div className={`${styles.title} ${isActive ? styles.titleActive : ''}`}>
-          Paso {step}: {label}
-        </div>
-
-        {isActive && (
-          <div className={styles.innerContent}>
-            {children}
-          </div>
-        )}
-
-      </div>
-    </div>
   );
 }

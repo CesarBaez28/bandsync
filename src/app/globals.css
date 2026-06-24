@@ -10,7 +10,7 @@
 	--color-gray-300: #595959;
 	--color-error: #ff4d4d;
 	--color-success: #16a34a;
-	--color-warning: #facc15;
+	--color-warning: #f3e3b3;
 	--color-info: #3b82f6;
 
 	--text-muted: var(--color-gray-250);
@@ -33,6 +33,7 @@
 	--color-white: #080808;
 	--color-white-100: #262626;
 	--color-white-200: #2e2e2e;
+  --color-warning: #caa52a;
 
 	--color-gray-100: #3a3a3a;
 	--color-gray-200: #6b6b6b;

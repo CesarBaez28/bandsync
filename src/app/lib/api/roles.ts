@@ -187,8 +187,10 @@ export async function updateRoleAndPermissions({ musicalBandId, roleId, newName,
     })
   });
 
-  if (!response.ok) {
-    throw new Error("Error while updating role and permissions");
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message);
   }
 
   return await response.json();
@@ -255,8 +257,10 @@ export async function deleteRoleById({ musicalBandId, roleId }: DeleteRoleByIdPr
     headers,
   });
 
-  if (!response.ok) {
-    throw new Error("Error while deleting the role");
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message);
   }
 
   return await response.json();

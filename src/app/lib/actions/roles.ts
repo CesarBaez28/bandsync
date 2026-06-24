@@ -101,7 +101,7 @@ export async function updateUserRoleAction(prevState: UserRoleState, formData: F
   if (error) {
     console.error("Error updating user role:", error);
     return {
-      message: "Ocurrió un error al actualizar el rol del usuario. Por favor, inténtelo de nuevo.",
+      message: error.message || "Ocurrió un error al actualizar el rol del usuario. Por favor, inténtelo de nuevo.",
       success: false
     };
   }
@@ -151,7 +151,7 @@ export async function updateRoleAction(prevState: RoleState, formData: FormData)
   if (error) {
     console.error("Error updating role:", error);
     return {
-      message: "Ocurrió un error al actualizar el rol. Por favor, inténtelo de nuevo.",
+      message: error.message || "Ocurrió un error al actualizar el rol. Por favor, inténtelo de nuevo.",
       success: false
     };
   }
@@ -188,7 +188,7 @@ export async function deleteRoleAction(prevState: RoleStateDelete, formData: For
   if (error) {
     console.error("Error deleting role:", error);
     return {
-      message: "Ocurrió un error al eliminar el rol. Por favor, inténtelo de nuevo.",
+      message: error.message || "Ocurrió un error al eliminar el rol. Por favor, inténtelo de nuevo.",
       data: [],
       success: false
     };
