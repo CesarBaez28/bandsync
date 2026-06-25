@@ -145,7 +145,7 @@ export default function UsersTable({
                   </td>
                 </Can>
                 <td>
-                  <span className={styles.usernameContainer}>
+                  <div className={styles.usernameContainer}>
                     <CustomImage
                       src={user?.photo}
                       alt={'Foto de perfil'}
@@ -155,7 +155,7 @@ export default function UsersTable({
                       className={user?.photo ? styles['image'] : styles['fall-back']}
                     />
                     {user.username}
-                  </span>
+                  </div>
                 </td>
                 <td>
                   {`${user.firstName} ${user.lastName}`}
