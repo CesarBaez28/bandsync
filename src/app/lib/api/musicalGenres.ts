@@ -95,7 +95,13 @@ export async function createMusicalGenre({ name, musicalBandId }: CreateMusicalG
     body: JSON.stringify({ name, musicalBandId }),
   });
 
-  return await response.json();
+  const result: ApiResponse<MusicalGenre> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error creating musical genre");
+  }
+
+  return result;
 }
 
 export async function updateMusicalGenreById({ name, id, musicalBandId }: { name: string; id: number; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
@@ -120,7 +126,13 @@ export async function updateMusicalGenreById({ name, id, musicalBandId }: { name
     body: JSON.stringify({ name })
   })
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error updating musical genre");
+  }
+
+  return result;
 }
 
 export async function deleteMusicalGenreById({ id, musicalBandId }: { id: number; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
@@ -144,5 +156,11 @@ export async function deleteMusicalGenreById({ id, musicalBandId }: { id: number
     headers,
   });
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error deleting musical band");
+  }
+
+  return result;
 }
