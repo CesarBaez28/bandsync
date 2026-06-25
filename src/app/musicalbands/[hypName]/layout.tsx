@@ -8,6 +8,7 @@ import { auth } from "@/auth";
 import { Metadata } from "next";
 import { config } from "@/app/lib/config";
 import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
+import { Footer } from "@/app/ui/footer/Footer";
 
 type LayoutProps = {
   children: ReactNode;
@@ -41,14 +42,17 @@ export default async function Layout({ children, params }: LayoutProps) {
   return (
     <PermissionsProvider session={session}>
       <SideNavProvider>
-        <MainHeader hypName={hypName} appName={appName} />
-        <div className={styles['layout-content']}>
-          {musicalBand && (
-            <SideNav hypName={hypName} musicalBandId={musicalBand.id} />
-          )}
-          <div className={styles.mainContainer}>
-            {children}
+        <div className={styles.layout}>
+          <MainHeader hypName={hypName} appName={appName} />
+          <div className={styles.layoutContent}>
+            {musicalBand && (
+              <SideNav hypName={hypName} musicalBandId={musicalBand.id} />
+            )}
+            <div className={styles.mainContainer}>
+              {children}
+            </div>
           </div>
+          <Footer />
         </div>
       </SideNavProvider>
     </PermissionsProvider>

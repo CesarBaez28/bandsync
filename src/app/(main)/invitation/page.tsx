@@ -1,10 +1,9 @@
+import acceptInvitation from "@/app/lib/api/invitations";
 import styles from "./invitation-page.module.css";
-import acceptInvitation from "../lib/api/invitations";
-import { AcceptInvitation, ApiResponse } from "../lib/definitions";
-import { handleAsync } from "../lib/utils";
-import CustomLink from "../ui/link/CustomLink";
-import { Footer } from "../ui/footer/Footer";
 import { Metadata } from "next";
+import { handleAsync } from "@/app/lib/utils";
+import { AcceptInvitation, ApiResponse } from "@/app/lib/definitions";
+import CustomLink from "@/app/ui/link/CustomLink";
 
 export const metadata: Metadata = {
   title: "Invitación",
@@ -103,7 +102,6 @@ export default async function InvitationPage(props: Props) {
           )}
         </main>
       </div>
-      <Footer />
     </div>
   );
 }

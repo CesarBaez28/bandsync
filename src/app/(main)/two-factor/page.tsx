@@ -22,7 +22,7 @@ export default async function TwoFactorPage() {
       { label: 'Cerrar sesión', action: signOutAction, isFormAction: true },
     ]} />
 
-    <main style={{ marginTop: '1rem', padding: '0 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <main style={{ marginTop: '1rem', padding: '0 1.5rem 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
       {error == null ? (<TwoFactorOptions is2FAEnabled={is2FAEnabled} />) : (
         <div className="message">

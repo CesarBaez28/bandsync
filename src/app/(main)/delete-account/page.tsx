@@ -1,9 +1,9 @@
 import HomeHeader from "@/ui/header/HomeHeader";
 import { signOutAction } from "@/app/lib/actions/auth";
-import { getBandBeforeDeleteAccount } from "../lib/api/users";
-import { ApiResponse, MusicalBandDeletionCheck } from "../lib/definitions";
-import { handleAsync } from "../lib/utils";
-import DeleteAccountContent from "../ui/delete-account/DeleteAccountContent";
+import { handleAsync } from "@/app/lib/utils";
+import { ApiResponse, MusicalBandDeletionCheck } from "@/app/lib/definitions";
+import { getBandBeforeDeleteAccount } from "@/app/lib/api/users";
+import DeleteAccountContent from "@/app/ui/delete-account/DeleteAccountContent";
 
 export default async function DeleteAccountPage() {
   const [response, error] = await handleAsync<ApiResponse<MusicalBandDeletionCheck[]>>(getBandBeforeDeleteAccount());

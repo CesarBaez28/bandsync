@@ -1,11 +1,11 @@
-import { signOutAction } from "../lib/actions/auth";
-import ProfileContent from "../ui/profile/ProfileContent";
-import { ApiResponse, User } from "../lib/definitions";
-import { handleAsync } from "../lib/utils";
-import { getUserById } from "../lib/api/users";
 import styles from './profile.module.css';
 import { Metadata } from "next";
-import HomeHeader from "../ui/header/HomeHeader";
+import HomeHeader from "@/app/ui/header/HomeHeader";
+import { handleAsync } from '@/app/lib/utils';
+import { getUserById } from '@/app/lib/api/users';
+import { signOutAction } from '@/app/lib/actions/auth';
+import { ApiResponse, User } from '@/app/lib/definitions';
+import ProfileContent from '@/app/ui/profile/ProfileContent';
 
 export const metadata: Metadata = {
   title: "Perfil",

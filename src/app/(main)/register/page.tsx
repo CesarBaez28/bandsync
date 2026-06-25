@@ -1,6 +1,5 @@
-import styles from '../styles/login-regiser.module.css'
-import { Footer } from '../ui/footer/Footer';
-import RegisterForm from '../ui/register/RegisterForm';
+import styles from '@/app/styles/login-regiser.module.css'
+import RegisterForm from '../../ui/register/RegisterForm';
 import { config } from '@/app/lib/config';
 
 type Props = {
@@ -19,7 +18,6 @@ export default async function RegisterPage(props: Props) {
           <RegisterForm token={token} appName={config.appName} />
         </div>
       </div>
-      <Footer />
     </main>
   );
 }

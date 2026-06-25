@@ -79,7 +79,7 @@ export default function HomeHeader({ setData, appName }: HomeHeaderProps) {
           style={{ padding: '0.4rem 0.4rem' }}
           onClick={() => setOpen(true)}
         >
-          Crear una banda
+          Crear banda
         </CustomButton>
 
         <ThemeToggle />

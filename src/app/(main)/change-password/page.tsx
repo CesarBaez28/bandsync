@@ -1,6 +1,6 @@
+import { signOutAction } from "@/app/lib/actions/auth";
 import ChangePasswordForm from "@/app/ui/change-password/ChangePasswordForm";
-import { signOutAction } from "../lib/actions/auth";
-import HomeHeader from "../ui/header/HomeHeader";
+import HomeHeader from "@/app/ui/header/HomeHeader";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

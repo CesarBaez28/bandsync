@@ -1,6 +1,5 @@
-import LoginForm from "../ui/login/LoginForm";
-import styles from '../styles/login-regiser.module.css'
-import { Footer } from "../ui/footer/Footer";
+import LoginForm from "../../ui/login/LoginForm";
+import styles from '@/app/styles/login-regiser.module.css';
 import { config } from '@/app/lib/config';
 import { Suspense } from "react";
 
@@ -14,7 +13,6 @@ export default function Login() {
           </Suspense>
         </div>
       </div>
-      <Footer />
     </main>
   );
 }

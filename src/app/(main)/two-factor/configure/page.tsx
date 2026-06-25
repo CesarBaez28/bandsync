@@ -20,7 +20,7 @@ export default async function Configure2FAPage() {
       { label: 'Cerrar sesión', action: signOutAction, isFormAction: true },
     ]} />
 
-    <main style={{ marginTop: '1rem', padding: '0 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <main style={{ marginTop: '1rem', padding: '0 1.5rem 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <h2>Configurar autenticación de dos factores</h2>
 
       {setupError == null ? (
