@@ -52,7 +52,7 @@ export default async function Layout({ children, params }: LayoutProps) {
               {children}
             </div>
           </div>
-          <Footer />
+          <Footer hypName={hypName} />
         </div>
       </SideNavProvider>
     </PermissionsProvider>

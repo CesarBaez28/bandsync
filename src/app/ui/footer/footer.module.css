@@ -6,8 +6,4 @@
 .footer-container {
   padding: 20px;
   color: var(--color-text);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
 }

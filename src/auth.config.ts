@@ -28,7 +28,9 @@ export const authConfig = {
         '/invitation',
         '/forgot-password',
         '/reset-password',
-        '/two-factor/verify'
+        '/two-factor/verify',
+        '/privacy-policy',
+        '/terms-of-service'
       ]);
 
       if (allowPublicAccess.has(request.nextUrl.pathname)) {
