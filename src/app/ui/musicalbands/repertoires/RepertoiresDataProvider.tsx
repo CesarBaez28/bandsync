@@ -2,7 +2,7 @@ import { getRepertoiresByMusicalBandId } from "@/app/lib/api/repertoires";
 import { ApiResponse, PagedData, Repertoire } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import Pagination from "../../pagination/Pagination";
-import RepertoiresTable from "./RepertoiresTable";
+import RepertoiresContent from "./RepertoiresContent";
 import { UUID } from "node:crypto";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
   readonly page: number;
 }
 
-export default async function RepertoiresTableDataProvider({ musicalBandId, hypName, query, page }: Props) {
+export default async function RepertoiresDataProvider({ musicalBandId, hypName, query, page }: Props) {
 
   const [response, error] = await handleAsync<ApiResponse<PagedData<Repertoire>>>(getRepertoiresByMusicalBandId({
     musicalBandId,
@@ -32,7 +32,7 @@ export default async function RepertoiresTableDataProvider({ musicalBandId, hypN
   return (
     <>
       <Pagination totalPages={response?.data?.totalPages ?? 0} />
-      <RepertoiresTable data={response?.data} musicalBandId={musicalBandId} hypName={hypName} />
+      <RepertoiresContent data={response?.data} musicalBandId={musicalBandId} hypName={hypName} />
     </>
   );
 }

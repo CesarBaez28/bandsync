@@ -6,6 +6,21 @@
   display: none;
 }
 
+.rowAlignCenter {
+  display: flex;
+  gap: .5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.descriptionText {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
 @media (max-width: 768px) {
   .desktopOnly {
     display: none;

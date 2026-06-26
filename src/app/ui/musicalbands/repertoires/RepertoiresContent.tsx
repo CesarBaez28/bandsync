@@ -2,8 +2,9 @@
 
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import { PagedData, Repertoire } from "@/app/lib/definitions";
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
 import { useActionState, useCallback, useEffect, useState } from "react";
@@ -17,6 +18,7 @@ import EditIcon from '@/public/edit_24dp.svg'
 import DeleteIcon from '@/public/delete_24dp.svg'
 import LinkIcon from '@/public/link_24dp.svg'
 import SeeIcon from '@/public/opsz24.svg'
+import RepertoiresAccordion from "./RepertoiresAccordion";
 
 type RepertoiresTableProps = {
   readonly data: PagedData<Repertoire> | undefined;
@@ -24,7 +26,7 @@ type RepertoiresTableProps = {
   readonly hypName: string;
 };
 
-export default function RepertoiresTable({ data, musicalBandId, hypName }: RepertoiresTableProps) {
+export default function RepertoiresContent({ data, musicalBandId, hypName }: RepertoiresTableProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [selectedRepertoire, setSelectedRepertoire] = useState<Repertoire | null>(null);
@@ -52,43 +54,57 @@ export default function RepertoiresTable({ data, musicalBandId, hypName }: Reper
   return (
     <div id="modal-root">
       {(data?.content?.length ?? 0) > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Acciones</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.content.map((repertoire) => (
-              <tr key={repertoire.id}>
-                <td>
-                  <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <Can permission={UserPermissions.UPDATE_REPERTOIRE} musicalBandId={musicalBandId}>
-                      <CustomLink href={`/musicalbands/${hypName}/repertoires/${repertoire.id}/edit`} variant="tertiary">
-                        <EditIcon width={24} height={24} />
-                      </CustomLink>
-                    </Can>
-                    <Can permission={UserPermissions.DELETE_REPERTOIRE} musicalBandId={musicalBandId}>
-                      <CustomButton onClick={() => handleDelete(repertoire)} variant="tertiary" type="button">
-                        <DeleteIcon width={24} height={24} />
-                      </CustomButton>
-                    </Can>
-                    <CustomLink href={repertoire.link} variant="tertiary">
-                      <LinkIcon width={24} height={24} />
-                    </CustomLink>
-                    <CustomLink href={`/musicalbands/${hypName}/repertoires/${repertoire.id}/see`} variant="tertiary">
-                      <SeeIcon width={24} height={24} />
-                    </CustomLink>
-                  </div>
-                </td>
-                <td>{repertoire.name}</td>
-                <td>{repertoire.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>) : (
+        <>
+          <div className={stylesResponsive.desktopOnly}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Acciones</th>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.content.map((repertoire) => (
+                  <tr key={repertoire.id}>
+                    <td>
+                      <div style={{ display: 'flex', gap: '.6rem' }}>
+                        <Can permission={UserPermissions.UPDATE_REPERTOIRE} musicalBandId={musicalBandId}>
+                          <CustomLink href={`/musicalbands/${hypName}/repertoires/${repertoire.id}/edit`} variant="tertiary">
+                            <EditIcon width={24} height={24} />
+                          </CustomLink>
+                        </Can>
+                        <Can permission={UserPermissions.DELETE_REPERTOIRE} musicalBandId={musicalBandId}>
+                          <CustomButton onClick={() => handleDelete(repertoire)} variant="tertiary" type="button">
+                            <DeleteIcon width={24} height={24} />
+                          </CustomButton>
+                        </Can>
+                        <CustomLink href={repertoire.link} variant="tertiary">
+                          <LinkIcon width={24} height={24} />
+                        </CustomLink>
+                        <CustomLink href={`/musicalbands/${hypName}/repertoires/${repertoire.id}/see`} variant="tertiary">
+                          <SeeIcon width={24} height={24} />
+                        </CustomLink>
+                      </div>
+                    </td>
+                    <td>{repertoire.name}</td>
+                    <td>{repertoire.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={stylesResponsive.mobileOnly}>
+            <RepertoiresAccordion
+              data={data}
+              musicalBandId={musicalBandId}
+              hypName={hypName}
+              onDelete={handleDelete}
+            />
+          </div>
+        </>
+      ) : (
         <div className="message">
           <h2>¡No se encontraron resultados!</h2>
           <p>Registre un repertorio usando el botón Agregar o cambie los valores de su búsqueda</p>
