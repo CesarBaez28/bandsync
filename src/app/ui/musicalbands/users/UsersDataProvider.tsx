@@ -1,5 +1,5 @@
 import { handleAsync } from "@/app/lib/utils";
-import UsersTable from "./UsersTable";
+import UsersContent from "./UsersContent";
 import { getAllMusicalRolesByMusicalBandId } from "@/app/lib/api/musicalRoles";
 import { getUsersByMusicalBandId } from "@/app/lib/api/users";
 import { getAllByMusicalBandId } from "@/app/lib/api/musicalRolesUsers";
@@ -14,7 +14,7 @@ type Props = {
   readonly page: number;
 };
 
-export default async function UsersTableDataProvider({
+export default async function UsersDataProvider({
   musicalBandId,
   hypName,
   currentUserId,
@@ -48,7 +48,7 @@ export default async function UsersTableDataProvider({
   return <>
     <Pagination totalPages={usersResponse.data?.totalPages ?? 0} />
 
-    <UsersTable
+    <UsersContent
       musicalBandId={musicalBandId}
       users={usersResponse?.data}
       musicalRolesUsers={musicalRolesUsersResponse?.data}

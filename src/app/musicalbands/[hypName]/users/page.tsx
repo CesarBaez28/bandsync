@@ -1,16 +1,18 @@
 import styles from './users.module.css';
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import InputContainer from '@/app/ui/musicalbands/users/InputContainer';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import { auth } from '@/auth';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import UsersTableDataProvider from '@/app/ui/musicalbands/users/UsersTableDataProvider';
+import UsersDataProvider from '@/app/ui/musicalbands/users/UsersDataProvider';
 import TableSkeleton from '@/app/ui/skeletons/TableSkeleton';
 import PaginationSkeleton from '@/app/ui/skeletons/PaginationSkeleton';
+import AccordionSkeleton from '@/app/ui/skeletons/AccordionSkeleton';
 
 type UsersPageProps = {
-  params: Promise<{ hypName: string; }>;
-  searchParams?: Promise<{
+  readonly params: Promise<{ hypName: string; }>;
+  readonly searchParams?: Promise<{
     query?: string;
     page?: string;
   }>;
@@ -45,11 +47,19 @@ export default async function UsersPage(props: UsersPageProps) {
         <Suspense fallback={
           <>
             <PaginationSkeleton showArrows={false} pages={3} />
-            <TableSkeleton columns={6} rows={6} />
+
+            <div className={stylesResponsive.desktopOnly}>
+              <TableSkeleton columns={6} rows={6} />
+            </div>
+
+            <div className={stylesResponsive.mobileOnly}>
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+            </div>
           </>
-        }
-        >
-          <UsersTableDataProvider
+        }>
+          <UsersDataProvider
             musicalBandId={musicalBand?.id}
             hypName={hypName}
             currentUserId={userId}

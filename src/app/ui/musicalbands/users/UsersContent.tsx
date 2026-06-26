@@ -1,6 +1,7 @@
 'use client';
 
-import styles from './users-table.module.css';
+import styles from './users-content.module.css';
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { MusicalRole, MusicalRolesUsers, PagedData, User } from "@/app/lib/definitions";
@@ -9,7 +10,7 @@ import CustomImage from "../../image/CustomImage";
 import Modal from '../../modal/Modal';
 import { useActionState, useCallback, useEffect, useState } from 'react';
 import { leaveMusicalBandAction, LeaveMusicalBandState } from '@/app/lib/actions/users';
-import { UUID } from 'crypto';
+import { UUID } from 'node:crypto';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../../toast/ToastContext';
 import CustomSelect, { OptionInputSelect } from '../../inputs/CustomSelect';
@@ -20,6 +21,7 @@ import EditIcon from '@/public/edit_24dp.svg';
 import DeleteIcon from '@/public/delete_24dp.svg';
 import AddIcon from '@/public/add_2_24dp.svg';
 import PersonIcon from '@/public/person_24dp.svg'
+import UsersAccordion from './UsersAccordion';
 
 type Props = {
   readonly musicalBandId: UUID | undefined;
@@ -30,7 +32,7 @@ type Props = {
   readonly hypName: string;
 }
 
-export default function UsersTable({
+export default function UsersContent({
   users,
   musicalRolesUsers,
   musicalRoles,
@@ -50,7 +52,7 @@ export default function UsersTable({
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
 
   const options: OptionInputSelect[] | undefined = musicalRoles
-    ?.sort((a, b) => a.name.localeCompare(b.name))
+    ?.toSorted((a, b) => a.name.localeCompare(b.name))
     .map((musicalRole) => (
       { label: musicalRole.name, value: musicalRole.id.toString() }
     ));
@@ -112,71 +114,88 @@ export default function UsersTable({
   return (
     <div id="modal-root">
       {(users?.content?.length ?? 0) > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <Can anyOf={[UserPermissions.UPDATE_MEMBER, UserPermissions.DELETE_MEMBER]} musicalBandId={musicalBandId}>
-                <th>Acciones</th>
-              </Can>
-              <th>Usuario</th>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Roles</th>
-              <th>Contacto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users?.content.map((user) => (
-              <tr key={user.id}>
-                <Can anyOf={[UserPermissions.UPDATE_MEMBER, UserPermissions.DELETE_MEMBER]} musicalBandId={musicalBandId}>
-                  <td>
-                    <div style={{ display: 'flex', gap: '.6rem' }}>
-                      <Can permission={UserPermissions.UPDATE_MEMBER} musicalBandId={musicalBandId}>
-                        <CustomButton variant="tertiary" type='button' onClick={() => handleEdit(user)}>
-                          <EditIcon width={24} height={24} />
-                        </CustomButton>
-                      </Can>
-                      <Can permission={UserPermissions.DELETE_MEMBER} musicalBandId={musicalBandId}>
-                        <CustomButton disabled={user.id === currentUserId} onClick={() => handleDelete(user)} variant="tertiary" type="button">
-                          <DeleteIcon width={24} height={24} />
-                        </CustomButton>
-                      </Can>
-                    </div>
-                  </td>
-                </Can>
-                <td>
-                  <div className={styles.usernameContainer}>
-                    <CustomImage
-                      src={user?.photo}
-                      alt={'Foto de perfil'}
-                      width={48}
-                      height={48}
-                      fallback={<PersonIcon width={24} height={24} />}
-                      className={user?.photo ? styles['image'] : styles['fall-back']}
-                    />
-                    {user.username}
-                  </div>
-                </td>
-                <td>
-                  {`${user.firstName} ${user.lastName}`}
-                </td>
-                <td>{user.email}</td>
-                <td>
-                  {
-                    musicalRolesUsers?.find(mru => mru.userId === user.id)?.musicalRoles.map((mr) => (
-                      <span key={mr.id} className={styles.roleBadge}>{mr.name}</span>
-                    )) ?? ''
-                  }
-                </td>
-                <td>{user.phone}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>) : (
+        <>
+          <div className={stylesResponsive.desktopOnly}>
+            <table>
+              <thead>
+                <tr>
+                  <Can anyOf={[UserPermissions.UPDATE_MEMBER, UserPermissions.DELETE_MEMBER]} musicalBandId={musicalBandId}>
+                    <th>Acciones</th>
+                  </Can>
+                  <th>Usuario</th>
+                  <th>Nombre</th>
+                  <th>Correo</th>
+                  <th>Roles</th>
+                  <th>Contacto</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users?.content.map((user) => (
+                  <tr key={user.id}>
+                    <Can anyOf={[UserPermissions.UPDATE_MEMBER, UserPermissions.DELETE_MEMBER]} musicalBandId={musicalBandId}>
+                      <td>
+                        <div style={{ display: 'flex', gap: '.6rem' }}>
+                          <Can permission={UserPermissions.UPDATE_MEMBER} musicalBandId={musicalBandId}>
+                            <CustomButton variant="tertiary" type='button' onClick={() => handleEdit(user)}>
+                              <EditIcon width={24} height={24} />
+                            </CustomButton>
+                          </Can>
+                          <Can permission={UserPermissions.DELETE_MEMBER} musicalBandId={musicalBandId}>
+                            <CustomButton disabled={user.id === currentUserId} onClick={() => handleDelete(user)} variant="tertiary" type="button">
+                              <DeleteIcon width={24} height={24} />
+                            </CustomButton>
+                          </Can>
+                        </div>
+                      </td>
+                    </Can>
+                    <td>
+                      <div className={styles.usernameContainer}>
+                        <CustomImage
+                          src={user?.photo}
+                          alt={'Foto de perfil'}
+                          width={48}
+                          height={48}
+                          fallback={<PersonIcon width={24} height={24} />}
+                          className={user?.photo ? styles['image'] : styles['fall-back']}
+                        />
+                        {user.username}
+                      </div>
+                    </td>
+                    <td>
+                      {`${user.firstName} ${user.lastName}`}
+                    </td>
+                    <td>{user.email}</td>
+                    <td>
+                      {
+                        musicalRolesUsers?.find(mru => mru.userId === user.id)?.musicalRoles.map((mr) => (
+                          <span key={mr.id} className={styles.roleBadge}>{mr.name}</span>
+                        )) ?? ''
+                      }
+                    </td>
+                    <td>{user.phone}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={stylesResponsive.mobileOnly}>
+            <UsersAccordion
+              users={users}
+              musicalRolesUsers={musicalRolesUsers}
+              currentUserId={currentUserId}
+              musicalBandId={musicalBandId}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </>
+      ) : (
         <div className="message">
           <h2>¡No se encontraron resultados!</h2>
           <p>Invite a un integrante o cambie los valores de su búsqueda</p>
-        </div>)
+        </div>
+      )
       }
 
       <Modal
