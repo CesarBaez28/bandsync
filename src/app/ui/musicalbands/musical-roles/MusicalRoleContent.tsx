@@ -1,5 +1,6 @@
 'use client';
 
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { MusicalRole, PagedData } from "@/app/lib/definitions";
@@ -13,11 +14,12 @@ import CustomInput from "../../inputs/CustomInput";
 import { musicalRoleSchema, MusicalRoleSchema } from "@/app/lib/schemas/musicalRolesSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
 import EditIcon from "@/public/edit_24dp.svg";
 import DeleteIcon from "@/public/delete_24dp.svg";
+import MusicalRolesAccordion from './MusicalRolesAccordion';
 
 type MusicalRoleTableProps = {
   readonly data: PagedData<MusicalRole> | undefined;
@@ -25,7 +27,7 @@ type MusicalRoleTableProps = {
   readonly musicalBandId?: UUID;
 }
 
-export default function MusicalRoleTable({ data, hypName, musicalBandId }: MusicalRoleTableProps) {
+export default function MusicalRoleContent({ data, hypName, musicalBandId }: MusicalRoleTableProps) {
   const [selectedMusicalRole, setSelectedMusicalRole] = useState<MusicalRole | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
@@ -102,39 +104,53 @@ export default function MusicalRoleTable({ data, hypName, musicalBandId }: Music
   return (
     <div id="modal-root">
       {(data?.content?.length ?? 0) > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <Can anyOf={[UserPermissions.UPDATE_MUSICAL_ROLE, UserPermissions.DELETE_MUSICAL_ROLE]} musicalBandId={musicalBandId}>
-                <th>Acciones</th>
-              </Can>
-              <th>Nombre</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.content.map((role) => (
-              <tr key={role.id}>
-                <Can anyOf={[UserPermissions.UPDATE_MUSICAL_ROLE, UserPermissions.DELETE_MUSICAL_ROLE]} musicalBandId={musicalBandId}>
-                  <td>
-                    <div style={{ display: 'flex', gap: '.6rem' }}>
-                      <Can permission={UserPermissions.UPDATE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
-                        <CustomButton onClick={() => handleEdit(role)} variant="tertiary" type="button">
-                          <EditIcon width={24} height={24} />
-                        </CustomButton>
-                      </Can>
-                      <Can permission={UserPermissions.DELETE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
-                        <CustomButton onClick={() => handleDelete(role)} variant="tertiary" type="button">
-                          <DeleteIcon width={24} height={24} />
-                        </CustomButton>
-                      </Can>
-                    </div>
-                  </td>
-                </Can>
-                <td>{role.name}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>) : (
+        <>
+          <div className={stylesResponsive.desktopOnly}>
+            <table>
+              <thead>
+                <tr>
+                  <Can anyOf={[UserPermissions.UPDATE_MUSICAL_ROLE, UserPermissions.DELETE_MUSICAL_ROLE]} musicalBandId={musicalBandId}>
+                    <th>Acciones</th>
+                  </Can>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.content.map((role) => (
+                  <tr key={role.id}>
+                    <Can anyOf={[UserPermissions.UPDATE_MUSICAL_ROLE, UserPermissions.DELETE_MUSICAL_ROLE]} musicalBandId={musicalBandId}>
+                      <td>
+                        <div style={{ display: 'flex', gap: '.6rem' }}>
+                          <Can permission={UserPermissions.UPDATE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
+                            <CustomButton onClick={() => handleEdit(role)} variant="tertiary" type="button">
+                              <EditIcon width={24} height={24} />
+                            </CustomButton>
+                          </Can>
+                          <Can permission={UserPermissions.DELETE_MUSICAL_ROLE} musicalBandId={musicalBandId}>
+                            <CustomButton onClick={() => handleDelete(role)} variant="tertiary" type="button">
+                              <DeleteIcon width={24} height={24} />
+                            </CustomButton>
+                          </Can>
+                        </div>
+                      </td>
+                    </Can>
+                    <td>{role.name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={stylesResponsive.mobileOnly}>
+            <MusicalRolesAccordion
+              data={data}
+              musicalBandId={musicalBandId}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </div>
+        </>
+      ) : (
         <div className="message">
           <h2>¡No se encontraron resultados!</h2>
           <p>Registre un role musical usando el botón Agregar o cambie los valores de su búsqueda</p>

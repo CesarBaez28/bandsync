@@ -1,6 +1,6 @@
 import { handleAsync } from "@/app/lib/utils";
 import Pagination from "../../pagination/Pagination";
-import MusicalRoleTable from "./MusicalRoleTable";
+import MusicalRoleContent from "./MusicalRoleContent";
 import { getMusicalRolesByMusicalBandIdAndName } from "@/app/lib/api/musicalRoles";
 import { ApiResponse, MusicalRole, PagedData } from "@/app/lib/definitions";
 import { UUID } from "node:crypto";
@@ -12,7 +12,7 @@ export type Props = {
   readonly page: number;
 };
 
-export default async function MusicalRolesTableDataProvider({
+export default async function MusicalRolesDataProvider({
   musicalBandId,
   hypName,
   query,
@@ -37,7 +37,7 @@ export default async function MusicalRolesTableDataProvider({
   return <>
     <Pagination totalPages={response?.data?.totalPages ?? 0} />
 
-    <MusicalRoleTable
+    <MusicalRoleContent
       musicalBandId={musicalBandId}
       data={response?.data}
       hypName={hypName}
