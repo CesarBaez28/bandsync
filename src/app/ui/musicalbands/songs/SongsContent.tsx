@@ -1,5 +1,6 @@
 'use client';
 
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
 import { PagedData, Song } from "@/app/lib/definitions";
@@ -8,7 +9,7 @@ import CustomLink from "../../link/CustomLink";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import Modal from "../../modal/Modal";
 import { deleteSongAction, DeleteSongActionState } from "@/app/lib/actions/songs";
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { useRouter } from "next/navigation";
 import { useToast } from "../../toast/ToastContext";
 import { Can } from "../../authorization/Can";
@@ -17,6 +18,7 @@ import EditIcon from "@/public/edit_24dp.svg";
 import DeleteIcon from "@/public/delete_24dp.svg";
 import LinkIcon from "@/public/link_24dp.svg";
 import DocsIcon from "@/public/docs_24dp.svg";
+import SongsAccordion from './SongsAccordion';
 
 type SongsTableProps = {
   readonly data: PagedData<Song> | undefined;
@@ -24,7 +26,7 @@ type SongsTableProps = {
   readonly hypName: string;
 };
 
-export default function SongsTable({ data, musicalBandId, hypName }: SongsTableProps) {
+export default function SongsContent({ data, musicalBandId, hypName }: SongsTableProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
@@ -52,47 +54,61 @@ export default function SongsTable({ data, musicalBandId, hypName }: SongsTableP
   return (
     <div id="modal-root">
       {(data?.content?.length ?? 0) > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Acciones</th>
-              <th>Nombre</th>
-              <th>Artista</th>
-              <th>Género</th>
-              <th>Tonalidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.content.map((song) => (
-              <tr key={song.id}>
-                <td>
-                  <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <Can permission={UserPermissions.UPDATE_SONG} musicalBandId={musicalBandId}>
-                      <CustomLink href={`/musicalbands/${hypName}/songs/${song.id}/edit`} variant="tertiary">
-                        <EditIcon width={24} height={24} />
-                      </CustomLink>
-                    </Can>
-                    <Can permission={UserPermissions.DELETE_SONG} musicalBandId={musicalBandId}>
-                      <CustomButton onClick={() => handleDelete(song)} variant="tertiary" type="button">
-                        <DeleteIcon width={24} height={24} />
-                      </CustomButton>
-                    </Can>
-                    <CustomLink href={song.link} variant="tertiary">
-                      <LinkIcon width={24} height={24} />
-                    </CustomLink>
-                    <CustomLink href={song.sheetMusic} variant="tertiary">
-                      <DocsIcon width={24} height={24} />
-                    </CustomLink>
-                  </div>
-                </td>
-                <td>{song.name}</td>
-                <td>{song.artist.name}</td>
-                <td>{song.genre.name}</td>
-                <td>{song.tonality}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>) : (
+        <>
+          <div className={stylesResponsive.desktopOnly}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Acciones</th>
+                  <th>Nombre</th>
+                  <th>Artista</th>
+                  <th>Género</th>
+                  <th>Tonalidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.content.map((song) => (
+                  <tr key={song.id}>
+                    <td>
+                      <div style={{ display: 'flex', gap: '.6rem' }}>
+                        <Can permission={UserPermissions.UPDATE_SONG} musicalBandId={musicalBandId}>
+                          <CustomLink href={`/musicalbands/${hypName}/songs/${song.id}/edit`} variant="tertiary">
+                            <EditIcon width={24} height={24} />
+                          </CustomLink>
+                        </Can>
+                        <Can permission={UserPermissions.DELETE_SONG} musicalBandId={musicalBandId}>
+                          <CustomButton onClick={() => handleDelete(song)} variant="tertiary" type="button">
+                            <DeleteIcon width={24} height={24} />
+                          </CustomButton>
+                        </Can>
+                        <CustomLink href={song.link} variant="tertiary">
+                          <LinkIcon width={24} height={24} />
+                        </CustomLink>
+                        <CustomLink href={song.sheetMusic} variant="tertiary">
+                          <DocsIcon width={24} height={24} />
+                        </CustomLink>
+                      </div>
+                    </td>
+                    <td>{song.name}</td>
+                    <td>{song.artist.name}</td>
+                    <td>{song.genre.name}</td>
+                    <td>{song.tonality}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={stylesResponsive.mobileOnly}>
+            <SongsAccordion
+              data={data}
+              musicalBandId={musicalBandId}
+              hypName={hypName}
+              onDelete={handleDelete}
+            />
+          </div>
+        </>
+      ) : (
         <div className="message">
           <h2>¡No se encontraron resultados!</h2>
           <p>Registre una canción usando el botón Agregar o cambie los valores de su búsqueda</p>

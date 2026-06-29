@@ -3,7 +3,7 @@ import { ApiResponse, PagedData, Song } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import { UUID } from "node:crypto";
 import Pagination from "../../pagination/Pagination";
-import SongsTable from "./SongsTable";
+import SongsContent from "./SongsContent";
 
 type Props = {
   readonly musicalBandId?: UUID;
@@ -12,7 +12,7 @@ type Props = {
   readonly page: number;
 };
 
-export default async function SongsTableDataProvider({ musicalBandId, hypName, query, page }: Props) {
+export default async function SongsDataProvider({ musicalBandId, hypName, query, page }: Props) {
 
   const [response, error] = await handleAsync<ApiResponse<PagedData<Song>>>(getSongsByMusicalBandIdAndSearchTerm({
     musicalBandId: musicalBandId,
@@ -32,6 +32,6 @@ export default async function SongsTableDataProvider({ musicalBandId, hypName, q
   return <>
     <Pagination totalPages={response?.data?.totalPages ?? 0} />
 
-    <SongsTable data={response?.data} musicalBandId={musicalBandId} hypName={hypName} />
+    <SongsContent data={response?.data} musicalBandId={musicalBandId} hypName={hypName} />
   </>;
 }
