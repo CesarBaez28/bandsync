@@ -3,7 +3,7 @@ import { ApiResponse, Artist, PagedData } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import { UUID } from "node:crypto";
 import Pagination from "../../pagination/Pagination";
-import ArtistTable from "./ArtistsTable";
+import ArtistContent from "./ArtistsContent";
 
 type Props = {
   readonly musicalBandId?: UUID;
@@ -32,7 +32,7 @@ export default async function ArtistsTableDataProvider({ musicalBandId, hypName,
   return <>
     <Pagination totalPages={response?.data?.totalPages ?? 0} />
 
-    <ArtistTable
+    <ArtistContent
       musicalBandId={musicalBandId}
       data={response?.data}
       hypName={hypName}

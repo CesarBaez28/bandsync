@@ -23,13 +23,15 @@ export default function Accordion({ header, actions, defaultOpen = false, childr
           <div className={styles.actions}>
             {actions}
           </div>
-          <ArrowDownIcon className={styles.chevron} />
+          {children && <ArrowDownIcon className={styles.chevron} />}
         </div>
       </summary>
 
-      <div className={styles.content}>
-        {children}
-      </div>
+      {children &&
+        <div className={styles.content}>
+          {children}
+        </div>
+      }
     </details>
   );
 }

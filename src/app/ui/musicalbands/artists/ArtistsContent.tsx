@@ -13,11 +13,13 @@ import Modal from "../../modal/Modal";
 import CustomInput from "../../inputs/CustomInput";
 import stylesForm from "../../../styles/form.module.css"
 import stylesModal from "../../../styles/modal.module.css";
-import { UUID } from "crypto";
+import stylesResponsive from '@/app/styles/responsive.module.css';
+import { UUID } from "node:crypto";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
 import EditIcon from "@/public/edit_24dp.svg";
 import DeleteIcon from "@/public/delete_24dp.svg";
+import ArtistsAccordion from "./ArtistsAccordion";
 
 type ArtistTableProps = {
   readonly data: PagedData<Artist> | undefined;
@@ -25,7 +27,7 @@ type ArtistTableProps = {
   readonly musicalBandId?: UUID;
 };
 
-export default function ArtistTable({ data, hypName, musicalBandId }: ArtistTableProps) {
+export default function ArtistContent({ data, hypName, musicalBandId }: ArtistTableProps) {
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
@@ -102,39 +104,53 @@ export default function ArtistTable({ data, hypName, musicalBandId }: ArtistTabl
 
   return <div className="modal-root">
     {(data?.content?.length ?? 0) > 0 ? (
-      <table>
-        <thead>
-          <tr>
-            <Can anyOf={[UserPermissions.DELETE_ARTIST, UserPermissions.UPDATE_ARTIST]} musicalBandId={musicalBandId}>
-              <th>Acciones</th>
-            </Can>
-            <th>Nombre</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.content.map((artist) => (
-            <tr key={artist.id}>
-              <Can anyOf={[UserPermissions.DELETE_ARTIST, UserPermissions.UPDATE_ARTIST]} musicalBandId={musicalBandId}>
-                <td>
-                  <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <Can permission={UserPermissions.UPDATE_ARTIST} musicalBandId={musicalBandId}>
-                      <CustomButton onClick={() => handleEdit(artist)} variant="tertiary" type="button">
-                        <EditIcon width={24} height={24} />
-                      </CustomButton>
-                    </Can>
-                    <Can permission={UserPermissions.DELETE_ARTIST} musicalBandId={musicalBandId}>
-                      <CustomButton onClick={() => handleDelete(artist)} variant="tertiary" type="button">
-                        <DeleteIcon width={24} height={24} />
-                      </CustomButton>
-                    </Can>
-                  </div>
-                </td>
-              </Can>
-              <td>{artist.name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>) : (
+      <>
+        <div className={stylesResponsive.desktopOnly}>
+          <table>
+            <thead>
+              <tr>
+                <Can anyOf={[UserPermissions.DELETE_ARTIST, UserPermissions.UPDATE_ARTIST]} musicalBandId={musicalBandId}>
+                  <th>Acciones</th>
+                </Can>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.content.map((artist) => (
+                <tr key={artist.id}>
+                  <Can anyOf={[UserPermissions.DELETE_ARTIST, UserPermissions.UPDATE_ARTIST]} musicalBandId={musicalBandId}>
+                    <td>
+                      <div style={{ display: 'flex', gap: '.6rem' }}>
+                        <Can permission={UserPermissions.UPDATE_ARTIST} musicalBandId={musicalBandId}>
+                          <CustomButton onClick={() => handleEdit(artist)} variant="tertiary" type="button">
+                            <EditIcon width={24} height={24} />
+                          </CustomButton>
+                        </Can>
+                        <Can permission={UserPermissions.DELETE_ARTIST} musicalBandId={musicalBandId}>
+                          <CustomButton onClick={() => handleDelete(artist)} variant="tertiary" type="button">
+                            <DeleteIcon width={24} height={24} />
+                          </CustomButton>
+                        </Can>
+                      </div>
+                    </td>
+                  </Can>
+                  <td>{artist.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className={stylesResponsive.mobileOnly}>
+          <ArtistsAccordion
+            data={data}
+            musicalBandId={musicalBandId}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </div>
+      </>
+    ) : (
       <div className="message">
         <h2>¡No se encontraron resultados!</h2>
         <p>Registre un artista usando el botón Agregar o cambie los valores de su búsqueda</p>
