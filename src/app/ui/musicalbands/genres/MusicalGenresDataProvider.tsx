@@ -3,7 +3,7 @@ import { ApiResponse, MusicalGenre, PagedData } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
 import { UUID } from "node:crypto";
 import Pagination from "../../pagination/Pagination";
-import MusicalGenresTable from "./MusicalGenresTable";
+import MusicalGenresContent from "./MusicalGenresContent";
 
 type Props = {
   readonly musicalBandId?: UUID;
@@ -32,6 +32,6 @@ export default async function MusicalGenresTableDataProvider({ musicalBandId, hy
   return <>
     <Pagination totalPages={response?.data?.totalPages ?? 0} />
 
-    <MusicalGenresTable data={response?.data} hypName={hypName} musicalBandId={musicalBandId} />
+    <MusicalGenresContent data={response?.data} hypName={hypName} musicalBandId={musicalBandId} />
   </>;
 }

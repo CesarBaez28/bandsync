@@ -1,5 +1,6 @@
 'use client';
 
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import stylesForm from "../../../styles/form.module.css";
 import { MusicalGenre, PagedData } from "@/app/lib/definitions";
 import { useRouter } from "next/navigation";
@@ -13,11 +14,12 @@ import Modal from "../../modal/Modal";
 import CustomButton from "../../button/CustomButton";
 import CustomInput from "../../inputs/CustomInput";
 import stylesModal from "../../../styles/modal.module.css";
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { Can } from "../../authorization/Can";
 import { UserPermissions } from "@/app/lib/permisions";
 import EditIcon from "@/public/edit_24dp.svg";
 import DeleteIcon from "@/public/delete_24dp.svg";
+import MusicalGenresAccordion from './MusicalGenresAccordion';
 
 type MusicalGenresTableProps = {
   readonly data: PagedData<MusicalGenre> | undefined;
@@ -25,7 +27,7 @@ type MusicalGenresTableProps = {
   readonly musicalBandId?: UUID;
 };
 
-export default function MusicalGenresTable({ data, hypName, musicalBandId }: MusicalGenresTableProps) {
+export default function MusicalGenresContent({ data, hypName, musicalBandId }: MusicalGenresTableProps) {
   const [selectedMusicalGenre, setSelectedMusicalGenre] = useState<MusicalGenre | null>(null);
   const router = useRouter();
   const { showToast } = useToast();
@@ -101,39 +103,53 @@ export default function MusicalGenresTable({ data, hypName, musicalBandId }: Mus
 
   return <div className="modal-root">
     {(data?.content?.length ?? 0) > 0 ? (
-      <table>
-        <thead>
-          <tr>
-            <Can anyOf={[UserPermissions.UPDATE_MUSICAL_GENRE, UserPermissions.DELETE_MUSICAL_GENRE]} musicalBandId={musicalBandId}>
-              <th>Acciones</th>
-            </Can>
-            <th>Nombre</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.content.map((musicalGenre) => (
-            <tr key={musicalGenre.id}>
-              <Can anyOf={[UserPermissions.UPDATE_MUSICAL_GENRE, UserPermissions.DELETE_MUSICAL_GENRE]} musicalBandId={musicalBandId}>
-                <td>
-                  <div style={{ display: 'flex', gap: '.6rem' }}>
-                    <Can permission={UserPermissions.UPDATE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
-                      <CustomButton onClick={() => handleEdit(musicalGenre)} variant="tertiary" type="button">
-                        <EditIcon width={24} height={24} />
-                      </CustomButton>
-                    </Can>
-                    <Can permission={UserPermissions.DELETE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
-                      <CustomButton onClick={() => handleDelete(musicalGenre)} variant="tertiary" type="button">
-                        <DeleteIcon width={24} height={24} />
-                      </CustomButton>
-                    </Can>
-                  </div>
-                </td>
-              </Can>
-              <td>{musicalGenre.name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>) : (
+      <>
+        <div className={stylesResponsive.desktopOnly}>
+          <table>
+            <thead>
+              <tr>
+                <Can anyOf={[UserPermissions.UPDATE_MUSICAL_GENRE, UserPermissions.DELETE_MUSICAL_GENRE]} musicalBandId={musicalBandId}>
+                  <th>Acciones</th>
+                </Can>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.content.map((musicalGenre) => (
+                <tr key={musicalGenre.id}>
+                  <Can anyOf={[UserPermissions.UPDATE_MUSICAL_GENRE, UserPermissions.DELETE_MUSICAL_GENRE]} musicalBandId={musicalBandId}>
+                    <td>
+                      <div style={{ display: 'flex', gap: '.6rem' }}>
+                        <Can permission={UserPermissions.UPDATE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
+                          <CustomButton onClick={() => handleEdit(musicalGenre)} variant="tertiary" type="button">
+                            <EditIcon width={24} height={24} />
+                          </CustomButton>
+                        </Can>
+                        <Can permission={UserPermissions.DELETE_MUSICAL_GENRE} musicalBandId={musicalBandId}>
+                          <CustomButton onClick={() => handleDelete(musicalGenre)} variant="tertiary" type="button">
+                            <DeleteIcon width={24} height={24} />
+                          </CustomButton>
+                        </Can>
+                      </div>
+                    </td>
+                  </Can>
+                  <td>{musicalGenre.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className={stylesResponsive.mobileOnlys}>
+          <MusicalGenresAccordion
+            data={data}
+            musicalBandId={musicalBandId}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </div>
+      </>
+    ) : (
       <div className="message">
         <h2>¡No se encontraron resultados!</h2>
         <p>Registre un género musical usando el botón Agregar o cambie los valores de su búsqueda</p>
