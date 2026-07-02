@@ -1,5 +1,6 @@
 'use client';
 
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import stylesForm from '../../../styles/form.module.css'
 import stylesModal from '../../../styles/modal.module.css';
 import { Role, User, UserRole, UserRolesAndPermissions } from "@/app/lib/definitions";
@@ -20,6 +21,7 @@ import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
 import EditIcon from '@/public/edit_24dp.svg'
 import DeleteIcon from '@/public/delete_24dp.svg'
+import UsersRolesAccordion from './UsersRolesAccordion';
 
 type Props = {
   readonly hypName: string;
@@ -160,13 +162,14 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
 
   return (
     <div id="modal-root">
-      <section>
 
-        <Can permission={UserPermissions.ASSIGN_ROLE} musicalBandId={musicalBandId}>
-          <CustomButton onClick={() => setOpenAssignModal(true)} type='button' style={{ marginBottom: '1rem' }}>
-            Agregar usuario
-          </CustomButton>
-        </Can>
+      <Can permission={UserPermissions.ASSIGN_ROLE} musicalBandId={musicalBandId}>
+        <CustomButton onClick={() => setOpenAssignModal(true)} type='button' style={{ marginBottom: '1rem' }}>
+          Agregar usuario
+        </CustomButton>
+      </Can>
+      
+      <div className={stylesResponsive.desktopOnly}>
 
         <table>
           <thead>
@@ -207,7 +210,18 @@ export default function UsersRolesContent({ currentUserId, users, usersRoles, ro
             ))}
           </tbody>
         </table>
-      </section>
+      </div>
+
+      <div className={stylesResponsive.mobileOnly}>
+        <UsersRolesAccordion
+          currentUserRole={currentUserRole}
+          currentUserId={currentUserId}
+          usersRoles={usersRoles}
+          musicalBandId={musicalBandId}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
 
       <Modal
         size="sm"
