@@ -1,11 +1,13 @@
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import styles from './repertoires.module.css'
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import InputContainer from "@/app/ui/musicalbands/repertoires/InputContainer";
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import TableSkeleton from '@/app/ui/skeletons/TableSkeleton';
 import PaginationSkeleton from '@/app/ui/skeletons/PaginationSkeleton';
-import RepertoiresTableDataProvider from '@/app/ui/musicalbands/repertoires/RepertoiresTableDataProvider';
+import RepertoiresDataProvider from '@/app/ui/musicalbands/repertoires/RepertoiresDataProvider';
+import AccordionSkeleton from '@/app/ui/skeletons/AccordionSkeleton';
 
 type RepertoiresPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -38,10 +40,18 @@ export default async function RepertoiresPage(props: RepertoiresPageProps) {
         <Suspense fallback={
           <>
             <PaginationSkeleton showArrows={false} pages={3} />
-            <TableSkeleton columns={3} rows={6} />
+            <div className={stylesResponsive.desktopOnly}>
+              <TableSkeleton columns={6} rows={6} />
+            </div>
+
+            <div className={stylesResponsive.mobileOnly}>
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+            </div>
           </>
         }>
-          <RepertoiresTableDataProvider
+          <RepertoiresDataProvider
             musicalBandId={musicalBand?.id}
             hypName={hypName}
             query={query}

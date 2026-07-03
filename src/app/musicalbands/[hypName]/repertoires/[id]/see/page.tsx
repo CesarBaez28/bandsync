@@ -3,12 +3,12 @@ import styles from '../../repertoires.module.css';
 import { getRepertoireById, getRepertoireSongs } from "@/app/lib/api/repertoires";
 import { ApiResponse, Repertoire, Song } from "@/app/lib/definitions";
 import { handleAsync } from "@/app/lib/utils";
-import RepertoireSongsTable from '@/app/ui/musicalbands/repertoires/SeeRepertoireSongsTable';
+import RepertoireSongs from '@/app/ui/musicalbands/repertoires/SeeRepertoireSongs';
 import { UUID } from "node:crypto";
 import { Metadata } from 'next';
 
 type Props = {
-  params: Promise<{ hypName: string; id: UUID }>;
+  readonly params: Promise<{ hypName: string; id: UUID }>;
 }
 
 export const metadata: Metadata = {
@@ -37,7 +37,7 @@ export default async function SeeRepertoireSongsPage(props: Props) {
             <p>Hubo un error al cargar la página. Intente refrescar la página o vuelva a visitar la página más tarde.</p>
           </div>
           : (
-            <RepertoireSongsTable songs={songs?.data} />
+            <RepertoireSongs songs={songs?.data} />
           )
         }
       </main>

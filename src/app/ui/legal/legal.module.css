@@ -1,0 +1,80 @@
+.page {
+  display: flex;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-100);
+  border-radius: 8px;
+
+  padding: clamp(1.5rem, 5vw, 4rem);
+
+  box-shadow: 0 6px 20px rgb(0 0 0 / 8%);
+}
+
+.header h1 {
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: .5rem;
+}
+
+.updated {
+  margin-bottom: 1rem;
+}
+
+.section {
+  margin-bottom: 1rem;
+}
+
+.section h2 {
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
+  margin-bottom: 1rem;
+}
+
+.section h3 {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  margin: 2rem 0 .75rem;
+}
+
+.section p {
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.section ul {
+  padding-left: 1.4rem;
+}
+
+.section li {
+  margin-bottom: .75rem;
+  line-height: 1.8;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: .75rem;
+  }
+
+  .container {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 1.25rem;
+  }
+
+  .updated {
+    margin-bottom: 2rem;
+  }
+}

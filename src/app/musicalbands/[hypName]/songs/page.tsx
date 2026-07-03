@@ -1,11 +1,13 @@
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import styles from './songs.module.css'
 import InputContainer from '@/app/ui/musicalbands/songs/InputContainer';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import SongsTableDataProvider from '@/app/ui/musicalbands/songs/SongsTableDataProvider';
+import SongsDataProvider from '@/app/ui/musicalbands/songs/SongsDataProvider';
 import PaginationSkeleton from '@/app/ui/skeletons/PaginationSkeleton';
 import TableSkeleton from '@/app/ui/skeletons/TableSkeleton';
+import AccordionSkeleton from '@/app/ui/skeletons/AccordionSkeleton';
 
 type SongsPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -38,10 +40,18 @@ export default async function SongsPage(props: SongsPageProps) {
         <Suspense fallback={
           <>
             <PaginationSkeleton showArrows={false} pages={3} />
-            <TableSkeleton columns={5} rows={6} />
+            <div className={stylesResponsive.desktopOnly}>
+              <TableSkeleton columns={6} rows={6} />
+            </div>
+
+            <div className={stylesResponsive.mobileOnly}>
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+            </div>
           </>
         }>
-          <SongsTableDataProvider
+          <SongsDataProvider
             musicalBandId={musicalBand?.id}
             hypName={hypName}
             query={query} page={Number(page)}

@@ -1,11 +1,13 @@
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import styles from './artists.module.css';
 import InputContainer from "@/app/ui/musicalbands/artists/InputContainer";
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import ArtistsTableDataProvider from '@/app/ui/musicalbands/artists/ArtistsTableDataProvider';
+import ArtistsTableDataProvider from '@/app/ui/musicalbands/artists/ArtistsDataProvider';
 import PaginationSkeleton from '@/app/ui/skeletons/PaginationSkeleton';
 import TableSkeleton from '@/app/ui/skeletons/TableSkeleton';
+import AccordionSkeleton from '@/app/ui/skeletons/AccordionSkeleton';
 
 type ArtistPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -38,7 +40,15 @@ export default async function ArtistsPage(props: ArtistPageProps) {
         <Suspense fallback={
           <>
             <PaginationSkeleton showArrows={false} pages={3} />
-            <TableSkeleton columns={2} rows={6} />
+            <div className={stylesResponsive.desktopOnly}>
+              <TableSkeleton columns={2} rows={6} />
+            </div>
+
+            <div className={stylesResponsive.mobileOnly}>
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+              <AccordionSkeleton />
+            </div>
           </>
         }>
           <ArtistsTableDataProvider

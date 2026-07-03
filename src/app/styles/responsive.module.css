@@ -1,0 +1,41 @@
+.desktopOnly {
+  display: block;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+.rowAlignCenter {
+  display: flex;
+  gap: .5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.descriptionText {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+@media (max-width: 768px) {
+  .desktopOnly {
+    display: none;
+  }
+  .mobileOnly {
+    display: block;
+  }
+  .stackOnMobile {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .rowAlignCenter {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+  }
+}

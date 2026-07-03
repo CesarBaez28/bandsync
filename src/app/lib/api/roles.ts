@@ -193,7 +193,7 @@ export async function updateRoleAndPermissions({ musicalBandId, roleId, newName,
     throw new Error(result.message);
   }
 
-  return await response.json();
+  return result;
 }
 
 export type UpdateUserRoleProps = {
@@ -257,13 +257,13 @@ export async function deleteRoleById({ musicalBandId, roleId }: DeleteRoleByIdPr
     headers,
   });
 
-  const result: ApiResponse<void> = await response.json();
+  const result: ApiResponse<User[]> = await response.json();
 
   if (!result.success) {
     throw new Error(result.message);
   }
 
-  return await response.json();
+  return result;
 }
 
 export async function deleteUserRole({ musicalBandId, userId }: { musicalBandId: UUID; userId: UUID }): Promise<ApiResponse<void>> {

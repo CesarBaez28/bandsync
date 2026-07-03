@@ -1,4 +1,4 @@
-import { UUID } from "crypto";
+import { UUID } from "node:crypto";
 import { config } from "../config";
 import { ApiResponse, MusicalBand, MusicalBandInfo } from "../definitions";
 import { auth } from "@/auth";
@@ -79,7 +79,13 @@ export async function saveMusicalBand(formData: FormData): Promise<ApiResponse<M
     body: formData
   });
 
-  return await response.json();
+  const result: ApiResponse<MusicalBand> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error saving musical band");
+  }
+
+  return result;
 }
 
 export type InvitationProps = {
@@ -110,7 +116,13 @@ export async function sendInvitationEmail({ email, user, musicalBandId }: Invita
     body: JSON.stringify({ email, invitedBy: user })
   });
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error sending invitation");
+  }
+
+  return result;
 }
 
 export async function updateMusicalBand(musicalBandId: UUID, formData: FormData): Promise<ApiResponse<MusicalBandInfo>> {
@@ -132,7 +144,13 @@ export async function updateMusicalBand(musicalBandId: UUID, formData: FormData)
     body: formData
   });
 
-  return await response.json();
+  const result: ApiResponse<MusicalBandInfo> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error updating musical band");
+  }
+
+  return result;
 }
 
 export async function deleteMusicalBand({ musicalBandId }: { musicalBandId: UUID }): Promise<ApiResponse<void>> {
@@ -153,5 +171,11 @@ export async function deleteMusicalBand({ musicalBandId }: { musicalBandId: UUID
     headers
   });
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error deleting musical band");
+  }
+
+  return result;
 }

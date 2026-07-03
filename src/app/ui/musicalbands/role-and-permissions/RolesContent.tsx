@@ -1,5 +1,6 @@
 'use client';
 
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import styles from './roles-content.module.css';
 import stylesForm from '../../../styles/form.module.css';
 import stylesModal from '../../../styles/modal.module.css'
@@ -20,6 +21,7 @@ import { Can } from '../../authorization/Can';
 import { UserPermissions } from '@/app/lib/permisions';
 import EditIcon from '@/public/edit_24dp.svg'
 import DeleteIcon from '@/public/delete_24dp.svg'
+import RolesAccordion from './RolesAccordion';
 
 type Props = {
   readonly hypName: string;
@@ -229,7 +231,7 @@ export default function RolesContent({ hypName, musicalBandId, rolesAndPermissio
         </CustomButton>
       </Can>
 
-      <section>
+      <div className={stylesResponsive.desktopOnly}>
         <table>
           <thead>
             <tr>
@@ -263,8 +265,17 @@ export default function RolesContent({ hypName, musicalBandId, rolesAndPermissio
             ))}
           </tbody>
         </table>
+      </div>
 
-      </section>
+      <div className={stylesResponsive.mobileOnly}>
+        <RolesAccordion
+          musicalBandId={musicalBandId}
+          rolesAndPermissions={rolesAndPermissions}
+          currentUserRole={currentUserRole}
+          onEdit={handleEditRole}
+          onDelete={handleDelete}
+        />
+      </div>
 
       <Modal
         size={isMobile ? "sm" : "md"}
@@ -372,7 +383,7 @@ export default function RolesContent({ hypName, musicalBandId, rolesAndPermissio
       <Modal
         size="sm"
         isOpen={openDeleteModal}
-        title="Eliminar Canción"
+        title="Eliminar Role"
       >
         <form action={formActionDelete} className={stylesModal.modalContent}>
 

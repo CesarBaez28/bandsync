@@ -1,11 +1,13 @@
+import stylesResponsive from '@/app/styles/responsive.module.css';
 import styles from './genres.module.css'
 import InputContainer from '@/app/ui/musicalbands/genres/InputContainer';
 import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import MusicalGenresTableDataProvider from '@/app/ui/musicalbands/genres/MusicalGenresTableDataProvider';
+import MusicalGenresTableDataProvider from '@/app/ui/musicalbands/genres/MusicalGenresDataProvider';
 import PaginationSkeleton from '@/app/ui/skeletons/PaginationSkeleton';
 import TableSkeleton from '@/app/ui/skeletons/TableSkeleton';
+import AccordionSkeleton from '@/app/ui/skeletons/AccordionSkeleton';
 
 type GenresPageProps = {
   params: Promise<{ hypName: string; }>;
@@ -39,7 +41,15 @@ export default async function GenresPage(props: GenresPageProps) {
           <Suspense fallback={
             <>
               <PaginationSkeleton showArrows={false} pages={3} />
-              <TableSkeleton columns={2} rows={6} />
+              <div className={stylesResponsive.desktopOnly}>
+                <TableSkeleton columns={2} rows={6} />
+              </div>
+
+              <div className={stylesResponsive.mobileOnly}>
+                <AccordionSkeleton />
+                <AccordionSkeleton />
+                <AccordionSkeleton />
+              </div>
             </>
           }>
             <MusicalGenresTableDataProvider

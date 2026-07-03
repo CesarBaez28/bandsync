@@ -152,115 +152,117 @@ export default function SideNav({ hypName, musicalBandId }: { readonly hypName: 
 
   if (!mounted) return null;
 
-  return <>
-    <AnimatePresence>
-      {isMobile && !isCollapsed && (
-        <motion.div
-          className={styles.overlay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setCollapsed(true)}
-        />
-      )}
-    </AnimatePresence>
+  return (
+    <div>
+      <AnimatePresence>
+        {isMobile && !isCollapsed && (
+          <motion.div
+            className={styles.overlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setCollapsed(true)}
+          />
+        )}
+      </AnimatePresence>
 
-    <motion.nav
-      className={clsx(styles.sideNav, {
-        [styles.collapsed]: isCollapsed && !isMobile,
-        [styles.open]: !isCollapsed
-      })}
-      animate={mounted ? { width: isCollapsed ? 0 : 240 } : false}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    >
-      {!isCollapsed && (
-        <motion.ul
-          className={styles.navList}
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
-        >
-          {navItems.map((item) => {
-            const isActive = item.href === pathname;
-            const icon = item.icon;
+      <motion.nav
+        className={clsx(styles.sideNav, {
+          [styles.collapsed]: isCollapsed && !isMobile,
+          [styles.open]: !isCollapsed
+        })}
+        animate={mounted ? { width: isCollapsed ? 0 : 250 } : false}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      >
+        {!isCollapsed && (
+          <motion.ul
+            className={styles.navList}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+          >
+            {navItems.map((item) => {
+              const isActive = item.href === pathname;
+              const icon = item.icon;
 
-            const hasItemPermission = item.permission ? hasPermission(item.permission, musicalBandId) : true;
+              const hasItemPermission = item.permission ? hasPermission(item.permission, musicalBandId) : true;
 
-            if (!hasItemPermission) return null;
+              if (!hasItemPermission) return null;
 
-            return (
-              <li key={item.label} className={styles.navItem}>
-                {item.subItems ? (
-                  <>
-                    <CustomButton
-                      style={{ justifyContent: 'space-between', textAlign: 'left' }}
+              return (
+                <li key={item.label} className={styles.navItem}>
+                  {item.subItems ? (
+                    <>
+                      <CustomButton
+                        style={{ justifyContent: 'space-between', textAlign: 'left' }}
+                        variant='tertiary'
+                        fullWidth
+                        type="button"
+                        onClick={() => toggleMenu(item.label)}
+                        aria-expanded={openMenus[item.label] ?? false}
+                      >
+                        <span className={styles.navButtonContainer}>
+                          {icon ?? icon}
+                          {item.label}
+                        </span>
+                        <span className={styles.chevronIcon}>
+                          {openMenus[item.label]
+                            ? <ArrowDownIcon />
+                            : <ArrowRightIcon />
+                          }
+                        </span>
+                      </CustomButton>
+
+                      {openMenus[item.label] && (
+                        <ul className={styles.subNavList}>
+                          {item.subItems.map((subItem) => {
+
+                            const hasSubItemPermission = subItem.permission ? hasPermission(subItem.permission, musicalBandId) : true;
+
+                            if (!hasSubItemPermission) return null;
+
+                            const subIcon = subItem.icon;
+
+                            const isSubActive = subItem.href === pathname;
+                            return (
+                              <li key={subItem.label} className={styles.subNavItem}>
+                                <CustomLink
+                                  style={{ textDecoration: 'none', fontSize: '0.9rem' }}
+                                  variant='tertiary'
+                                  href={subItem.href}
+                                  className={clsx({ [styles.activeLink]: isSubActive })}
+                                >
+                                  <span className={styles.navButtonContainer}>
+                                    {subIcon ?? subIcon}
+                                    {subItem.label}
+                                  </span>
+                                </CustomLink>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </>
+                  ) : (
+                    <CustomLink
+                      style={{ textDecoration: 'none', fontSize: '0.9rem' }}
                       variant='tertiary'
-                      fullWidth
-                      type="button"
-                      onClick={() => toggleMenu(item.label)}
-                      aria-expanded={openMenus[item.label] ?? false}
+                      href={item.href!}
+                      className={clsx({ [styles.activeLink]: isActive })}
                     >
                       <span className={styles.navButtonContainer}>
                         {icon ?? icon}
                         {item.label}
                       </span>
-                      <span className={styles.chevronIcon}>
-                        {openMenus[item.label]
-                          ? <ArrowDownIcon />
-                          : <ArrowRightIcon />
-                        }
-                      </span>
-                    </CustomButton>
-
-                    {openMenus[item.label] && (
-                      <ul className={styles.subNavList}>
-                        {item.subItems.map((subItem) => {
-
-                          const hasSubItemPermission = subItem.permission ? hasPermission(subItem.permission, musicalBandId) : true;
-
-                          if (!hasSubItemPermission) return null;
-
-                          const subIcon = subItem.icon;
-
-                          const isSubActive = subItem.href === pathname;
-                          return (
-                            <li key={subItem.label} className={styles.subNavItem}>
-                              <CustomLink
-                                style={{ textDecoration: 'none', fontSize: '0.9rem' }}
-                                variant='tertiary'
-                                href={subItem.href}
-                                className={clsx({ [styles.activeLink]: isSubActive })}
-                              >
-                                <span className={styles.navButtonContainer}>
-                                  {subIcon ?? subIcon}
-                                  {subItem.label}
-                                </span>
-                              </CustomLink>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </>
-                ) : (
-                  <CustomLink
-                    style={{ textDecoration: 'none', fontSize: '0.9rem' }}
-                    variant='tertiary'
-                    href={item.href!}
-                    className={clsx({ [styles.activeLink]: isActive })}
-                  >
-                    <span className={styles.navButtonContainer}>
-                      {icon ?? icon}
-                      {item.label}
-                    </span>
-                  </CustomLink>
-                )}
-              </li>
-            );
-          })}
-        </motion.ul>
-      )}
-    </motion.nav>
-  </>;
+                    </CustomLink>
+                  )}
+                </li>
+              );
+            })}
+          </motion.ul>
+        )}
+      </motion.nav>
+    </div>
+  );
 }

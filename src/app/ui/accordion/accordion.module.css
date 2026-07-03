@@ -1,0 +1,65 @@
+.accordion {
+  background: var(--color-white-100);
+  border-radius: 8px;
+  padding: .75rem;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  cursor: pointer;
+  padding: .35rem 0;
+}
+
+.summaryLeft {
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-overflow: ellipsis;
+}
+
+.summaryRight {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  gap: .4rem;
+  align-items: center;
+}
+
+.chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+  color: var(--color-text);
+}
+
+.accordion[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.content {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  margin-top: .5rem;
+  display: block;
+}
+
+/* Remove default marker for summary */
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion summary {
+  list-style: none;
+}
+
+.summaryLeft>* {
+  min-width: 0;
+}

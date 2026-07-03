@@ -54,5 +54,11 @@ export async function assignRolesToUser({ userId, musicalBandId, roleIds }: Assi
     body: JSON.stringify(roleIds)
   });
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error assigning roles to user");
+  }
+
+  return result;
 }

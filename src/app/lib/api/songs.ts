@@ -108,7 +108,13 @@ export async function createSong(formData: FormData, musicalBandId: string): Pro
     body: formData
   });
 
-  return await response.json();
+  const result: ApiResponse<Song> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || 'Error creating song');
+  }
+
+  return result;
 }
 
 export async function updateSongById(formData: FormData, id: number, musicalBandId: string): Promise<ApiResponse<Song>> {
@@ -130,7 +136,13 @@ export async function updateSongById(formData: FormData, id: number, musicalBand
     body: formData
   });
 
-  return await response.json();
+  const result: ApiResponse<Song> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || 'Error updating song');
+  }
+
+  return result;
 }
 
 export async function deleteSongById({ id, musicalBandId }: { id: number, musicalBandId: string }): Promise<ApiResponse<void>> {

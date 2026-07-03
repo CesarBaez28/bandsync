@@ -94,7 +94,13 @@ export async function createArtist({ name, musicalBandId }: CreateArtistParams):
     body: JSON.stringify({ name, musicalBandId }),
   });
 
-  return await response.json();
+  const result: ApiResponse<Artist> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while creating artist");
+  }
+
+  return result;
 }
 
 export async function updateArtistById({ name, id, musicalBandId }: { name: string; id: number; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
@@ -118,7 +124,13 @@ export async function updateArtistById({ name, id, musicalBandId }: { name: stri
     body: JSON.stringify({ name })
   })
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while updating artist");
+  }
+
+  return result;
 }
 
 export default async function deleteArtistById({ id, musicalBandId }: { id: number; musicalBandId: UUID | undefined }): Promise<ApiResponse<void>> {
@@ -142,5 +154,11 @@ export default async function deleteArtistById({ id, musicalBandId }: { id: numb
     headers,
   })
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while deleting artist");
+  }
+
+  return result;
 }

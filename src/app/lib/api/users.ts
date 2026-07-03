@@ -1,7 +1,7 @@
 import { UUID } from "node:crypto";
 import { UserInfo } from "../actions/users";
 import { config } from "../config";
-import { ApiResponse, MusicalBand, MusicalBandDeletionCheck, PagedData, User } from "@/app/lib/definitions";
+import { ApiResponse, MusicalBandDeletionCheck, PagedData, User } from "@/app/lib/definitions";
 import { auth } from "@/auth";
 import { TransferSelection } from "@/app/ui/delete-account/DeleteAccountContent";
 
@@ -19,7 +19,7 @@ export async function registerUser({
   email,
   password,
   repeatedPassword,
-}: RegisterUserParams): Promise<ApiResponse<MusicalBand>> {
+}: RegisterUserParams): Promise<ApiResponse<void>> {
 
   const response = await fetch(`${config.api}/${USER_PATH}/register`, {
     method: 'POST',
@@ -29,7 +29,13 @@ export async function registerUser({
     body: JSON.stringify({ username, email, password, repeatedPassword }),
   });
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while registering a new user")
+  }
+
+  return result;
 }
 
 type RegisterUserFromInvitationParams = {
@@ -46,7 +52,7 @@ export async function registerUserFromInvitation({
   password,
   repeatedPassword,
   token
-}: RegisterUserFromInvitationParams): Promise<ApiResponse<MusicalBand>> {
+}: RegisterUserFromInvitationParams): Promise<ApiResponse<void>> {
 
   const response = await fetch(`${config.api}/${USER_PATH}/register/${token}`, {
     method: 'POST',
@@ -56,7 +62,13 @@ export async function registerUserFromInvitation({
     body: JSON.stringify({ username, email, password, repeatedPassword }),
   });
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while registering a new user");
+  }
+
+  return result;
 }
 
 export async function getUserById(): Promise<ApiResponse<User>> {
@@ -95,7 +107,13 @@ export async function updateUser(formData: FormData): Promise<ApiResponse<UserIn
     body: formData
   });
 
-  return await response.json();
+  const result: ApiResponse<UserInfo> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error updating user");
+  }
+
+  return result;
 }
 
 type GetUsersByMusicalBandIdProps = {
@@ -124,7 +142,13 @@ export async function getUsersByMusicalBandId({ musicalBandId, query, page }: Ge
     headers
   });
 
-  return await response.json();
+  const result: ApiResponse<PagedData<User>> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error getting users");
+  }
+
+  return result;
 }
 
 export async function getAllUsersByMusicalBandId({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<User[]>> {
@@ -147,7 +171,13 @@ export async function getAllUsersByMusicalBandId({ musicalBandId }: { musicalBan
     headers
   });
 
-  return await response.json();
+  const result: ApiResponse<User[]> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || 'Error getting users by musical band id')
+  }
+
+  return result;
 }
 
 export async function leaveMusicalBand(userId: UUID, musicalBandId: UUID): Promise<ApiResponse<void>> {
@@ -165,7 +195,13 @@ export async function leaveMusicalBand(userId: UUID, musicalBandId: UUID): Promi
     }
   });
 
-  return await response.json();
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || 'Error leaving musical band');
+  }
+
+  return result;
 }
 
 export type ChangePasswordRequest = {

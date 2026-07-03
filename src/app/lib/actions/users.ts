@@ -2,7 +2,7 @@
 
 import { auth, unstable_update } from "@/auth";
 import { changePassword, ChangePasswordRequest, deleteAccount, isNeedToAssignAdminRoleBeforeDeletion, leaveMusicalBand, registerUser, registerUserFromInvitation, transferAndDeleteAccount, updateUser } from "../api/users";
-import { ApiResponse, MusicalBand } from "../definitions";
+import { ApiResponse } from "../definitions";
 import { editUserSchema } from "../schemas/editUserSchema";
 import { formRegisterSchema } from "../schemas/formRegisterSchema";
 import { handleAsync } from "../utils";
@@ -49,13 +49,13 @@ export async function registerAction(prevState: RegisterUserState, formData: For
 
   const token = formData.get("token") as string;
 
-  let response: ApiResponse<MusicalBand> | null;
+  let response: ApiResponse<void> | null;
   let error: Error | null;
 
   if (token === '') {
-    [response, error] = await handleAsync<ApiResponse<MusicalBand>>(registerUser(requestBody));
+    [response, error] = await handleAsync<ApiResponse<void>>(registerUser(requestBody));
   } else {
-    [response, error] = await handleAsync<ApiResponse<MusicalBand>>(registerUserFromInvitation({ ...requestBody, token }));
+    [response, error] = await handleAsync<ApiResponse<void>>(registerUserFromInvitation({ ...requestBody, token }));
   }
 
   if (error) {
