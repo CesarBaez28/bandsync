@@ -1,7 +1,7 @@
 'use client';
 
 import Link, { LinkProps } from 'next/link';
-import { CSSProperties, ReactNode } from 'react';
+import { AnchorHTMLAttributes, CSSProperties, ReactNode } from 'react';
 import clsx from 'clsx';
 import styles from './custom-link.module.css';
 
@@ -14,6 +14,9 @@ type CustomLinkProps = LinkProps & {
   variant?: 'primary' | 'secondary' | 'tertiary';
   fullWidth?: boolean;
   buttonStyle?: boolean;
+  target?: AnchorHTMLAttributes<HTMLAnchorElement>['target'];
+  rel?: AnchorHTMLAttributes<HTMLAnchorElement>['rel'];
+  newTab?: boolean;
 };
 
 export default function CustomLink({
@@ -26,6 +29,9 @@ export default function CustomLink({
   variant = 'primary',
   fullWidth = false,
   buttonStyle = false,
+  target,
+  rel,
+  newTab = false,
   ...props
 }: CustomLinkProps) {
   const linkClassName = clsx(
@@ -38,8 +44,18 @@ export default function CustomLink({
     className
   );
 
+  const resolvedTarget = target ?? (newTab ? '_blank' : undefined);
+  const resolvedRel = rel ?? (newTab ? 'noopener noreferrer' : undefined);
+
   return (
-    <Link href={href} className={linkClassName} style={style} {...props}>
+    <Link
+      href={href}
+      className={linkClassName}
+      style={style}
+      target={resolvedTarget}
+      rel={resolvedRel}
+      {...props}
+    >
       {iconLeft && <span className={styles.iconLeft}>{iconLeft}</span>}
       {children}
       {iconRight && <span className={styles.iconRight}>{iconRight}</span>}

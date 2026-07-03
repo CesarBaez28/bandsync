@@ -140,7 +140,7 @@ export default function MusicalGenresContent({ data, hypName, musicalBandId }: M
           </table>
         </div>
 
-        <div className={stylesResponsive.mobileOnlys}>
+        <div className={stylesResponsive.mobileOnly}>
           <MusicalGenresAccordion
             data={data}
             musicalBandId={musicalBandId}
