@@ -23,7 +23,7 @@ export default function RepertoiresSongsAccordion({ songs }: Props) {
           )}
           actions={(
             <>
-              <CustomLink href={song.link} variant="tertiary">
+              <CustomLink href={song.link} variant="tertiary" newTab>
                 <LinkIcon width={24} height={24} />
               </CustomLink>
               <CustomLink href={song.sheetMusic} variant="tertiary">

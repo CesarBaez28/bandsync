@@ -81,7 +81,7 @@ export default function SongsContent({ data, musicalBandId, hypName }: SongsTabl
                             <DeleteIcon width={24} height={24} />
                           </CustomButton>
                         </Can>
-                        <CustomLink href={song.link} variant="tertiary">
+                        <CustomLink href={song.link} variant="tertiary" newTab>
                           <LinkIcon width={24} height={24} />
                         </CustomLink>
                         <CustomLink href={song.sheetMusic} variant="tertiary">

@@ -41,7 +41,7 @@ export default function RepertoiresAccordion({ data, musicalBandId, hypName, onD
                   <DeleteIcon width={24} height={24} />
                 </CustomButton>
               </Can>
-              <CustomLink href={repertoire.link} variant="tertiary">
+              <CustomLink href={repertoire.link} variant="tertiary" newTab>
                 <LinkIcon width={24} height={24} />
               </CustomLink>
               <CustomLink href={`/musicalbands/${hypName}/repertoires/${repertoire.id}/see`} variant="tertiary">
