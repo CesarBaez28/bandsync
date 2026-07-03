@@ -1,5 +1,5 @@
 import TwoFactorForm from "@/app/ui/two-factor/TwoFactorForm";
-import styles from '@/app/two-factor/verify/verify.module.css'
+import styles from './verify.module.css';
 import { Footer } from "@/app/ui/footer/Footer";
 import { Metadata } from "next";
 

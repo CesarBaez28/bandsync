@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import styles from '@/app/reset-password/reset-password.module.css'
+import styles from './reset-password.module.css'
 import HomeHeader from "@/app/ui/header/HomeHeader";
 import ResetPasswordForm from "@/app/ui/reset-password/ResetPasswordForm";
 
