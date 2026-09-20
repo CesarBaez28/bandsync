@@ -1,3 +1,5 @@
+'use server';
+
 import { UUID } from "crypto";
 import { ApiResponse, PagedData, Repertoire, Song } from "../definitions";
 import { config } from "../config";

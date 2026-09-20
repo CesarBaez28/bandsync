@@ -18,6 +18,13 @@ export const UserPermissions = {
   DELETE_REPERTOIRE: 'Eliminar repertorio',
 
   // =========================
+  // Setlists (Setlists)
+  // =========================
+  ADD_SETLIST: 'Agregar setlist',
+  UPDATE_SETLIST: 'Modificar setlist',
+  DELETE_SETLIST: 'Eliminar setlist',
+
+  // =========================
   // Events (Eventos)
   // =========================
   ADD_EVENT: 'Agregar evento',

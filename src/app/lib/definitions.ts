@@ -159,3 +159,12 @@ export type MusicalBandDeletionCheck = {
   adminId: number;
   members: User[];
 }
+
+export type Setlist = {
+  id: UUID;
+  repertoire: Repertoire;
+  name: string;
+  description: string;
+  createdAt: string;
+  status: boolean;
+}

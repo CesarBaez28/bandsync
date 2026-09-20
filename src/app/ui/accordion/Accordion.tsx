@@ -14,24 +14,32 @@ type Props = {
 
 export default function Accordion({ header, actions, defaultOpen = false, children, className }: Props) {
   return (
-    <details className={clsx(styles.accordion, className)} open={defaultOpen}>
+    <details
+      className={clsx(styles.accordion, className)}
+      open={defaultOpen}
+    >
       <summary className={styles.summary}>
         <div className={styles.summaryLeft}>
           {header}
         </div>
-        <div className={styles.summaryRight}>
-          <div className={styles.actions}>
-            {actions}
-          </div>
-          {children && <ArrowDownIcon className={styles.chevron} />}
-        </div>
+
+        <ArrowDownIcon className={styles.chevron} />
       </summary>
 
-      {children &&
+      {children && (
         <div className={styles.content}>
           {children}
         </div>
-      }
+      )}
+
+      {actions && (
+        <div className={styles.actionsContainer}>
+          <div className={styles.actions}>
+            {actions}
+          </div>
+        </div>
+      )}
+
     </details>
   );
 }

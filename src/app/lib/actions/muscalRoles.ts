@@ -152,7 +152,7 @@ export async function assignMusicalRolesToUserAction(prevState: AssignMusicalRol
   if (error) {
     console.error("Error assigning musical roles to user:", error);
     return {
-      message: "Ocurrió un error al asignar los roles musicales al usuario. Por favor, inténtelo de nuevo.",
+      message: error.message || "Ocurrió un error al asignar los roles musicales al usuario. Por favor, inténtelo de nuevo.",
       success: false
     };
   }

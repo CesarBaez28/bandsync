@@ -27,6 +27,7 @@ import MusicNoteIcon from '@/public/music_note_24dp.svg'
 import AdminPanelSettingsIcon from '@/public/admin_panel_settings_24dp.svg'
 import ArrowDownIcon from '@/public/keyboard_arrow_down_24dp.svg'
 import ArrowRightIcon from '@/public/keyboard_arrow_right_24dp.svg'
+import AssignmentIcon from '@/public/assignment_24dp.svg'
 
 type NavItem = {
   label: string;
@@ -92,6 +93,28 @@ export default function SideNav({ hypName, musicalBandId }: { readonly hypName: 
           href: `/musicalbands/${hypName}/repertoires/export`,
           icon: <FileExportIcon />
         },
+      ]
+    },
+    {
+      label: 'Setlists',
+      icon: <AssignmentIcon />,
+      subItems: [
+        {
+          label: 'Ver setlists',
+          href: `/musicalbands/${hypName}/setlists`,
+          icon: <DocumentSearchIcon />
+        },
+        {
+          label: 'Registrar setlist',
+          href: `/musicalbands/${hypName}/setlists/create`,
+          icon: <AddIcon />,
+          permission: UserPermissions.ADD_SETLIST
+        },
+        {
+          label: 'Exportar',
+          href: `/musicalbands/${hypName}/setlists/export`,
+          icon: <FileExportIcon />
+        }
       ]
     },
     {
