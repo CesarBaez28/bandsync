@@ -1,8 +1,8 @@
 'use server';
 
 import { UUID } from "node:crypto";
-import { createSetlist, createSetListParams } from "../api/setlists";
-import { ApiResponse } from "../definitions";
+import { createSetlist, createSetListParams, deleteSetList, updateSetlist, updateSetListParams } from "../api/setlists";
+import { ApiResponse, Setlist } from "../definitions";
 import { createSetListSchema } from "../schemas/createSetListSchema";
 import { handleAsync } from "../utils";
 
@@ -34,9 +34,6 @@ export async function createSetListAction(prevState: SetListState, formData: For
 
   const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
   const sets = formData.get('sets');
-
-  console.log("Sets:", sets);
-
   const requestBody: createSetListParams = {
     name: validatedFields.data.name,
     repertoire: { id: validatedFields.data.repertoire as UUID },
@@ -64,4 +61,66 @@ export async function createSetListAction(prevState: SetListState, formData: For
   return {
     success: true
   }
+}
+
+export async function updateSetListAction(prevState: SetListState, formData: FormData) {
+  const validatedFields = createSetListSchema.safeParse({
+    name: formData.get("name"),
+    repertoire: formData.get("repertoire"),
+    description: formData.get("description"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false
+    };
+  }
+
+  const setlistId = formData.get("setlistId") as UUID;
+  const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
+  const sets = formData.get('sets');
+  const requestBody: updateSetListParams = {
+    setlistId,
+    name: validatedFields.data.name,
+    repertoire: { id: validatedFields.data.repertoire as UUID },
+    description: validatedFields.data.description,
+    musicalBand: { id: musicalBandId as UUID },
+    sets: sets ? JSON.parse(sets as string) : []
+  };
+
+  console.log("requestBody", requestBody);
+
+  const [response, error] = await handleAsync<ApiResponse<Setlist>>(updateSetlist(requestBody));
+
+  if (error || !response.success) {
+    return {
+      message: response?.message || "Error al actualizar el SetList. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    };
+  }
+
+  return { success: true };
+}
+
+export type DeleteSetListState = {
+  message?: string | null;
+  success: boolean;
+}
+
+export async function deleteSetListAction(prevState: DeleteSetListState, formData: FormData) {
+  const setlistId = formData.get("setlistId") as UUID;
+  const musicalBandId = formData.get("musicalBandId") as UUID;
+
+  const [response, error] = await handleAsync<ApiResponse<void>>(deleteSetList({ musicalBandId, setlistId }));
+
+  if (error || !response.success) {
+    return {
+      message: response?.message || "Error al eliminar el SetList. Por favor, inténtelo de nuevo más tarde.",
+      success: false
+    };
+  }
+
+  return { success: true };
 }

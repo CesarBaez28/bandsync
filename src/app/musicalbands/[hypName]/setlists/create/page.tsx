@@ -3,7 +3,7 @@ import { getMusicalBandByHyphenatedName } from '@/app/lib/api/musicalBands';
 import { getAllRepertoiresByMusicalBandId } from '@/app/lib/api/repertoires';
 import { ApiResponse, Repertoire } from '@/app/lib/definitions';
 import { handleAsync } from '@/app/lib/utils';
-import Form from '@/app/ui/musicalbands/setlists/CreateSetListForm';
+import Form from '@/app/ui/musicalbands/setlists/SetListForm';
 
 export const metadata: Metadata = {
   title: "Crear SetList",

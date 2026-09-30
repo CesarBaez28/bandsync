@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { config } from "../config";
-import { ApiResponse, PagedData, Setlist } from "../definitions";
+import { ApiResponse, PagedData, Setlist, SetlistDetails } from "../definitions";
 import { UUID } from "node:crypto";
 
 const SETLISTS_PATH = 'setlists';
@@ -91,4 +91,113 @@ export async function createSetlist({ name, repertoire, description, musicalBand
   }
 
   return result;
-} 
+}
+
+export async function getSetlistDetailsById({ setlistId, musicalBandId }: { setlistId: UUID; musicalBandId: UUID | undefined }): Promise<ApiResponse<SetlistDetails>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${SETLISTS_PATH}/${setlistId}`, { headers });
+  const result: ApiResponse<SetlistDetails> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while getting setlist by id");
+  }
+
+  return result;
+}
+
+export type updateSetListParams = {
+  setlistId: UUID;
+  name: string;
+  repertoire: {
+    id: UUID;
+  };
+  musicalBand: {
+    id: UUID;
+  };
+  description: string;
+  sets: {
+    id?: UUID;
+    name: string;
+    orderIndex: number;
+    songs: {
+      setSongId?: UUID
+      songId: string;
+      orderIndex: number;
+      notes?: string;
+    }[];
+  }[];
+}
+
+export async function updateSetlist({ setlistId, name, repertoire, description, musicalBand, sets }: updateSetListParams): Promise<ApiResponse<Setlist>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (musicalBand) {
+    headers[config.musicalBandHeader] = musicalBand.id;
+  }
+
+  const response = await fetch(`${config.api}/${SETLISTS_PATH}/${setlistId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ name, repertoire, description, musicalBand, sets }),
+  });
+
+  const result: ApiResponse<Setlist> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while updating setlist");
+  }
+
+  return result;
+}
+
+export async function deleteSetList({ musicalBandId, setlistId }: { musicalBandId: UUID, setlistId: UUID }): Promise<ApiResponse<void>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${SETLISTS_PATH}/${setlistId}`, {
+    method: 'DELETE',
+    headers
+  });
+
+  const result: ApiResponse<void> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while deleting setlist");
+  }
+
+  return result;
+}

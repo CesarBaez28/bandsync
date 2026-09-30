@@ -7,10 +7,11 @@ import { handleAsync } from '@/app/lib/utils';
 import { getRepertoireSongs } from '@/app/lib/api/repertoires';
 import { ApiResponse, Song } from '@/app/lib/definitions';
 
-export type SongItem = Song & { uid: string; index: number; notes?: string };
+export type SongItem = Song & { uid: string; setSongId?: UUID; index: number; notes?: string };
 
 export type SetSongs = {
   uid: string;
+  id?: UUID;
   name: string;
   index: number;
   songs: SongItem[];
@@ -43,20 +44,26 @@ const fetchSongs = async (
 export function useSetListForm({
   musicalBandId,
   selectedRepertoire,
+  initialSets = [],
 }: {
   musicalBandId: UUID | undefined;
   selectedRepertoire: string | undefined;
+  initialSets?: SetSongs[];
 }) {
   const [songOptions, setSongOptions] = useState<OptionInputSelect[]>([]);
   const [selectedSong, setSelectedSong] = useState<string>('');
   const [setName, setSetName] = useState<string>('');
-  const [newSets, setNewSets] = useState<SetSongs[]>([]);
+  const [newSets, setNewSets] = useState<SetSongs[]>(initialSets);
   const [songs, setSongs] = useState<Song[]>([]);
   const [selectedSongs, setSelectedSongs] = useState<SongItem[]>([]);
   const [activeSetId, setActiveSetId] = useState<string | null>(null);
   const [activeSelectedSongId, setActiveSelectedSongId] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [editingSetUid, setEditingSetUid] = useState<string | null>(null);
+
+  useEffect(() => {
+    setNewSets(initialSets);
+  }, [initialSets]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

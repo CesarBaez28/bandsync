@@ -2,11 +2,11 @@
 
 import styles from '@/ui/musicalbands/setlists/setlists-content.module.css';
 import stylesForm from '@/app/styles/form.module.css';
-import { Repertoire } from "@/app/lib/definitions";
+import { Repertoire, SetlistDetails } from "@/app/lib/definitions";
 import { useForm } from 'react-hook-form';
 import { createSetListSchema, CreateSetListSchema } from '@/app/lib/schemas/createSetListSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { startTransition, useActionState, useEffect, useRef } from 'react';
+import { startTransition, useActionState, useEffect, useMemo, useRef } from 'react';
 import CustomInput from '@/ui/inputs/CustomInput';
 import CustomTextArea from '@/ui/inputs/CustomTextArea';
 import CustomSelect, { OptionInputSelect } from '@/ui/inputs/CustomSelect';
@@ -29,10 +29,10 @@ import {
 import SortableSetItem from './SortableSetItem';
 import { UUID } from 'node:crypto';
 import SortableSongItem from './SortableSongItem';
-import { useSetListForm } from './useSetListForm';
+import { SetSongs, useSetListForm } from './useSetListForm';
 import { DragOverlaySet } from './DragOverlaySet';
 import { DragOverlaySong } from './DragOverlaySong';
-import { createSetListAction, SetListState } from '@/app/lib/actions/setlists';
+import { createSetListAction, SetListState, updateSetListAction } from '@/app/lib/actions/setlists';
 import { useToast } from '../../toast/ToastContext';
 import { useRouter } from 'next/navigation';
 
@@ -40,23 +40,25 @@ type Props = {
   readonly hypName: string;
   readonly musicalBandId: UUID | undefined;
   readonly repertoires: Repertoire[] | undefined;
+  readonly setListDetails?: SetlistDetails;
 }
 
-export default function Form({ hypName, musicalBandId, repertoires }: Props) {
+export default function Form({ hypName, musicalBandId, repertoires, setListDetails }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
 
   const initialState: SetListState = { errors: {}, message: null, success: false };
-  const [state, formAction, isPending] = useActionState<SetListState, FormData>(createSetListAction, initialState);
+  const action = setListDetails ? updateSetListAction : createSetListAction;
+  const [state, formAction, isPending] = useActionState<SetListState, FormData>(action, initialState);
 
   const { showToast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
     if (state?.success) {
-      showToast('Set List registrado con éxito!', 'success');
+      showToast(setListDetails ? 'Set list actualizado con éxito!' : 'Set list registrado con éxito!', 'success');
       router.push(`/musicalbands/${hypName}/setlists`);
     }
-  }, [state, hypName, router, showToast])
+  }, [state, hypName, router, showToast, setListDetails])
 
   const {
     register,
@@ -66,9 +68,28 @@ export default function Form({ hypName, musicalBandId, repertoires }: Props) {
   } = useForm<CreateSetListSchema>({
     resolver: zodResolver(createSetListSchema),
     mode: "onChange",
+    defaultValues: {
+      name: setListDetails?.setList.name,
+      repertoire: setListDetails?.setList.repertoire.id.toString(),
+      description: setListDetails?.setList.description,
+    },
   });
 
   const selectedRepertoire = watch("repertoire");
+
+  const initialSets = useMemo<SetSongs[]>(() => setListDetails?.sets?.map((setSongs, setIndex) => ({
+    uid: setSongs.set.id.toString(),
+    id: setSongs.set.id,
+    name: setSongs.set.name,
+    index: setSongs.set.orderIndex || setIndex + 1,
+    songs: setSongs.songs.map((setSong, songIndex) => ({
+      ...setSong.song,
+      uid: setSong.id.toString(),
+      setSongId: setSong.id,
+      index: setSong.orderIndex || songIndex + 1,
+      notes: setSong.notes || '',
+    })),
+  })) ?? [], [setListDetails]);
 
   const { songOptions,
     selectedSong,
@@ -98,7 +119,7 @@ export default function Form({ hypName, musicalBandId, repertoires }: Props) {
     handleDeleteSong,
     handleSongNotesChange,
     handleDeleteSongFromSet
-  } = useSetListForm({ musicalBandId, selectedRepertoire })
+  } = useSetListForm({ musicalBandId, selectedRepertoire, initialSets })
 
   const repertoiresOptions: OptionInputSelect[] | undefined = repertoires
     ?.toSorted((a, b) => a.name.localeCompare(b.name))
@@ -116,10 +137,12 @@ export default function Form({ hypName, musicalBandId, repertoires }: Props) {
       'sets',
       JSON.stringify(
         newSets.map((set) => ({
+          ...(set.id ? { id: set.id } : {}),
           name: set.name,
           orderIndex: set.index,
           songs: set.songs.map((song) => ({
-            id: song.id,
+            setSongId: song.setSongId,
+            songId: song.id,
             orderIndex: song.index,
             notes: song.notes ?? '',
           })),
@@ -163,6 +186,7 @@ export default function Form({ hypName, musicalBandId, repertoires }: Props) {
           />
 
           <input type="hidden" name="musicalBandId" value={musicalBandId} />
+          {setListDetails && <input type="hidden" name="setlistId" value={setListDetails.setList.id} />}
 
           {state?.message && (
             <p className={stylesForm.errorMessage}>

@@ -31,7 +31,7 @@ export default function SetListsAccordion({ data, musicalBandId, hypName, onDele
           actions={(
             <>
               <Can permission={UserPermissions.UPDATE_SONG} musicalBandId={musicalBandId}>
-                <CustomLink href={`/musicalbands/${hypName}/songs/${setlist.id}/edit`} variant="tertiary">
+                <CustomLink href={`/musicalbands/${hypName}/setlists/${setlist.id}/edit`} variant="tertiary">
                   <EditIcon width={24} height={24} />
                 </CustomLink>
               </Can>

@@ -1,6 +1,9 @@
 'use client'
 
 import stylesResponsive from '@/app/styles/responsive.module.css';
+import stylesForm from "@/app/styles/form.module.css"
+import stylesModal from "@/app/styles/modal.module.css";
+
 import { PagedData, Setlist } from "@/app/lib/definitions";
 import { UUID } from "node:crypto";
 import CustomLink from '../../link/CustomLink';
@@ -10,9 +13,13 @@ import CustomButton from '../../button/CustomButton';
 
 import EditIcon from '@/public/edit_24dp.svg';
 import DeleteIcon from '@/public/delete_24dp.svg';
-import { useState } from 'react';
+import { useActionState, useCallback, useEffect, useState } from 'react';
 import { formatDate } from '@/app/lib/utils';
 import SetListsAccordion from './SetListsAccordion';
+import Modal from '../../modal/Modal';
+import { deleteSetListAction, DeleteSetListState } from '@/app/lib/actions/setlists';
+import { useRouter } from 'next/navigation';
+import { useToast } from '../../toast/ToastContext';
 
 type Props = {
   readonly data: PagedData<Setlist> | undefined;
@@ -21,12 +28,29 @@ type Props = {
 };
 
 export default function SetListsContent({ data, musicalBandId, hypName }: Props) {
+  const router = useRouter();
+  const { showToast } = useToast();
   const [selectedSetList, setSelectedSetList] = useState<Setlist | null>(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const initialState: DeleteSetListState = { success: false, message: null };
+  const [deleteState, formAction, isPending] = useActionState<DeleteSetListState, FormData>(deleteSetListAction, initialState);
 
   const handleDelete = (setList: Setlist) => {
     setSelectedSetList(setList);
-    // Implement delete functionality here
+    setOpenModal(true);
   }
+
+  const handleCancel = useCallback(() => {
+    setOpenModal(false);
+  }, []);
+
+  useEffect(() => {
+    if (deleteState?.success) {
+      handleCancel();
+      showToast('Set list eliminado correctamente!', 'success');
+      router.push(`/musicalbands/${hypName}/setlists`);
+    }
+  }, [deleteState, showToast, handleCancel, hypName, router]);
 
   return (
     <div id='modal-root'>
@@ -85,6 +109,37 @@ export default function SetListsContent({ data, musicalBandId, hypName }: Props)
           <p>Registre un Setlist usando el botón Agregar o cambie los valores de su búsqueda</p>
         </div>)
       }
+
+      <Modal
+        size="sm"
+        isOpen={openModal}
+        title="Eliminar Set List"
+      >
+        <form action={formAction} className={stylesModal.modalContent}>
+
+          <h3 className={stylesModal.titleSize}>¿Estas seguro de realizar esta acción?</h3>
+
+          <p>Toda la información relacionada con este set list será eliminada </p>
+
+          {deleteState?.message && (
+            <p className={stylesForm.errorMessage}>
+              {deleteState?.message}
+            </p>
+          )}
+
+          <input type="hidden" name="setlistId" value={selectedSetList?.id} />
+          <input type="hidden" name="musicalBandId" value={musicalBandId} />
+
+          <div className={stylesModal.buttonsContainer}>
+            <CustomButton type='button' variant='secondary' onClick={handleCancel}>
+              Cancelar
+            </CustomButton>
+            <CustomButton isLoading={isPending} type='submit'>
+              Eliminar
+            </CustomButton>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
