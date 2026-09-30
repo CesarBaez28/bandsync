@@ -160,8 +160,6 @@ export type MusicalBandDeletionCheck = {
   members: User[];
 }
 
-//TODO: create a SetListDetails type to store the details of a setlist, including its sets and songs, to be used in the API response and in the frontend.
-
 export type Setlist = {
   id: UUID;
   repertoire: Repertoire;
