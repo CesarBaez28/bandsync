@@ -1,10 +1,11 @@
 'use server';
 
 import { UUID } from "node:crypto";
-import { createSetlist, createSetListParams, deleteSetList, updateSetlist, updateSetListParams } from "../api/setlists";
-import { ApiResponse, Setlist } from "../definitions";
+import { createSetlist, createSetListParams, deleteSetList, getSetlistDetailsById, updateSetlist, updateSetListParams } from "../api/setlists";
+import { ApiResponse, Setlist, SetlistDetails } from "../definitions";
 import { createSetListSchema } from "../schemas/createSetListSchema";
 import { handleAsync } from "../utils";
+import { exportSetListSchema } from "../schemas/exportSetListSchema";
 
 export type SetListState = {
   errors?: {
@@ -123,4 +124,56 @@ export async function deleteSetListAction(prevState: DeleteSetListState, formDat
   }
 
   return { success: true };
+}
+
+export type ExportSetListState = {
+  errors?: {
+    setlist?: string[];
+    option?: string[];
+  };
+  message?: string | null;
+  data?: {
+    setlistDetails?: SetlistDetails;
+    option?: string;
+  };
+  success: boolean;
+}
+
+export async function exportSetListAction(prevState: ExportSetListState, formData: FormData) {
+  const validatedFields = exportSetListSchema.safeParse({
+    setlist: formData.get("setlist"),
+    option: formData.get("option"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Por favor, corrija los errores en el formulario.",
+      success: false,
+    };
+  }
+
+  const musicalBandId = formData.get("musicalBandId") as UUID | undefined;
+
+  const [response, error] = await handleAsync<ApiResponse<SetlistDetails>>(
+    getSetlistDetailsById({
+      setlistId: validatedFields.data.setlist as UUID,
+      musicalBandId,
+    })
+  );
+
+  if (error || !response?.success || !response.data) {
+    return {
+      message: response?.message || "Ocurrió un error al obtener el set list. Por favor, inténtelo de nuevo más tarde.",
+      success: false,
+    };
+  }
+
+  return {
+    data: {
+      setlistDetails: response.data,
+      option: validatedFields.data.option,
+    },
+    success: true,
+  };
 }

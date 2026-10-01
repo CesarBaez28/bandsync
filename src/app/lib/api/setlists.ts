@@ -7,13 +7,13 @@ import { UUID } from "node:crypto";
 
 const SETLISTS_PATH = 'setlists';
 
-type GetSetlistsByMusicalBandIdParams = {
+type SearchSetlistsByMusicalBandIdParams = {
   musicalBandId: string | undefined;
   query: string | undefined;
   page: number | undefined;
 }
 
-export async function getSetlistsByMusicalBandId({ musicalBandId, query, page }: GetSetlistsByMusicalBandIdParams): Promise<ApiResponse<PagedData<Setlist>>> {
+export async function searchSetlistsByMusicalBandId({ musicalBandId, query, page }: SearchSetlistsByMusicalBandIdParams): Promise<ApiResponse<PagedData<Setlist>>> {
   const session = await auth();
 
   if (!session?.accessToken) {
@@ -28,7 +28,7 @@ export async function getSetlistsByMusicalBandId({ musicalBandId, query, page }:
     headers[config.musicalBandHeader] = musicalBandId;
   }
 
-  const response = await fetch(`${config.api}/${SETLISTS_PATH}/musicalBandId/${musicalBandId}?query=${query}&page=${page}`, {
+  const response = await fetch(`${config.api}/${SETLISTS_PATH}/musicalBandId/${musicalBandId}/search?query=${query}&page=${page}`, {
     headers,
   });
 
@@ -39,6 +39,62 @@ export async function getSetlistsByMusicalBandId({ musicalBandId, query, page }:
   }
 
   return result;
+}
+
+export async function getSetListsByMusicalBandId({ musicalBandId }: { musicalBandId: UUID | undefined }): Promise<ApiResponse<Setlist[]>> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${SETLISTS_PATH}/musicalBandId/${musicalBandId}`, {
+    headers,
+  });
+
+  const result: ApiResponse<Setlist[]> = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Error while getting setlists by musical band id");
+  }
+
+  return result;
+}
+
+export async function downloadSetListSpreadsheet({ musicalBandId, setlistId }: { musicalBandId: UUID, setlistId: UUID }): Promise<Blob> {
+  const session = await auth();
+
+  if (!session?.accessToken) {
+    throw new Error("Unauthorized: No session or access token found.")
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${session.accessToken}`,
+  };
+
+  if (musicalBandId) {
+    headers[config.musicalBandHeader] = musicalBandId;
+  }
+
+  const response = await fetch(`${config.api}/${SETLISTS_PATH}/${setlistId}/spreadsheet`, {
+    headers,
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    const errorResponse = await response.json().catch(() => null) as { message?: string } | null;
+    throw new Error(errorResponse?.message || 'Error al descargar el archivo Excel del set list.');
+  }
+
+  return response.blob();
 }
 
 
