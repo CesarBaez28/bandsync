@@ -7,6 +7,7 @@ import { UserPermissions } from '@/app/lib/permisions';
 import CustomLink from '../../link/CustomLink';
 import CustomButton from '../../button/CustomButton';
 import EditIcon from "@/public/edit_24dp.svg";
+import SeeIcon from '@/public/opsz24.svg'
 import DeleteIcon from "@/public/delete_24dp.svg";
 import { formatDate } from '@/app/lib/utils';
 
@@ -31,7 +32,7 @@ export default function SetListsAccordion({ data, musicalBandId, hypName, onDele
           actions={(
             <>
               <CustomLink href={`/musicalbands/${hypName}/setlists/${setlist.id}/see`} variant="tertiary">
-                Ver
+                <SeeIcon width={24} height={24} />
               </CustomLink>
               <Can permission={UserPermissions.UPDATE_SONG} musicalBandId={musicalBandId}>
                 <CustomLink href={`/musicalbands/${hypName}/setlists/${setlist.id}/edit`} variant="tertiary">

@@ -9,6 +9,7 @@ import { Metadata } from "next";
 import { config } from "@/app/lib/config";
 import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
 import { Footer } from "@/app/ui/footer/Footer";
+import Breadcrumbs from "@/app/ui/breadcrumbs/Breadcrumbs";
 
 type LayoutProps = {
   children: ReactNode;
@@ -49,6 +50,7 @@ export default async function Layout({ children, params }: LayoutProps) {
               <SideNav hypName={hypName} musicalBandId={musicalBand.id} />
             )}
             <div className={styles.mainContainer}>
+              <Breadcrumbs />
               {children}
             </div>
           </div>
