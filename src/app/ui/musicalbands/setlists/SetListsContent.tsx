@@ -13,6 +13,7 @@ import CustomButton from '../../button/CustomButton';
 
 import EditIcon from '@/public/edit_24dp.svg';
 import DeleteIcon from '@/public/delete_24dp.svg';
+import SeeIcon from '@/public/opsz24.svg'
 import { useActionState, useCallback, useEffect, useState } from 'react';
 import { formatDate } from '@/app/lib/utils';
 import SetListsAccordion from './SetListsAccordion';
@@ -72,6 +73,9 @@ export default function SetListsContent({ data, musicalBandId, hypName }: Props)
                   <tr key={setList.id}>
                     <td>
                       <div style={{ display: 'flex', gap: '.6rem' }}>
+                        <CustomLink href={`/musicalbands/${hypName}/setlists/${setList.id}/see`} variant="tertiary">
+                          <SeeIcon width={24} height={24} />
+                        </CustomLink>
                         <Can permission={UserPermissions.UPDATE_SETLIST} musicalBandId={musicalBandId}>
                           <CustomLink href={`/musicalbands/${hypName}/setlists/${setList.id}/edit`} variant="tertiary">
                             <EditIcon width={24} height={24} />
