@@ -80,7 +80,6 @@ export type Repertoire = {
 
 export type Event = {
   id: UUID;
-  repertoire: Repertoire;
   date: Date;
   name: string;
   description: string;

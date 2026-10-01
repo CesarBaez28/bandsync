@@ -7,7 +7,6 @@ import { createEvent, CreateEventRequestBody, deleteEvent, updateEvent, UpdateEv
 export type EventState = {
   errors?: {
     name?: string[];
-    repertoire?: string[];
     date?: string[];
     description?: string[];
     place?: string[];
@@ -21,7 +20,6 @@ export type EventState = {
 export async function createEventAction(prevState: EventState, formData: FormData) {
 
   const validatedFields = eventSchema.safeParse({
-    repertoire: formData.get("repertoire"),
     name: formData.get("name"),
     date: formData.get("date"),
     description: formData.get("description"),
@@ -39,7 +37,6 @@ export async function createEventAction(prevState: EventState, formData: FormDat
 
   const requestBody: CreateEventRequestBody = {
     musicalBand: { id: formData.get("musicalBandId") as UUID },
-    repertoire: { id: validatedFields.data.repertoire as UUID },
     name: validatedFields.data.name,
     date: validatedFields.data.date + "T00:00:00",
     description: validatedFields.data.description,
@@ -76,7 +73,6 @@ export async function createEventAction(prevState: EventState, formData: FormDat
 export async function updateEventAction(prevState: EventState, formData: FormData) {
 
   const validatedFields = eventSchema.safeParse({
-    repertoire: formData.get("repertoire"),
     name: formData.get("name"),
     date: formData.get("date"),
     description: formData.get("description"),
@@ -93,7 +89,6 @@ export async function updateEventAction(prevState: EventState, formData: FormDat
   }
 
   const requestBody: UpdateEventRequestBody = {
-    repertoireId: validatedFields.data.repertoire as UUID,
     name: validatedFields.data.name,
     date: validatedFields.data.date + "T00:00:00",
     description: validatedFields.data.description,

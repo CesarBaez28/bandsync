@@ -1,9 +1,6 @@
 import { z } from "zod";
 
 export const eventSchema = z.object({
-  repertoire: z
-    .string()
-    .nonempty('Seleccione un repertorio'),
   name: z
     .string()
     .min(3, 'El nombre debe tener al menos 3 letras'),

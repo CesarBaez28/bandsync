@@ -7,11 +7,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { startTransition, useActionState, useEffect, useRef, useState, useCallback } from "react";
 import CustomButton from "../../button/CustomButton";
-import { Event, MusicalBand, Repertoire } from "@/app/lib/definitions";
+import { Event, MusicalBand } from "@/app/lib/definitions";
 import { EventInput } from "@fullcalendar/core/index.js";
 import type { EventClickArg, EventContentArg } from "@fullcalendar/core";
 import Modal from "../../modal/Modal";
-import CustomSelect, { OptionInputSelect } from '../../inputs/CustomSelect';
 import CustomInput from '../../inputs/CustomInput';
 import CustomTextArea from '../../inputs/CustomTextArea';
 import { useForm } from 'react-hook-form';
@@ -28,11 +27,10 @@ import CalendarIcon from "@/public/calendar_add_on_24dp.svg";
 type Props = {
   readonly events: Event[] | undefined;
   readonly fullcalendarEvents: EventInput[];
-  readonly repertoires: Repertoire[] | undefined;
   readonly musicalBand: MusicalBand | undefined;
 };
 
-export default function Calendar({ events, fullcalendarEvents, repertoires, musicalBand }: Props) {
+export default function Calendar({ events, fullcalendarEvents, musicalBand }: Props) {
   const { hasPermission, permissionsLoaded } = usePermissions();
   const [fullcalendarEventsState, setFullcalendarEventsState] = useState<EventInput[] | undefined>(fullcalendarEvents);
   const [eventsState, setEventsState] = useState<Event[] | undefined>(events);
@@ -55,12 +53,6 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
 
   const canUpdateEvent = permissionsLoaded &&
     hasPermission(UserPermissions.UPDATE_EVENT, musicalBand?.id);
-
-  const repertoiresOptions: OptionInputSelect[] | undefined = repertoires
-    ?.sort((a, b) => a.name.localeCompare(b.name))
-    .map((repertoire) => (
-      { label: repertoire.name, value: repertoire.id.toString() }
-    ));
 
   const {
     register: registerCreate,
@@ -112,8 +104,6 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
 
     setEventsState(prev => prev ? [...prev, newEvent] : [newEvent]);
 
-    const repertoire = repertoires?.find(r => r.id === newEvent.repertoire.id);
-
     const newFullcalendarEvent: EventInput = {
       id: newEvent.id,
       title: newEvent.name,
@@ -121,8 +111,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
       extendedProps: {
         description: newEvent.description,
         place: newEvent.place,
-        location: newEvent.location,
-        repertoire
+        location: newEvent.location
       },
       allDay: true
     };
@@ -132,7 +121,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
     handleCreateCancel();
     showToast("Evento creado exitosamente.", "success");
 
-  }, [createState, handleCreateCancel, showToast, repertoires]);
+  }, [createState, handleCreateCancel, showToast]);
 
 
   const {
@@ -170,17 +159,12 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
 
     const formValues = getValuesEdit();
 
-    const updatedRepertoire = repertoires?.find(
-      (r) => r.id.toString() === String(formValues.repertoire)
-    );
-
     setEventsState((prev) =>
       prev?.map((ev) => {
         if (ev.id !== selectedEventId) return ev;
 
         return {
           ...ev,
-          repertoire: updatedRepertoire || ev.repertoire,
           name: formValues.name,
           date: new Date(formValues.date + "T00:00:00"),
           description: formValues.description ? String(formValues.description) : ev.description,
@@ -202,7 +186,6 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
             description: formValues.description,
             place: formValues.place,
             location: formValues.location,
-            repertoire: updatedRepertoire,
           },
         };
       })
@@ -210,7 +193,7 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
 
     handleEditCancel();
     showToast("Evento actualizado exitosamente.", "success");
-  }, [editState, getValuesEdit, repertoires, resetEdit, selectedEventId, showToast, handleEditCancel]);
+  }, [editState, getValuesEdit, resetEdit, selectedEventId, showToast, handleEditCancel]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -225,7 +208,6 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
     const selectedEvent = eventsState?.find(e => e.id === arg.event.id);
     setSelectedEventId(arg.event.id);
     if (selectedEvent) {
-      setValueEdit('repertoire', selectedEvent.repertoire.id.toString());
       setValueEdit('name', selectedEvent.name);
       const formattedDate = formatDate(new Date(selectedEvent.date));
       setValueEdit('date', formattedDate);
@@ -319,13 +301,6 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
         >
           <div className={stylesForm.fieldsContainer}>
 
-            <CustomSelect
-              label="Selecione el repertorio:"
-              options={repertoiresOptions}
-              {...registerCreate("repertoire")}
-              error={errorsCreate.repertoire}
-            />
-
             <CustomInput
               label="Nombre del evento:"
               type="text"
@@ -392,14 +367,6 @@ export default function Calendar({ events, fullcalendarEvents, repertoires, musi
           onSubmit={handleSubmitEdit(onSubmitEdit)}
         >
           <div className={stylesForm.fieldsContainer}>
-
-            <CustomSelect
-              disabled={!canUpdateEvent}
-              label="Selecione el repertorio:"
-              options={repertoiresOptions}
-              {...registerEdit("repertoire")}
-              error={errorsEdit.repertoire}
-            />
 
             <CustomInput
               disabled={!canUpdateEvent}
@@ -493,7 +460,6 @@ function renderEventContent(arg: EventContentArg) {
     >
       <strong>{arg.event.title}</strong>
       {event.place && <div>{event.place}</div>}
-      <div>{event.repertoire.name}</div>
     </div>
   )
 } 
