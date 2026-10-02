@@ -4,7 +4,7 @@ import clsx from "clsx";
 import styles from "./customs-inputs.module.css";
 
 type InputProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  label: string;
+  label?: string;
   name: string;
   error?: FieldError;
 };

@@ -20,17 +20,18 @@
   text-overflow: ellipsis;
 }
 
-.summaryRight {
+.actionsContainer {
   display: flex;
   align-items: center;
-  gap: .5rem;
-  flex-shrink: 0;
+  margin-top: .75rem;
+  padding-top: .75rem;
+  border-top: 1px solid var(--color-gray-200);
 }
 
 .actions {
   display: flex;
-  gap: .4rem;
   align-items: center;
+  gap: .4rem;
 }
 
 .chevron {

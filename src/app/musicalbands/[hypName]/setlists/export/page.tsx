@@ -1,18 +1,18 @@
-import styles from '../repertoires.module.css'
-import { handleAsync, urlToBase64 } from "@/app/lib/utils";
-import { ApiResponse, Repertoire } from "@/app/lib/definitions";
-import { getAllRepertoiresByMusicalBandId } from "@/app/lib/api/repertoires";
-import ExportRerpertoiresContent from "@/app/ui/musicalbands/repertoires/ExportRepertoiresContent";
+import styles from '../setlists.module.css'
 import { getMusicalBandByHyphenatedName } from "@/app/lib/api/musicalBands";
-import { Metadata } from 'next';
+import { getSetListsByMusicalBandId } from "@/app/lib/api/setlists";
+import { ApiResponse, Setlist } from "@/app/lib/definitions";
+import { handleAsync, urlToBase64 } from "@/app/lib/utils";
+import ExportSetListsContent from '@/app/ui/musicalbands/setlists/ExportSetListsContent';
+import { Metadata } from "next";
 
 type Props = {
   readonly params: Promise<{ hypName: string; }>;
 }
 
 export const metadata: Metadata = {
-  title: "Exportar repertorio",
-  description: "Exportar repertorio",
+  title: "Exportar set list",
+  description: "Exportar set list",
 };
 
 export default async function ExportPage(props: Props) {
@@ -20,12 +20,15 @@ export default async function ExportPage(props: Props) {
 
   const musicalBand = (await getMusicalBandByHyphenatedName({ name: hypName })).data;
 
-  const [response, error] = await handleAsync<ApiResponse<Repertoire[]>>(getAllRepertoiresByMusicalBandId({ musicalBandId: musicalBand?.id }));
+  const [response, error] = await handleAsync<ApiResponse<Setlist[]>>(getSetListsByMusicalBandId(
+    { musicalBandId: musicalBand?.id }
+  ));
+
   const imageBase64 = await urlToBase64(musicalBand?.logo);
 
   return (
     <div>
-      <h2>Exportar Repertorios</h2>
+      <h2>Exportar Set List</h2>
       <main className={styles.mainContainer}>
         {error
           ? <div className="message">
@@ -33,7 +36,7 @@ export default async function ExportPage(props: Props) {
             <p>Hubo un error al cargar la página. Intente refrescar la página o vuelva a visitar la página más tarde.</p>
           </div>
           : (
-            <ExportRerpertoiresContent repertoires={response?.data} imageBase64={imageBase64} musicalBand={musicalBand} />
+            <ExportSetListsContent setlists={response.data} imageBase64={imageBase64} musicalBand={musicalBand} />
           )
         }
       </main>

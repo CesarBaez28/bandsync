@@ -35,7 +35,6 @@ export async function getAllEventsByMusicalBandId({ musicalBandId }: { musicalBa
 
 export type CreateEventRequestBody = {
   musicalBand: { id: UUID };
-  repertoire: { id: UUID };
   name: string;
   date: string;
   description?: string;
@@ -72,7 +71,6 @@ export async function createEvent(requestBody: CreateEventRequestBody): Promise<
 }
 
 export type UpdateEventRequestBody = {
-  repertoireId: UUID;
   date: string;
   name: string;
   description?: string;

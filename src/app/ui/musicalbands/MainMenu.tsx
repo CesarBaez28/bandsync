@@ -12,6 +12,7 @@ import AudioFileIcon from '@/public/audio_file_24dp.svg';
 import AdaptiveAudioMicIcon from '@/public/adaptive_audio_mic_24dp.svg';
 import CalendarMonthIcon from '@/public/calendar_month_24dp.svg';
 import SettingsIcon from '@/public/settings_24dp.svg';
+import AssignmentIcon from '@/public/assignment_24dp.svg'
 
 type Props = {
   readonly hypName: string;
@@ -57,6 +58,25 @@ export default function MainMenu({ hypName, musicalBandId }: Props) {
         {
           label: 'Exportar repertorio',
           href: `/musicalbands/${hypName}/repertoires/export`
+        }
+      ]
+    },
+    {
+      label: 'Set lists',
+      icon: <AssignmentIcon />,
+      subItems: [
+        {
+          label: 'Ver set lists',
+          href: `/musicalbands/${hypName}/setlists`
+        },
+        {
+          label: 'Crear set list',
+          href: `/musicalbands/${hypName}/setlists/create`,
+          permission: UserPermissions.ADD_SETLIST
+        },
+        {
+          label: 'Exportar set lists',
+          href: `/musicalbands/${hypName}/setlists/export`
         }
       ]
     },

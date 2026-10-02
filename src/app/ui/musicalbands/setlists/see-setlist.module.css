@@ -1,0 +1,89 @@
+.setsList {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.emptySet {
+  color: var(--color-gray-500);
+}
+
+.tableWrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.songTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.notes {
+  min-width: 10rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.songLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2rem;
+}
+
+.songAccordionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.songAccordion {
+  background-color: var(--color-white);
+}
+
+.songHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.songHeader p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.songOrder {
+  display: inline-flex;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-gray-100);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.songDetails {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.songDetails > div {
+  display: grid;
+  grid-template-columns: minmax(6rem, auto) minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.songDetails dt {
+  font-weight: 700;
+}
+
+.songDetails dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
