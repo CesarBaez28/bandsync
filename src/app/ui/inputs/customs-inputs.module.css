@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  width: 100%;
+  min-width: 0;
 }
 
 .fullWidth {
@@ -61,6 +63,16 @@
 .input-wrapper {
   position: relative;
   width: 100%;
+  min-width: 0;
+}
+
+.input-wrapper input {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.input-wrapper input[type="date"] {
+  padding-right: 2.5rem;
 }
 
 .calendar-icon {

@@ -6,7 +6,7 @@ import { Repertoire, SetlistDetails } from "@/app/lib/definitions";
 import { useForm } from 'react-hook-form';
 import { createSetListSchema, CreateSetListSchema } from '@/app/lib/schemas/createSetListSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { startTransition, useActionState, useEffect, useMemo, useRef } from 'react';
+import { startTransition, useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import CustomInput from '@/ui/inputs/CustomInput';
 import CustomTextArea from '@/ui/inputs/CustomTextArea';
 import CustomSelect, { OptionInputSelect } from '@/ui/inputs/CustomSelect';
@@ -53,12 +53,21 @@ export default function Form({ hypName, musicalBandId, repertoires, setListDetai
   const { showToast } = useToast();
   const router = useRouter();
 
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
   useEffect(() => {
     if (state?.success) {
       showToast(setListDetails ? 'Set list actualizado con éxito!' : 'Set list registrado con éxito!', 'success');
       router.push(`/musicalbands/${hypName}/setlists`);
     }
   }, [state, hypName, router, showToast, setListDetails])
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const {
     register,
@@ -252,7 +261,7 @@ export default function Form({ hypName, musicalBandId, repertoires, setListDetai
       </form>
 
       <Modal
-        size='md'
+        size={isMobile ? "sm" : "md"}
         isOpen={openModal}
         title={editingSetUid ? 'Editar set' : 'Agregar set'}
       >
