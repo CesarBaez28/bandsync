@@ -41,7 +41,7 @@
   color: var(--color-text);
 }
 
-.accordion[open] .chevron {
+.accordion[open] > .summary > .chevron {
   transform: rotate(180deg);
 }
 

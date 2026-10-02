@@ -10,6 +10,7 @@ import { FormRegisterSchema, formRegisterSchema } from "@/app/lib/schemas/formRe
 import { registerAction, RegisterUserState } from "@/app/lib/actions/users";
 import CustomLink from "../link/CustomLink";
 import Modal from "../modal/Modal";
+import BrandLogo from '@/app/ui/brand/BrandLogo';
 
 type Props = {
   readonly token: string | undefined;
@@ -48,7 +49,7 @@ export default function RegisterForm({ token, appName }: Props) {
     >
       <div>
         <header className={styles['header']}>
-          <h1>{appName}</h1>
+          <BrandLogo alt={appName} size="form" />
           <p className={styles['header-description']}>
             Ingrese los siguientes datos para <br /> registrar tu cuenta
           </p>

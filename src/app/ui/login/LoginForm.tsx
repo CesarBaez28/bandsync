@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CustomInput from '../inputs/CustomInput';
 import CustomButton from '../button/CustomButton';
 import CustomLink from '../link/CustomLink';
+import BrandLogo from '@/app/ui/brand/BrandLogo';
 
 type Props = {
   appName: string;
@@ -47,7 +48,7 @@ export default function LoginForm({ appName }: Props) {
     >
       <div>
         <header className={styles['header']}>
-          <h1>{appName}</h1>
+          <BrandLogo alt={appName} size="form" />
           <p className={styles['header-description']}>
             Ingrese las credenciales para <br /> entrar con tu cuenta
           </p>

@@ -8,6 +8,7 @@ import { signOutAction } from "@/app/lib/actions/auth";
 import ThemeToggle from "../button/ThemeToggle";
 import MenuIcon from '@/public/menu_24dp.svg'
 import PersonIcon from '@/public/person_24dp.svg'
+import BrandLogo from '../brand/BrandLogo';
 
 export default function MainHeader({ hypName, appName }: { readonly hypName: string, readonly appName: string }) {
   const { toggleSideNav } = useSideNav();
@@ -18,7 +19,7 @@ export default function MainHeader({ hypName, appName }: { readonly hypName: str
         <CustomButton onClick={toggleSideNav} variant="tertiary">
           <MenuIcon width={24} height={24} />
         </CustomButton>
-        <h2>{appName}</h2>
+        <BrandLogo alt={appName} />
       </div>
       <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '.6rem'}}>
         <ThemeToggle />

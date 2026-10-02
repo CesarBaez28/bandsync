@@ -1,0 +1,47 @@
+.frame {
+  position: relative;
+  display: block;
+  flex: 0 0 clamp(128px, 38vw, 185px);
+  width: clamp(128px, 38vw, 185px);
+  height: 56px;
+  overflow: hidden;
+}
+
+.formFrame {
+  flex: none;
+  width: min(100%, 320px);
+  height: 100px;
+  margin-inline: auto;
+}
+
+.canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 136%;
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+
+.formFrame .canvas {
+  width: 100%;
+}
+
+.light {
+  display: block;
+  mix-blend-mode: multiply;
+}
+
+.dark {
+  display: none;
+  mix-blend-mode: screen;
+}
+
+:global(:root[data-theme='dark']) .light {
+  display: none;
+}
+
+:global(:root[data-theme='dark']) .dark {
+  display: block;
+}
