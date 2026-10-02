@@ -18,6 +18,7 @@ import { useToast } from '../toast/ToastContext';
 import AddIcon from '@/public/add_24dp.svg'
 import PersonIcon from '@/public/person_24dp.svg'
 import ThemeToggle from '../button/ThemeToggle';
+import BrandLogo from '../brand/BrandLogo';
 
 type HomeHeaderProps = {
   readonly setData: Dispatch<SetStateAction<MusicalBand[] | null>>;
@@ -71,7 +72,7 @@ export default function HomeHeader({ setData, appName }: HomeHeaderProps) {
 
   return <>
     <Header>
-      <h2>{appName}</h2>
+      <BrandLogo alt={appName} />
       <div className={styles['header-buttons']}>
         <CustomButton
           iconLeft={<AddIcon width={24} height={24} />}
