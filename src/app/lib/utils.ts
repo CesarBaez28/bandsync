@@ -56,3 +56,9 @@ export const formatDate = (date: Date): string => {
 
   return `${year}-${month}-${day}`;
 }
+
+export const formatDateOnly = (date: Date | string): string => {
+  if (typeof date === 'string') return date.slice(0, 10);
+
+  return formatDate(date);
+}

@@ -16,7 +16,7 @@ import CustomTextArea from '../../inputs/CustomTextArea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EventSchema, eventSchema } from '@/app/lib/schemas/eventSchema';
-import { formatDate } from '@/app/lib/utils';
+import { formatDate, formatDateOnly } from '@/app/lib/utils';
 import { createEventAction, deleteEventAction, DeleteEventProps, EventState, updateEventAction } from '@/app/lib/actions/events';
 import { useToast } from '../../toast/ToastContext';
 import { Can } from '../../authorization/Can';
@@ -107,7 +107,7 @@ export default function Calendar({ events, fullcalendarEvents, musicalBand }: Pr
     const newFullcalendarEvent: EventInput = {
       id: newEvent.id,
       title: newEvent.name,
-      start: newEvent.date ? new Date(newEvent.date) : undefined,
+      start: newEvent.date ? formatDateOnly(newEvent.date) : undefined,
       extendedProps: {
         description: newEvent.description,
         place: newEvent.place,
@@ -181,7 +181,7 @@ export default function Calendar({ events, fullcalendarEvents, musicalBand }: Pr
         return {
           ...ev,
           title: formValues.name,
-          start: new Date(formValues.date + "T00:00:00"),
+          start: formValues.date,
           extendedProps: {
             description: formValues.description,
             place: formValues.place,
