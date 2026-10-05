@@ -1,5 +1,5 @@
 import styles from './calendar.module.css';
-import { handleAsync } from '@/app/lib/utils';
+import { formatDateOnly, handleAsync } from '@/app/lib/utils';
 import { ApiResponse, Event } from '@/app/lib/definitions';
 import { getAllEventsByMusicalBandId } from '@/app/lib/api/events';
 import { EventInput } from "@fullcalendar/core/index.js";
@@ -28,7 +28,7 @@ export default async function CalendarPage(props: CalendarPageProps) {
   const fullcalendarEvents: EventInput[] = events?.data?.map(ev => ({
     id: ev.id,
     title: ev.name,
-    start: ev.date ? new Date(ev.date) : undefined,
+    start: ev.date ? formatDateOnly(ev.date) : undefined,
     extendedProps: {
       description: ev.description,
       place: ev.place,
